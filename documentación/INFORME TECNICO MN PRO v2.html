@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFORME TÉCNICO Y DE PRODUCTO: MAGIC NUMBER PRO v2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.6;
+    font-size: 11pt;
+    background: #fff;
+  }
+
+  .page {
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 20mm 18mm;
+  }
+
+  /* COVER */
+  .cover {
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 250mm;
+    text-align: center;
+    padding: 40mm 20mm;
+  }
+  .cover h1 {
+    font-size: 28pt;
+    font-weight: 800;
+    color: #0f0f23;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .cover .version {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #6366f1;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    font-size: 10pt;
+    color: #64748b;
+    line-height: 2;
+  }
+  .cover .divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    margin: 30px auto;
+    border-radius: 2px;
+  }
+
+  /* HEADINGS */
+  h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #0f0f23;
+    margin-top: 28px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #6366f1;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 14px;
+    margin-bottom: 6px;
+  }
+
+  /* PARAGRAPHS */
+  p { margin-bottom: 8px; }
+  strong { font-weight: 600; }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 16px;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 600;
+    text-align: left;
+    padding: 6px 8px;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+  }
+  td {
+    padding: 5px 8px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fafbfc; }
+
+  /* LISTS */
+  ul, ol { margin: 6px 0 12px 20px; }
+  li { margin-bottom: 4px; }
+
+  /* CALLOUTS */
+  .callout {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 12px 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+  }
+  .callout-important {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+  }
+  .callout-caution {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+  }
+  .callout-note {
+    background: #f0fdf4;
+    border-left: 4px solid #22c55e;
+  }
+  .callout-label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 8.5pt;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .callout-important .callout-label { color: #2563eb; }
+  .callout-caution .callout-label { color: #dc2626; }
+  .callout-note .callout-label { color: #16a34a; }
+
+  /* CODE BLOCKS */
+  pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 14px 16px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 9pt;
+    margin: 10px 0 16px;
+    overflow-x: auto;
+    page-break-inside: avoid;
+  }
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 9pt;
+    background: #f1f5f9;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+  pre code { background: none; padding: 0; }
+
+  /* HR */
+  hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 20px 0;
+  }
+
+  /* MERMAID PLACEHOLDER */
+  .mermaid-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 12px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .mermaid-box img { max-width: 100%; }
+
+  /* PRINT */
+  @media print {
+    body { font-size: 10pt; }
+    .page { padding: 10mm 14mm; }
+    h2 { margin-top: 20px; }
+    .cover { min-height: 260mm; }
+    table { font-size: 8.5pt; }
+    .no-break { page-break-inside: avoid; }
+  }
+
+  .section { page-break-inside: avoid; }
+  .emoji { font-style: normal; }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <h1>INFORME TÉCNICO Y DE PRODUCTO</h1>
+  <div class="version">MAGIC NUMBER PRO — v2</div>
+  <div class="divider"></div>
+  <div class="meta">
+    <strong>Fecha:</strong> 20 de marzo de 2026<br>
+    <strong>Destinatario:</strong> Equipo Fundador<br>
+    <strong>Elaborado por:</strong> Antigravity — workflow <code>/senior-orchestration</code>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="page">
+
+<h2>1. ESTADO DE SITUACIÓN</h2>
+
+<h3>Dimensión de Producto</h3>
+
+<p>Magic Number PRO es una herramienta de claridad financiera para el retiro que opera bajo el modelo <strong>"Doble Turbina"</strong>:</p>
+
+<table>
+  <tr><th>Motor</th><th>Descripción</th><th>Independencia</th></tr>
+  <tr><td><strong>B2C</strong></td><td>Paywall one-time (Basic / PRO Report)</td><td>Genera revenue sin depender de la red de asesores</td></tr>
+  <tr><td><strong>B2B</strong></td><td>Derivación de leads auto-calificados a asesores financieros</td><td>Genera revenue sin depender del paywall — cualquier usuario (free o pago) puede derivarse</td></tr>
+</table>
+
+<div class="callout callout-important">
+  <div class="callout-label">⚠️ Importante</div>
+  <strong>Ambos motores funcionan de forma independiente.</strong> Esta es la decisión arquitectónica de producto más fuerte del proyecto: el paywall nunca bloquea el camino hacia el lead B2B. Esto elimina la tensión clásica entre monetización directa y generación de leads.
+</div>
+
+<p><strong>Estado del MVP:</strong> Producto funcional con 15 tabs, motor financiero completo (Magic Number, cash flow variable, proyecciones year-by-year, portafolio blended, Score 0-100), 7 perfiles de inversión y UI mobile-first dark theme. Son ~1,680 líneas de JSX en un archivo monolítico.</p>
+
+<p><strong>Assets confirmados:</strong></p>
+<ul>
+  <li>✅ Dominios: <code>magic-number.app</code> (EN) + <code>minumeromagico.com</code> (ES)</li>
+  <li>✅ Gatillos psicológicos implementados en UI ("Cost of Inaction", "How to Close the Gap")</li>
+  <li>✅ Documentación estratégica completa (Plan, FODA, Competitivo, Deck FA, Q&A)</li>
+</ul>
+
+<h3>Validación de Mercado Externa</h3>
+
+<p>Fidelity Investments publicó el 19 de marzo de 2026 un email a sus clientes titulado <strong>"Is $1 million enough?"</strong> con un CTA <strong>"Find your number"</strong> — exactamente el lenguaje y el concepto de Magic Number PRO. El mercado más grande del mundo está validando esta necesidad ahora mismo.</p>
+
+<h3>Dimensión Técnica: El Cuello de Botella Real</h3>
+
+<table>
+  <tr><th>Aspecto</th><th>Estado actual</th><th>Impacto</th></tr>
+  <tr><td><strong>Código fuente</strong></td><td>No está en el workspace como archivo editable (solo PDF)</td><td>🔴 No se puede trabajar el código</td></tr>
+  <tr><td><strong>Arquitectura</strong></td><td>Monolito JSX de 1,680 líneas, todo en un archivo</td><td>🔴 Impide paywall, testing, SEO</td></tr>
+  <tr><td><strong>Estado</strong></td><td>100% local (<code>useState</code>), se pierde al recargar</td><td>🔴 Impide auth, persistencia, re-engagement</td></tr>
+  <tr><td><strong>Seguridad</strong></td><td>Inexistente — no hay auth ni backend</td><td>🔴 Paywall de solo-UI es bypasseable con DevTools</td></tr>
+  <tr><td><strong>Analytics</strong></td><td>No hay tracking de ningún tipo</td><td>🟠 Imposible optimizar el funnel sin datos</td></tr>
+  <tr><td><strong>Infraestructura</strong></td><td>Cloudflare Pages, ~150KB payload</td><td>✅ Costo cercano a cero, alta velocidad</td></tr>
+</table>
+
+<hr>
+
+<h2>2. PENDIENTES ACTIVOS</h2>
+
+<p>Organizados por <strong>criticidad real</strong>, no por orden temático:</p>
+<ul>
+  <li>🔴 <strong>Bloqueante</strong> — impide avanzar hacia producción</li>
+  <li>🟠 <strong>Necesario</strong> — se puede lanzar sin él, pero con riesgo significativo</li>
+  <li>🟡 <strong>Deseable</strong> — mejora el producto pero no bloquea el lanzamiento</li>
+</ul>
+
+<h3>Decisiones Bloqueantes (Requieren resolución humana)</h3>
+
+<p>Estos ítems <strong>no se resuelven con código</strong> — necesitan una decisión del equipo fundador:</p>
+
+<table>
+  <tr><th>#</th><th>Decisión</th><th>Estado actual</th><th>Opciones</th><th>Urgencia</th></tr>
+  <tr><td>D1</td><td><strong>Precio del Basic</strong></td><td>Inconsistente ($14.99 en Deck, $19.99 en Plan)</td><td>$9.99 / $14.99 / $19.99 / A/B test</td><td>🔴</td></tr>
+  <tr><td>D2</td><td><strong>Estructura jurídica</strong></td><td>No definida</td><td>LLC USA / SAS Argentina / PF MVP</td><td>🔴</td></tr>
+  <tr><td>D3</td><td><strong>Captura del email</strong></td><td>3 opciones abiertas</td><td>Antes del MN / para desbloquear / al final</td><td>🔴</td></tr>
+  <tr><td>D4</td><td><strong>Precios LATAM</strong></td><td>No definido</td><td>USD global / Regionalización / Iterativo</td><td>🟡</td></tr>
+  <tr><td>D5</td><td><strong>¿Lanzar PRO Report?</strong></td><td>Propuesta de posponerlo</td><td>Posponer / $49.99 / Done-for-you</td><td>🟡</td></tr>
+</table>
+
+<h3>Pendientes Técnicos</h3>
+
+<table>
+  <tr><th>#</th><th>Pendiente</th><th>Descripción</th><th>Crit.</th></tr>
+  <tr><td>T0</td><td><strong>Reconstruir el repo</strong></td><td>Traer el JSX como archivo editable, crear <code>package.json</code>, verificar que compila</td><td>🔴</td></tr>
+  <tr><td>T1</td><td><strong>Refactorización</strong></td><td>Desacoplar monolito en <code>components/</code>, <code>utils/</code>, <code>views/</code></td><td>🔴</td></tr>
+  <tr><td>T2</td><td><strong>Auth + Persistencia</strong></td><td>Supabase Auth + Postgres para perfiles de usuario y estado</td><td>🔴</td></tr>
+  <tr><td>T3</td><td><strong>Pagos</strong></td><td>Stripe Checkout (Basic). Requiere D1 + D2 resueltos</td><td>🔴</td></tr>
+  <tr><td>T4</td><td><strong>Seguridad del Paywall</strong></td><td>Token de Supabase validando pago → UI muestra/oculta. <strong>No solo UI</strong></td><td>🔴</td></tr>
+  <tr><td>T5</td><td><strong>Analytics</strong></td><td>PostHog con métricas pre-definidas desde Día 1</td><td>🟠</td></tr>
+  <tr><td>T6</td><td><strong>Validación de inputs</strong></td><td>Validación defensiva de inputs financieros + debounce</td><td>🟠</td></tr>
+  <tr><td>T7</td><td><strong>Trust Layer</strong></td><td>Badges SSL, política de privacidad, copy de seguridad</td><td>🟠</td></tr>
+  <tr><td>T8</td><td><strong>Lead form B2B</strong></td><td>Formulario + enrutamiento a CRM (Airtable → HubSpot)</td><td>🟠</td></tr>
+  <tr><td>T9</td><td><strong>i18n + Region-awareness</strong></td><td>Parámetros por país (inflación, edad jubilación, pensión)</td><td>🟡</td></tr>
+  <tr><td>T10</td><td><strong>PDF Report</strong></td><td>@react-pdf/renderer, solo si se valida demanda</td><td>🟡</td></tr>
+</table>
+
+<h3>Pendientes de Negocio</h3>
+
+<table>
+  <tr><th>#</th><th>Pendiente</th><th>Descripción</th><th>Crit.</th></tr>
+  <tr><td>B1</td><td><strong>One-pager para asesores</strong></td><td>Pitch de ROI específico. Responder: "¿por qué pagar $150 por un lead?"</td><td>🟠</td></tr>
+  <tr><td>B2</td><td><strong>KPIs pre-lanzamiento</strong></td><td>Definir métricas mínimas antes de lanzar (ver sección 4)</td><td>🟠</td></tr>
+  <tr><td>B3</td><td><strong>Outreach piloto</strong></td><td>5 asesores dispuestos a recibir leads gratuitos</td><td>🟡</td></tr>
+  <tr><td>B4</td><td><strong>Contenido TikTok/Reels</strong></td><td>10 videos con el hook del "85% no sabe su número"</td><td>🟡</td></tr>
+  <tr><td>B5</td><td><strong>T&C y Privacy Policy</strong></td><td>Obligatorio antes de lanzar. Abogado / Termly+Iubenda / adaptación</td><td>🟠</td></tr>
+</table>
+
+<hr>
+
+<h2>3. HOJA DE RUTA PROPUESTA</h2>
+
+<h3>Principios de ejecución (workflow <code>/senior-orchestration</code>)</h3>
+
+<ol>
+  <li><strong>Plan Node Default</strong> — Ningún sprint arranca sin plan escrito en <code>tasks/todo.md</code></li>
+  <li><strong>Verification Before Done</strong> — Diff de comportamiento contra el MVP en cada refactor</li>
+  <li><strong>Demand Elegance</strong> — Si una solución se siente hacky, se reescribe. Sin parches temporales</li>
+  <li><strong>Self-Improvement Loop</strong> — Lecciones capturadas en <code>tasks/lessons.md</code> tras cada corrección</li>
+  <li><strong>Simplicity First</strong> — Cambios mínimos con máximo impacto</li>
+</ol>
+
+<h3>Fase 0: Reconstrucción del Repo (Prerrequisito)</h3>
+
+<p><strong>Objetivo:</strong> Tener un proyecto funcional y editable.</p>
+
+<table>
+  <tr><th>#</th><th>Tarea</th><th>Verificación</th></tr>
+  <tr><td>0.1</td><td>Extraer el JSX del PDF a un archivo <code>.jsx</code> editable</td><td>Archivo legible, sin artefactos de PDF</td></tr>
+  <tr><td>0.2</td><td>Crear <code>package.json</code> con React + Vite</td><td><code>npm install</code> exitoso</td></tr>
+  <tr><td>0.3</td><td>Configurar Vite para desarrollo local</td><td><code>npm run dev</code> muestra la app en el browser</td></tr>
+  <tr><td>0.4</td><td>Verificar que la app funciona idéntica al MVP original</td><td>Validación visual + cálculos de prueba</td></tr>
+  <tr><td>0.5</td><td>Inicializar Git con commit inicial</td><td>Baseline para diffs futuros</td></tr>
+</table>
+
+<p><strong>Entregable:</strong> Repo funcional con la app corriendo localmente.<br>
+<strong>Dependencias:</strong> Ninguna. Se puede hacer hoy.</p>
+
+<hr>
+
+<h3>Fase 1: Resolución de Decisiones Bloqueantes + Spec</h3>
+
+<p><strong>Objetivo:</strong> Desbloquear la implementación tomando las decisiones D1-D3.</p>
+
+<table>
+  <tr><th>#</th><th>Entregable</th><th>Responsable</th></tr>
+  <tr><td>1.1</td><td>Decisión de precio Basic (D1)</td><td>Equipo fundador</td></tr>
+  <tr><td>1.2</td><td>Decisión de estructura jurídica mínima (D2)</td><td>Equipo fundador</td></tr>
+  <tr><td>1.3</td><td>Decisión de momento de captura de email (D3)</td><td>Equipo fundador</td></tr>
+  <tr><td>1.4</td><td>Spec técnica de refactorización</td><td>Antigravity → <code>tasks/todo.md</code></td></tr>
+  <tr><td>1.5</td><td>T&C y Privacy Policy (generador legal MVP)</td><td>Equipo fundador</td></tr>
+</table>
+
+<p><strong>Entregable:</strong> Decisiones documentadas + spec aprobada.<br>
+<strong>Dependencias:</strong> Fase 0 completada.</p>
+
+<hr>
+
+<h3>Fase 2: Refactorización + Auth + Pagos (Sprint 1-2)</h3>
+
+<p><strong>Objetivo:</strong> App modular con paywall funcional y pagos reales.</p>
+
+<table>
+  <tr><th>#</th><th>Tarea</th><th>Verificación</th></tr>
+  <tr><td>2.1</td><td>Desacoplar monolito en componentes</td><td><code>npm run dev</code> funciona + todos tabs renderizan</td></tr>
+  <tr><td>2.2</td><td>Clasificar cada <code>useState</code> → UI / sesión / persistente</td><td>Documento de clasificación aprobado</td></tr>
+  <tr><td>2.3</td><td>Implementar Zustand para estado de sesión</td><td>Estado sobrevive navegación entre tabs</td></tr>
+  <tr><td>2.4</td><td>Implementar Supabase Auth (magic link o Google OAuth)</td><td>Login/logout funcional</td></tr>
+  <tr><td>2.5</td><td>Implementar Supabase DB para perfil de usuario</td><td>Estado se restaura tras logout/login</td></tr>
+  <tr><td>2.6</td><td>Implementar Stripe Checkout</td><td>Pago de prueba exitoso en modo test</td></tr>
+  <tr><td>2.7</td><td>Paywall con seguridad backend</td><td>Token Supabase valida pago. DevTools NO bypassea</td></tr>
+  <tr><td>2.8</td><td>UX del paywall: MN gratis + no-pánico + CTA</td><td>Copy final revisado</td></tr>
+  <tr><td>2.9</td><td>PostHog con eventos pre-definidos</td><td>Eventos aparecen en dashboard</td></tr>
+  <tr><td>2.10</td><td><strong>Diff de comportamiento</strong> contra MVP original</td><td>Test automatizado comparando outputs</td></tr>
+</table>
+
+<div class="callout callout-caution">
+  <div class="callout-label">⚠️ Precaución</div>
+  <strong>2.10 es crítico.</strong> Si los cálculos cambian durante la refactorización, el producto pierde integridad. Este diff debe ejecutarse antes de dar por completada la Fase 2.
+</div>
+
+<p><strong>Entregable:</strong> App modular en Cloudflare Pages con paywall + Stripe (test) + auth + persistencia.<br>
+<strong>Dependencias:</strong> Fase 0 + Fase 1 completas.</p>
+
+<hr>
+
+<h3>Fase 3: Motor B2B + Trust Layer (Sprint 3-4)</h3>
+
+<p><strong>Objetivo:</strong> Validar el modelo de leads con asesores reales.</p>
+
+<table>
+  <tr><th>#</th><th>Tarea</th><th>Verificación</th></tr>
+  <tr><td>3.1</td><td>Lead form con datos del Score + MN + gap</td><td>Datos llegan al CRM</td></tr>
+  <tr><td>3.2</td><td>CRM setup (Airtable MVP → HubSpot)</td><td>Leads visibles con todos los campos</td></tr>
+  <tr><td>3.3</td><td>CTA asesor visible para todos los usuarios</td><td>CTA presente en Paso 2 y al final del Basic</td></tr>
+  <tr><td>3.4</td><td>Trust layer: badges + copy + T&C visibles</td><td>Revisión visual</td></tr>
+  <tr><td>3.5</td><td>One-pager de ROI para asesores</td><td>Documento listo para outreach</td></tr>
+  <tr><td>3.6</td><td>Outreach piloto: 5 asesores</td><td>Al menos 3 asesores aceptan</td></tr>
+  <tr><td>3.7</td><td>Email de captura post-acción</td><td>Email llega, datos se persisten</td></tr>
+</table>
+
+<p><strong>Entregable:</strong> Pipeline B2B funcional con ≥3 asesores recibiendo leads.<br>
+<strong>Dependencias:</strong> Fase 2 completa.</p>
+
+<hr>
+
+<h3>Fase 4: Validación y Contenido (Sprint 5-6)</h3>
+
+<p><strong>Objetivo:</strong> Generar tráfico real y medir conversiones.</p>
+
+<table>
+  <tr><th>#</th><th>Tarea</th><th>Verificación</th></tr>
+  <tr><td>4.1</td><td>10 videos TikTok/Reels con hook del "85%"</td><td>Videos publicados, engagement medido</td></tr>
+  <tr><td>4.2</td><td>Validación de inputs financieros + debounce</td><td>Inputs imposibles rechazados</td></tr>
+  <tr><td>4.3</td><td>A/B test de precio (si aplica)</td><td>PostHog muestra métricas por variante</td></tr>
+  <tr><td>4.4</td><td>Revisión de KPIs vs targets</td><td>Dashboard PostHog con todos los KPIs</td></tr>
+</table>
+
+<p><strong>Entregable:</strong> Primeros datos reales de funnel y conversión.<br>
+<strong>Dependencias:</strong> Fase 3 completa.</p>
+
+<hr>
+
+<h3>Fase 5+: Escala (Sprint 7+)</h3>
+
+<table>
+  <tr><th>Tarea</th><th>Sprint estimado</th></tr>
+  <tr><td>i18n español con region-awareness</td><td>Sprint 7-8</td></tr>
+  <tr><td>SEO mini-calculadoras (3 standalone)</td><td>Sprint 7-8</td></tr>
+  <tr><td>Mercado Pago para LATAM</td><td>Sprint 8-9</td></tr>
+  <tr><td>PRO Report PDF (si se valida demanda)</td><td>Sprint 9-10</td></tr>
+  <tr><td>Modo Pareja</td><td>Sprint 9-10</td></tr>
+  <tr><td>Monte Carlo</td><td>Sprint 11+</td></tr>
+  <tr><td>Portal de asesores</td><td>Sprint 11+</td></tr>
+  <tr><td>White-label</td><td>Sprint 13+</td></tr>
+</table>
+
+<hr>
+
+<h2>4. KPIs MÍNIMOS PRE-LANZAMIENTO</h2>
+
+<p>Definidos para PostHog desde Día 1 de la Fase 2:</p>
+
+<table>
+  <tr><th>Métrica</th><th>Target</th><th>Evento PostHog</th></tr>
+  <tr><td>Tasa de completitud del input (7 campos)</td><td>&gt;60%</td><td><code>input_completed</code></td></tr>
+  <tr><td>Conversión free → click en paywall</td><td>&gt;15%</td><td><code>paywall_viewed</code></td></tr>
+  <tr><td>Conversión paywall → pago exitoso</td><td>&gt;3%</td><td><code>payment_completed</code></td></tr>
+  <tr><td>Click en CTA asesor (usuarios free)</td><td>&gt;5%</td><td><code>advisor_cta_clicked_free</code></td></tr>
+  <tr><td>Click en CTA asesor (usuarios pagos)</td><td>&gt;15%</td><td><code>advisor_cta_clicked_paid</code></td></tr>
+  <tr><td>Bounce antes de ver el Magic Number</td><td>&lt;40%</td><td><code>magic_number_revealed</code> vs <code>session_start</code></td></tr>
+  <tr><td>Tiempo promedio en la app</td><td>&gt;4 min</td><td><code>session_duration</code></td></tr>
+</table>
+
+<hr>
+
+<h2>5. MAPA DE DEPENDENCIAS</h2>
+
+<div class="mermaid-box">
+  <pre style="background: #fff; color: #334155; text-align: left; font-size: 9pt;">
+┌─────────────────────────┐
+│  Fase 0: Reconstruir    │
+│       Repo              │
+└──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐     ┌──────────────────────┐
+│  Fase 1: Decisiones     │◄────│ D1: Precio Basic     │
+│       + Spec            │◄────│ D2: Estructura Legal │
+└──────────┬──────────────┘◄────│ D3: Captura Email    │
+           │                    └──────────────────────┘
+           ▼
+┌─────────────────────────┐
+│  Fase 2: Refactor +     │
+│  Auth + Pagos           │
+└──────────┬──────────────┘
+           │
+           ▼
+      ┌─────────┐
+      │  Diff   │──No──► Volver a Fase 2
+      │  OK?    │
+      └────┬────┘
+           │ Sí
+           ▼
+┌─────────────────────────┐     ┌──────────────────────┐
+│  Fase 3: Motor B2B      │◄────│ B5: T&C / Privacy    │
+│  + Trust Layer          │◄────│ B1: One-pager FA     │
+└──────────┬──────────────┘     └──────────────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│  Fase 4: Validación     │
+│  + Contenido            │
+└──────────┬──────────────┘
+           │
+           ▼
+┌─────────────────────────┐
+│  Fase 5+: Escala        │
+│  (i18n, SEO, PDF, etc.) │
+└─────────────────────────┘</pre>
+</div>
+
+<hr>
+
+<h2>6. SPEC DE DATOS: REGION-AWARENESS (LATAM)</h2>
+
+<p>Pendiente para Fase 5, pero la estructura de datos debe definirse desde ahora para no reescribir después:</p>
+
+<table>
+  <tr><th>Parámetro</th><th>USA</th><th>Argentina</th><th>México</th><th>España</th><th>Colombia</th></tr>
+  <tr><td>Edad jubilación (H/M)</td><td>67</td><td>65/60</td><td>65</td><td>65-67</td><td>62/57</td></tr>
+  <tr><td>Inflación base anual</td><td>2.5%</td><td>~100%+</td><td>4-5%</td><td>2-3%</td><td>5-7%</td></tr>
+  <tr><td>Sistema de pensión</td><td>Social Security</td><td>ANSES (SIPA)</td><td>AFORE/IMSS</td><td>Seg. Social</td><td>Colpensiones</td></tr>
+  <tr><td>Moneda</td><td>USD</td><td>ARS</td><td>MXN</td><td>EUR</td><td>COP</td></tr>
+  <tr><td>Pasarela de pago</td><td>Stripe</td><td>Mercado Pago</td><td>Stripe/Conekta</td><td>Stripe</td><td>Stripe</td></tr>
+  <tr><td>Impuesto sobre retiro</td><td>Federal + State</td><td>Ganancias</td><td>ISR</td><td>IRPF</td><td>Renta</td></tr>
+</table>
+
+<div class="callout callout-note">
+  <div class="callout-label">📝 Nota</div>
+  No es necesario implementar todo esto en Sprint 1-6. Pero sí es necesario <strong>diseñar el modelo de datos con un campo <code>country_profile</code></strong> desde la Fase 2 para que la migración posterior sea limpia.
+</div>
+
+<hr>
+
+<h2>7. RIESGOS ACTUALIZADOS (Top 5)</h2>
+
+<table>
+  <tr><th>#</th><th>Riesgo</th><th>Prob.</th><th>Impacto</th><th>Mitigación</th></tr>
+  <tr><td>1</td><td><strong>Código no editable</strong> — el JSX solo existe como PDF</td><td>Alta</td><td>🔴 Alto</td><td>Fase 0 inmediata</td></tr>
+  <tr><td>2</td><td><strong>Paywall bypasseable</strong> — sin backend, DevTools lo salta</td><td>Alta (si solo UI)</td><td>🔴 Alto</td><td>Token Supabase + validación server-side</td></tr>
+  <tr><td>3</td><td><strong>Decisiones no tomadas</strong> bloquean Sprint 1</td><td>Media</td><td>🔴 Alto</td><td>D1-D3 deben resolverse antes de codear</td></tr>
+  <tr><td>4</td><td><strong>Refactor rompe cálculos</strong></td><td>Media</td><td>🔴 Alto</td><td>Diff de comportamiento obligatorio (2.10)</td></tr>
+  <tr><td>5</td><td><strong>Sin asesores dispuestos</strong> a pagar por leads</td><td>Media</td><td>🟠 Alto</td><td>Piloto con leads gratuitos + one-pager ROI</td></tr>
+</table>
+
+<hr>
+
+<h2>8. PRÓXIMA ACCIÓN INMEDIATA</h2>
+
+<pre>
+HOY:
+├── Equipo fundador → Resolver D1 (precio), D2 (jurídica), D3 (email)
+└── Antigravity → Ejecutar Fase 0 (reconstruir el repo con código editable)
+
+ESTA SEMANA:
+├── Spec de refactorización en tasks/todo.md (Fase 1.4)
+└── Setup de T&C con generador legal (Fase 1.5)</pre>
+
+</div>
+</body>
+</html>

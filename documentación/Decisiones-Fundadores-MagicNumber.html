@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Number PRO — Decisiones para el Equipo Fundador</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-hover: #222633;
+    --border: #2a2e3d;
+    --text: #e4e7ef;
+    --text-muted: #8b90a5;
+    --accent: #818cf8;
+    --accent-soft: rgba(129, 140, 248, 0.12);
+    --green: #34d399;
+    --green-soft: rgba(52, 211, 153, 0.12);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.12);
+    --red: #f87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: white; color: #1a1a2e; padding: 1rem; }
+    .header { background: #1a1a2e !important; }
+    .question-card { border: 1px solid #ddd; background: #f8f9fa !important; }
+    table { border: 1px solid #ccc; }
+    th { background: #e9ecef !important; color: #1a1a2e !important; }
+    td { border-color: #ddd !important; color: #333 !important; }
+    .star { color: #d97706 !important; }
+    .footer-box { background: #e8f5e9 !important; border-color: #4caf50 !important; }
+    .choice-line { border-bottom: 1px solid #999; }
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(129, 140, 248, 0.2);
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c7d2fe, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .header .subtitle {
+    font-size: 0.95rem;
+    color: #a5b4fc;
+    font-weight: 400;
+  }
+
+  .intro {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .intro p { font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .intro p:last-child { margin-bottom: 0; }
+
+  .intro strong { color: var(--text); }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .question-card h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+  }
+
+  .question-card .question-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    font-style: italic;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    background: rgba(129, 140, 248, 0.08);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  th:first-child { border-radius: 8px 0 0 8px; }
+  th:last-child { border-radius: 0 8px 8px 0; }
+
+  td {
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td:first-child {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    width: 80px;
+  }
+
+  .star {
+    color: var(--amber);
+    font-weight: 700;
+  }
+
+  .rec-tag {
+    display: inline-block;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .choice-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+    padding-top: 0.25rem;
+  }
+
+  .choice-line span {
+    flex-grow: 1;
+    border-bottom: 2px dashed var(--border);
+    min-height: 1.5rem;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  .number-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: white;
+    font-weight: 800;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    margin-right: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  .question-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.35rem;
+  }
+
+  .footer-box {
+    background: var(--green-soft);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .footer-box h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-box p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .example-response {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-top: 0.75rem;
+  }
+
+  .meta {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2rem;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎯 Magic Number PRO</h1>
+  <div class="subtitle">3 decisiones que necesitamos del Equipo Fundador</div>
+</div>
+
+<div class="intro">
+  <p><strong>¿Qué es esto?</strong> Son 3 preguntas que necesitamos que respondan para poder avanzar con el desarrollo. Sin estas respuestas, <strong>no podemos implementar pagos ni subir la app a producción</strong>.</p>
+  <p><strong>¿Cómo responderlo?</strong> Elegí una letra por pregunta. Si no estás seguro, elegí la que dice <strong>RECOMENDADA</strong> y listo.</p>
+  <p><strong>⏱️ Tiempo estimado: 2 minutos.</strong></p>
+</div>
+
+<!-- PREGUNTA 1 -->
+<div class="question-card">
+  <div class="question-header">
+    <span class="number-badge">1</span>
+    <h2>¿Cuánto cobramos?</h2>
+  </div>
+  <div class="question-desc">Precio único (lifetime) del plan Basic — acceso completo a la app.</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Precio</th>
+        <th>¿Para quién es?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A</td>
+        <td>$9.99</td>
+        <td>Precio impulso. Más ventas, menos revenue por usuario.</td>
+      </tr>
+      <tr>
+        <td><span class="star">B ⭐</span></td>
+        <td>$14.99</td>
+        <td>Punto medio. Barato vs. el problema que resuelve (+$1M). <span class="rec-tag">Recomendada</span></td>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>$19.99</td>
+        <td>Más premium. Necesitás menos ventas para escalar.</td>
+      </tr>
+      <tr>
+        <td>D</td>
+        <td>A/B test</td>
+        <td>Lanzar con precios rotativos y que los datos decidan.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="choice-line">👉 Mi elección: <span></span></div>
+</div>
+
+<!-- PREGUNTA 2 -->
+<div class="question-card">
+  <div class="question-header">
+    <span class="number-badge">2</span>
+    <h2>¿Cuándo pedimos el email?</h2>
+  </div>
+  <div class="question-desc">¿En qué momento le pedimos el email al usuario durante el flujo de la app?</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Momento</th>
+        <th>Pro / Contra</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A</td>
+        <td>Antes de mostrar su Magic Number</td>
+        <td>Más emails, pero muchos se van sin completar.</td>
+      </tr>
+      <tr>
+        <td><span class="star">B ⭐</span></td>
+        <td>Para desbloquear el resultado</td>
+        <td>Ve el número gratis → email = contraseña para el detalle. <span class="rec-tag">Recomendada</span></td>
+      </tr>
+      <tr>
+        <td>C</td>
+        <td>Solo al comprar o pedir asesor</td>
+        <td>Menos emails, pero los que llegan son de altísima intención.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="choice-line">👉 Mi elección: <span></span></div>
+</div>
+
+<!-- PREGUNTA 3 -->
+<div class="question-card">
+  <div class="question-header">
+    <span class="number-badge">3</span>
+    <h2>¿Con qué estructura legal arrancamos?</h2>
+  </div>
+  <div class="question-desc">Esto define cómo recibimos los pagos y qué documentos legales necesitamos.</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Estructura</th>
+        <th>¿Qué implica?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>A</td>
+        <td>LLC en USA</td>
+        <td>Stripe global nativo + credibilidad. Costo de setup ~$500‑1500.</td>
+      </tr>
+      <tr>
+        <td>B</td>
+        <td>SAS Argentina (u otra local)</td>
+        <td>Más simple localmente, pero fricciones para cobros internacionales.</td>
+      </tr>
+      <tr>
+        <td><span class="star">C ⭐</span></td>
+        <td>Persona Física (MVP)</td>
+        <td>Arrancamos rápido, sin costos. Formalizamos al cruzar $1K/mes. <span class="rec-tag">Recomendada</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="choice-line">👉 Mi elección: <span></span></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-box">
+  <h2>✅ ¡Eso es todo!</h2>
+  <p>Mandame las 3 letras y en 48hs tenemos pagos funcionando.</p>
+  <p><strong>Ejemplo de respuesta:</strong></p>
+  <div class="example-response">"B, B, C"</div>
+</div>
+
+<div class="meta">Magic Number PRO — Documento generado el 25 de Marzo de 2026</div>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+MAGIC NUMBER PRO
+Informe de Progreso — Fases 0, 1 y 2
+Fecha: 25 de Marzo, 2026 (v2)
+Preparado por: Equipo de Desarrollo
+
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN EJECUTIVO
+═══════════════════════════════════════════════════════════════════
+
+Magic Number PRO es una aplicación web de planificación financiera que calcula cuánto necesita ahorrar una persona para retirarse ("su número mágico"), con 16 herramientas interactivas: simuladores, comparadores de inversión, análisis de deuda, y un health score integral.
+
+El proyecto se encuentra en Fase 2 de refactorización, con el código original del socio fundador ya funcionando sobre una stack moderna (React 19 + Vite 6). Las Fases 0 y 1 están completas.
+
+Estado general:
+  • Fase 0 (Reconstruir Repo)         → COMPLETA (100%)
+  • Fase 1 (Spec de Refactorización)  → COMPLETA (75%, 1 tarea bloqueada)
+  • Fase 2 (Refactor + Auth + Pagos)  → EN PROGRESO (~40%)
+
+Decisiones del equipo fundador:
+  • D1 — Precio del Basic: $14.99 (lifetime)                  ✅ RESUELTA
+  • D2 — Estructura jurídica: Persona Física (MVP, tentativo)  🟡 POR CONFIRMAR
+  • D3 — Captura de email: Solo al comprar o pedir asesor      ✅ RESUELTA
+
+
+═══════════════════════════════════════════════════════════════════
+FASE 0 — RECONSTRUIR REPO  ✅ COMPLETA
+═══════════════════════════════════════════════════════════════════
+
+Objetivo: Montar el código original del socio sobre un proyecto moderno y reproducible, con build verificado.
+
+  ✅ Obtener JSX original del socio (sabit-financial-planner - 3.24.26.jsx)
+  ✅ Crear proyecto React + Vite (React 19.1 + Vite 6.0)
+  ✅ Verificar npm run dev funcional (localhost:3000)
+  ✅ Verificar vite build exitoso (28 módulos, ~760ms)
+  ✅ Paridad visual con MVP original (confirmado por el usuario)
+  ✅ Crear .gitignore (node_modules, dist excluidos)
+  ✅ Inicializar Git con commit baseline (commit 9537a53)
+
+Resultado: 7/7 tareas completadas. El proyecto compila y corre sin errores.
+
+
+═══════════════════════════════════════════════════════════════════
+FASE 1 — SPEC DE REFACTORIZACIÓN  ✅ COMPLETA (parte técnica)
+═══════════════════════════════════════════════════════════════════
+
+Objetivo: Analizar el monolito, clasificar todo el estado, diseñar la arquitectura modular y documentar la spec.
+
+  ✅ Clasificar los 71 useState → 16 UI-local, 55 sesión/persistente
+  ✅ Diseñar estructura de componentes → constants, utils, components, hooks, tabs
+  ✅ Escribir spec completa de refactorización
+  🔒 T&C y Privacy Policy → Depende de D2 (estructura jurídica)
+
+Resultado: 3/4 tareas completadas. La restante depende de la decisión D2.
+
+Hallazgos clave del análisis:
+  • Líneas de código total (App.jsx): 1,979
+  • Variables de estado (useState): 71
+  • Tabs / Pantallas: 16
+  • Funciones financieras: 9
+  • Componentes UI inline: ~13
+
+
+═══════════════════════════════════════════════════════════════════
+FASE 2 — REFACTOR EN PROGRESO  🔄 (~40%)
+═══════════════════════════════════════════════════════════════════
+
+Objetivo: Desacoplar el monolito de 1,979 líneas en módulos manejables, sin romper funcionalidad.
+
+
+LO QUE YA ESTÁ HECHO:
+
+  1. Constantes (src/constants.js)
+     PROFILES (7 perfiles de inversión), DEFAULT_EXP (5 gastos), BENCH_SR,
+     BENCH_NW, TABS (16 tabs), INFLATION_DEFAULT, etc.
+
+  2. Formateadores (src/utils/formatters.js)
+     fmt() → formato moneda, fmtC() → compacto ($1.2M), pct() → porcentajes
+
+  3. Funciones financieras (src/utils/financial.js)
+     9 funciones documentadas: mR, fvC, fvL, pvA, gB, profByHorizon,
+     clamp, yearByYear, fvVariable
+
+  4. Card (src/components/Card.jsx)
+     Tarjeta con 6 variantes de glow (green, gold, orange, red, blue, purple)
+
+  5. TabButton (src/components/TabButton.jsx)
+     Botón de tab con estado activo/inactivo y color customizable
+
+  6. Tip (src/components/Tip.jsx)
+     Tooltip "?" con click-outside-to-close
+
+  7. Toggle (src/components/Toggle.jsx)
+     Switch on/off con label y sub-label
+
+
+LO QUE FALTA:
+
+  ⏳ Integrar imports en App.jsx
+     App.jsx aún define todo inline; no usa los módulos ya extraídos.
+
+  ⏳ Extraer componentes restantes (~9)
+     NI, ANum, ST, Gauge, Slider, MiniChart, MultiLineChart, AdvisorCTA, NavButtons
+
+  ⏳ Extraer custom hook useFinancials
+     Mover los 55 useState de sesión y ~20 useMemo derivados a un hook centralizado.
+
+  ⏳ Extraer 16 tabs a archivos individuales
+     Dashboard, Learn, Your MN, Cost of Inaction, You, Income&Exp, Debts, Invest,
+     Portfolio, Retirement, Save, Earn, Opp Cost, Int Needs, Score, Reports
+
+  ⏳ Implementar Zustand para estado
+     Reemplazar prop-drilling por store centralizado.
+
+  🔒 Supabase Auth → Depende de D2 y D3
+  🔒 Stripe Checkout → Depende de D1 y D2
+  🔒 Paywall con seguridad backend → Depende de D1, D2, D3
+  ⏳ PostHog analytics → Eventos pre-definidos de uso
+  ⏳ Diff de comportamiento vs MVP → OBLIGATORIO antes de deploy
+
+NOTA IMPORTANTE: Los módulos ya extraídos (constants, utils, components) están creados y probados, pero App.jsx aún no los importa. El archivo monolítico sigue funcionando con sus propias definiciones inline. La integración de imports es el siguiente paso lógico.
+
+
+═══════════════════════════════════════════════════════════════════
+ARQUITECTURA ACTUAL
+═══════════════════════════════════════════════════════════════════
+
+Magic Number/
+├── ABRIR-DEMO.bat                    → Doble click para probar
+├── documentación/                    → Docs del proyecto
+├── tasks/
+│   ├── todo.md                       → Backlog de tareas
+│   └── lessons.md                    → Lecciones aprendidas
+├── .agent/workflows/                 → Framework de orquestación
+└── app/                              → Proyecto React + Vite
+    ├── package.json                  → React 19.1 + Vite 6.0
+    ├── vite.config.js
+    ├── dist/                         → Build de producción
+    └── src/
+        ├── App.jsx                   → Monolito (1,979 líneas)
+        ├── main.jsx                  → Entry point
+        ├── constants.js              → ✅ Extraído
+        ├── utils/                    → ✅ Extraído
+        │   ├── formatters.js         → fmt, fmtC, pct
+        │   └── financial.js          → 9 funciones financieras
+        └── components/               → ✅ 4 de ~13
+            ├── Card.jsx
+            ├── TabButton.jsx
+            ├── Tip.jsx
+            └── Toggle.jsx
+
+
+Stack tecnológico:
+  • Framework:   React 19.1
+  • Bundler:     Vite 6.0
+  • Estado:      71x useState (actual) → Zustand store (target)
+  • Auth:        Ninguno → Supabase Auth (target)
+  • Pagos:       Ninguno → Stripe Checkout (target)
+  • Analytics:   Ninguno → PostHog (target)
+  • Deploy:      Local → Vercel/Netlify (target)
+
+
+═══════════════════════════════════════════════════════════════════
+MÉTRICAS TÉCNICAS
+═══════════════════════════════════════════════════════════════════
+
+  • Build status:          ✅ Exitoso (28 módulos, ~760ms)
+  • Bundle size (gzip):    97.88 KB
+  • Dev server:            ✅ Funcional (localhost:3000 con HMR)
+  • Preview build:         ✅ Funcional (localhost:4173 vía ABRIR-DEMO.bat)
+  • Git:                   ✅ Inicializado (baseline commit: 9537a53)
+  • Tests:                 ⏳ Sin configurar (pendiente para Fase 2)
+
+
+═══════════════════════════════════════════════════════════════════
+DECISIONES DEL EQUIPO FUNDADOR
+═══════════════════════════════════════════════════════════════════
+
+  D1 — Precio del plan Basic
+        Decidido: $14.99 (lifetime)
+        Bloquea: Stripe Checkout, pricing page
+        Estado: ✅ RESUELTA (25/03/2026)
+
+  D2 — Estructura jurídica
+        Tentativo: Persona Física (MVP)
+        Bloquea: T&C, Privacy Policy, cuenta Stripe
+        Estado: 🟡 POR CONFIRMAR (no bloquea la refactorización actual)
+
+  D3 — Momento de captura del email
+        Decidido: Solo al comprar o pedir asesor
+        Bloquea: Paywall, lead form, auth flow
+        Estado: ✅ RESUELTA (25/03/2026)
+
+NOTA: D2 no es urgente para la etapa actual de refactorización. Solo se necesita
+al momento de crear la cuenta Stripe y redactar documentos legales.
+
+
+═══════════════════════════════════════════════════════════════════
+PENDIENTES Y PRÓXIMOS PASOS
+═══════════════════════════════════════════════════════════════════
+
+INMEDIATO (No requiere decisiones):
+  1. Integrar imports en App.jsx
+  2. Extraer los 9 componentes restantes
+  3. Crear custom hook useFinancials
+  4. Extraer 16 tabs a src/tabs/
+  5. Implementar Zustand
+
+REQUIERE D2 CONFIRMADA:
+  • Supabase Auth (login/registro)
+  • Supabase DB (perfiles de usuario)
+  • Stripe Checkout (cobros a $14.99)
+  • Paywall con seguridad backend
+  • T&C y Privacy Policy
+
+FASES 3-5 (Futuro):
+  • Lead form + CRM + CTA asesor financiero
+  • Trust layer + outreach piloto a asesores
+  • Validación + contenido TikTok
+  • i18n + region-awareness (Sprint 7+)
+  • PostHog analytics con eventos pre-definidos
+
+
+═══════════════════════════════════════════════════════════════════
+LECCIONES APRENDIDAS
+═══════════════════════════════════════════════════════════════════
+
+  Lección 1: Iniciar trabajo sin verificar frameworks operativos del proyecto.
+  Corrección: Siempre leer lessons.md, luego senior-orchestration.md, luego
+  todo.md antes de comenzar cualquier trabajo.
+
+  Lección 2: Over-engineering — 6+ iteraciones de scripts complejos en vez de
+  pedir ayuda al usuario.
+  Corrección: Si el mismo error aparece 2+ veces, escalar al usuario.
+  Herramientas rotas → preguntar inmediatamente.
+
+  Lección 3: Re-ejecutar script de limpieza sobre archivo ya verificado,
+  rompiendo el build.
+  Corrección: Nunca modificar un archivo verificado sin correr verificación
+  primero. Preferir dev mode sobre build mode.
+
+
+═══════════════════════════════════════════════════════════════════
+CÓMO PROBAR LA APP
+═══════════════════════════════════════════════════════════════════
+
+Opción 1 — Doble click:
+  1. Asegurate de tener Node.js instalado
+  2. Abrí la carpeta Magic Number
+  3. Hacé doble click en ABRIR-DEMO.bat
+  4. Se abre automáticamente en http://localhost:4173
+
+Opción 2 — Desde el código fuente:
+  1. Abrí una terminal en la carpeta app/
+  2. Ejecutá: npm install
+  3. Ejecutá: npm run dev
+  4. Se abre en http://localhost:3000
+
+
+═══════════════════════════════════════════════════════════════════
+
+Magic Number PRO v0.1.0
+Informe generado el 25 de Marzo de 2026
+Preparado con el framework de Senior Orchestration Workflow

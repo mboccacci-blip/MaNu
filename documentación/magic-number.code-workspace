@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "name": "Magic Number PRO",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/.git": true
+    }
+  }
+}

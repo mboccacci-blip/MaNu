@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Number PRO — Informe de Progreso (Fases 0–2)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-alt: #1e2231;
+    --border: #2a2e3d;
+    --text: #e4e7ef;
+    --text-muted: #8b90a5;
+    --text-dim: #5c6178;
+    --accent: #818cf8;
+    --accent-soft: rgba(129, 140, 248, 0.12);
+    --green: #34d399;
+    --green-soft: rgba(52, 211, 153, 0.12);
+    --amber: #fbbf24;
+    --amber-soft: rgba(251, 191, 36, 0.12);
+    --red: #f87171;
+    --red-soft: rgba(248, 113, 113, 0.12);
+    --blue: #60a5fa;
+    --blue-soft: rgba(96, 165, 250, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1.5rem;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  @media print {
+    body { background: white; color: #1a1a2e; padding: 0.5rem; font-size: 11px; }
+    .header { background: #1e1b4b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section { border: 1px solid #ddd; background: #f8f9fa !important; break-inside: avoid; }
+    table { border: 1px solid #ccc; }
+    th { background: #e9ecef !important; color: #1a1a2e !important; -webkit-print-color-adjust: exact; }
+    td { border-color: #ddd !important; color: #333 !important; }
+    .status-done { color: #16a34a !important; }
+    .status-progress { color: #d97706 !important; }
+    .status-pending { color: #6b7280 !important; }
+    .toc { background: #f0f0ff !important; border-color: #818cf8 !important; }
+    .metric-card { background: #f8f9fa !important; border: 1px solid #ddd !important; }
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(129, 140, 248, 0.2);
+  }
+
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #c7d2fe, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .header .subtitle { font-size: 1rem; color: #a5b4fc; }
+  .header .date { font-size: 0.8rem; color: #6366f1; margin-top: 0.75rem; }
+
+  /* Metrics row */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+
+  .metric-card .metric-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-card .metric-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--accent-soft);
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    border-radius: 14px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .toc h3 {
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+  }
+
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    padding: 0;
+  }
+
+  .toc ol li {
+    counter-increment: toc;
+    padding: 0.3rem 0;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .toc ol li::before {
+    content: counter(toc) ". ";
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .toc ol li a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .toc ol li a:hover { color: var(--accent); }
+
+  /* Sections */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .section h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 1.25rem 0 0.75rem;
+    color: var(--text);
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    background: rgba(129, 140, 248, 0.06);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  th:first-child { border-radius: 8px 0 0 8px; }
+  th:last-child { border-radius: 0 8px 8px 0; }
+
+  td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  /* Status tags */
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 100px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .tag-done { background: var(--green-soft); color: var(--green); }
+  .tag-progress { background: var(--amber-soft); color: var(--amber); }
+  .tag-pending { background: rgba(107, 114, 128, 0.15); color: #9ca3af; }
+  .tag-blocked { background: var(--red-soft); color: var(--red); }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s;
+  }
+
+  /* File tree */
+  .file-tree {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .file-tree .dir { color: var(--blue); font-weight: 600; }
+  .file-tree .file { color: var(--text-muted); }
+  .file-tree .new { color: var(--green); }
+  .file-tree .comment { color: var(--text-dim); font-style: italic; }
+
+  /* Lists */
+  ul.check-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.check-list li {
+    padding: 0.4rem 0;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  ul.check-list li .icon { flex-shrink: 0; font-size: 0.85rem; }
+
+  /* Alert boxes */
+  .alert {
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+
+  .alert-warning {
+    background: var(--amber-soft);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    color: #fde68a;
+  }
+
+  .alert-info {
+    background: var(--blue-soft);
+    border: 1px solid rgba(96, 165, 250, 0.2);
+    color: #93c5fd;
+  }
+
+  .alert-success {
+    background: var(--green-soft);
+    border: 1px solid rgba(52, 211, 153, 0.25);
+    color: #a7f3d0;
+  }
+
+  .alert strong { color: inherit; }
+
+  /* Code */
+  code {
+    background: rgba(129, 140, 248, 0.1);
+    color: var(--accent);
+    padding: 0.15rem 0.4rem;
+    border-radius: 5px;
+    font-size: 0.82rem;
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0.75rem 0;
+  }
+
+  .stat-item {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+  }
+
+  .stat-item .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  .stat-item .stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .footer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>🎯 Magic Number PRO</h1>
+  <div class="subtitle">Informe de Progreso — Fases 0, 1 y 2</div>
+  <div class="date">25 de Marzo, 2026 · v2</div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value" style="color: var(--green);">✅</div>
+    <div class="metric-label">Fase 0<br>Completa</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value" style="color: var(--green);">✅</div>
+    <div class="metric-label">Fase 1<br>Completa</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value" style="color: var(--amber);">40%</div>
+    <div class="metric-label">Fase 2<br>En Progreso</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value" style="color: var(--red);">3</div>
+    <div class="metric-label">Decisiones<br>Bloqueantes</div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>📋 Contenido</h3>
+  <ol>
+    <li><a href="#resumen">Resumen Ejecutivo</a></li>
+    <li><a href="#fase0">Fase 0 — Reconstruir Repo</a></li>
+    <li><a href="#fase1">Fase 1 — Spec de Refactorización</a></li>
+    <li><a href="#fase2">Fase 2 — Refactor en Progreso</a></li>
+    <li><a href="#arquitectura">Arquitectura Actual</a></li>
+    <li><a href="#metricas">Métricas Técnicas</a></li>
+    <li><a href="#bloqueantes">Decisiones Bloqueantes</a></li>
+    <li><a href="#pendientes">Pendientes y Próximos Pasos</a></li>
+    <li><a href="#lecciones">Lecciones Aprendidas</a></li>
+  </ol>
+</div>
+
+<!-- 1. RESUMEN EJECUTIVO -->
+<div class="section" id="resumen">
+  <h2><span class="section-icon" style="background: var(--accent-soft);">📌</span>1. Resumen Ejecutivo</h2>
+  <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.7;">
+    Magic Number PRO es una aplicación web de planificación financiera que calcula cuánto necesita ahorrar una persona para retirarse ("su número mágico"), con 16 herramientas interactivas: simuladores, comparadores de inversión, análisis de deuda, y un health score integral.
+  </p>
+  <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-top: 0.75rem;">
+    El proyecto se encuentra en <strong style="color: var(--text);">Fase 2 de refactorización</strong>, con el código original del socio fundador ya funcionando sobre una stack moderna (React 19 + Vite 6). Las Fases 0 y 1 están <strong style="color: var(--green);">completas</strong>. El avance está sujeto a <strong style="color: var(--red);">3 decisiones bloqueantes</strong> del equipo fundador que impiden implementar pagos, paywall y documentos legales.
+  </p>
+</div>
+
+<!-- 2. FASE 0 -->
+<div class="section" id="fase0">
+  <h2><span class="section-icon" style="background: var(--green-soft);">🏗️</span>2. Fase 0 — Reconstruir Repo <span class="tag tag-done" style="margin-left: auto;">COMPLETA</span></h2>
+
+  <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+    Objetivo: Montar el código original del socio sobre un proyecto moderno y reproducible, con build verificado.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:50%">Tarea</th>
+        <th style="width:25%">Estado</th>
+        <th>Detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Obtener JSX original del socio</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td><code>sabit-financial-planner - 3.24.26.jsx</code></td>
+      </tr>
+      <tr>
+        <td>Crear proyecto React + Vite</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>React 19.1 + Vite 6.0</td>
+      </tr>
+      <tr>
+        <td>Verificar <code>npm run dev</code></td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>localhost:3000 funcional</td>
+      </tr>
+      <tr>
+        <td>Verificar <code>vite build</code></td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>28 módulos, ~760ms</td>
+      </tr>
+      <tr>
+        <td>Paridad visual con MVP original</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>Confirmado por el usuario</td>
+      </tr>
+      <tr>
+        <td>Crear <code>.gitignore</code></td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>node_modules, dist excluidos</td>
+      </tr>
+      <tr>
+        <td>Inicializar Git con commit baseline</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>Commit <code>9537a53</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="progress-bar">
+    <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, #34d399, #22c55e);"></div>
+  </div>
+  <div style="text-align: right; font-size: 0.75rem; color: var(--green); font-weight: 600;">7/7 tareas — 100%</div>
+</div>
+
+<!-- 3. FASE 1 -->
+<div class="section" id="fase1">
+  <h2><span class="section-icon" style="background: var(--green-soft);">📋</span>3. Fase 1 — Spec de Refactorización <span class="tag tag-done" style="margin-left: auto;">COMPLETA</span></h2>
+
+  <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+    Objetivo: Analizar el monolito, clasificar todo el estado, diseñar la arquitectura modular y documentar la spec de refactorización.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:50%">Tarea</th>
+        <th style="width:25%">Estado</th>
+        <th>Detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Clasificar los 71 <code>useState</code></td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>16 UI-local, 55 sesión/persistente</td>
+      </tr>
+      <tr>
+        <td>Diseñar estructura de componentes</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>constants, utils, components, hooks, tabs</td>
+      </tr>
+      <tr>
+        <td>Escribir spec completa de refactorización</td>
+        <td><span class="tag tag-done">✅ Hecho</span></td>
+        <td>Documentada y revisada</td>
+      </tr>
+      <tr>
+        <td>T&C y Privacy Policy</td>
+        <td><span class="tag tag-blocked">🔒 Bloqueado</span></td>
+        <td>Depende de D2 (estructura jurídica)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="progress-bar">
+    <div class="progress-fill" style="width: 75%; background: linear-gradient(90deg, #34d399, #22c55e);"></div>
+  </div>
+  <div style="text-align: right; font-size: 0.75rem; color: var(--green); font-weight: 600;">3/4 tareas — 75% (1 bloqueada por decisión D2)</div>
+
+  <h3>Hallazgos Clave del Análisis</h3>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-label">Líneas de código</div>
+      <div class="stat-value" style="color: var(--accent);">1,979</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Variables de estado</div>
+      <div class="stat-value" style="color: var(--amber);">71 useState</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Tabs / Pantallas</div>
+      <div class="stat-value" style="color: var(--blue);">16</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Funciones financieras</div>
+      <div class="stat-value" style="color: var(--green);">8+</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. FASE 2 -->
+<div class="section" id="fase2">
+  <h2><span class="section-icon" style="background: var(--amber-soft);">🔧</span>4. Fase 2 — Refactor en Progreso <span class="tag tag-progress" style="margin-left: auto;">40% AVANCE</span></h2>
+
+  <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+    Objetivo: Desacoplar el monolito de 1,979 líneas en módulos manejables, sin romper funcionalidad.
+  </p>
+
+  <h3>✅ Completado</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Módulo Extraído</th>
+        <th>Archivo</th>
+        <th>Contenido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Constantes</td>
+        <td><code>src/constants.js</code></td>
+        <td>PROFILES (7 perfiles inversión), DEFAULT_EXP (5 gastos), BENCH_SR, BENCH_NW, TABS (16 tabs), INFLATION_DEFAULT, etc.</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Formateadores</td>
+        <td><code>src/utils/formatters.js</code></td>
+        <td><code>fmt()</code> (moneda), <code>fmtC()</code> (compacto: $1.2M), <code>pct()</code> (porcentajes)</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Funciones financieras</td>
+        <td><code>src/utils/financial.js</code></td>
+        <td><code>mR, fvC, fvL, pvA, gB, profByHorizon, clamp, yearByYear, fvVariable</code> — 9 funciones con JSDoc</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Card</td>
+        <td><code>src/components/Card.jsx</code></td>
+        <td>Componente tarjeta con 6 variantes de glow (green, gold, orange, red, blue, purple)</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> TabButton</td>
+        <td><code>src/components/TabButton.jsx</code></td>
+        <td>Botón de tab con estado activo/inactivo y color customizable</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Tip</td>
+        <td><code>src/components/Tip.jsx</code></td>
+        <td>Tooltip "?" con click-outside-to-close</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-done">✅</span> Toggle</td>
+        <td><code>src/components/Toggle.jsx</code></td>
+        <td>Switch on/off con label y sub-label</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>⏳ Pendiente</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Tarea</th>
+        <th>Estado</th>
+        <th>Detalle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Integrar imports en App.jsx</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>App.jsx aún define todo inline; no usa los módulos ya extraídos</td>
+      </tr>
+      <tr>
+        <td>Extraer componentes restantes (~9)</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>NI, ANum, ST, Gauge, Slider, MiniChart, MultiLineChart, AdvisorCTA, NavButtons</td>
+      </tr>
+      <tr>
+        <td>Extraer custom hook <code>useFinancials</code></td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>Mover los 55 useState de sesión y los ~20 useMemo derivados</td>
+      </tr>
+      <tr>
+        <td>Extraer 16 tabs a archivos individuales</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>Dashboard, Learn, Your MN, Cost of Inaction, You, Income&Exp, Debts, Invest, Portfolio, Retirement, Save, Earn, Opp Cost, Int Needs, Score, Reports</td>
+      </tr>
+      <tr>
+        <td>Implementar Zustand para estado</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>Reemplazar prop-drilling por store centralizado</td>
+      </tr>
+      <tr>
+        <td>Supabase Auth</td>
+        <td><span class="tag tag-blocked">🔒 Bloqueado</span></td>
+        <td>Depende de D2 y D3</td>
+      </tr>
+      <tr>
+        <td>Stripe Checkout</td>
+        <td><span class="tag tag-blocked">🔒 Bloqueado</span></td>
+        <td>Depende de D1 y D2</td>
+      </tr>
+      <tr>
+        <td>Paywall con seguridad backend</td>
+        <td><span class="tag tag-blocked">🔒 Bloqueado</span></td>
+        <td>Depende de D1, D2, D3</td>
+      </tr>
+      <tr>
+        <td>PostHog analytics</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>Eventos pre-definidos de uso</td>
+      </tr>
+      <tr>
+        <td>Diff de comportamiento vs MVP</td>
+        <td><span class="tag tag-pending">⏳ Pendiente</span></td>
+        <td>Obligatorio antes de deploy</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="progress-bar">
+    <div class="progress-fill" style="width: 40%; background: linear-gradient(90deg, #fbbf24, #f59e0b);"></div>
+  </div>
+  <div style="text-align: right; font-size: 0.75rem; color: var(--amber); font-weight: 600;">7 módulos extraídos — 40% de la refactorización</div>
+
+  <div class="alert alert-info" style="margin-top: 1rem;">
+    <strong>⚡ Nota importante:</strong> Los módulos ya extraídos (constants, utils, components) están creados y probados, pero <strong>App.jsx aún no los importa</strong>. El archivo monolítico sigue funcionando con sus propias definiciones inline. La integración de imports es el siguiente paso lógico.
+  </div>
+</div>
+
+<!-- 5. ARQUITECTURA -->
+<div class="section" id="arquitectura">
+  <h2><span class="section-icon" style="background: var(--blue-soft);">📁</span>5. Arquitectura Actual</h2>
+
+  <h3>Estructura de Archivos</h3>
+  <div class="file-tree">
+    <span class="dir">Magic Number/</span><br>
+    ├── <span class="file">ABRIR-DEMO.bat</span> <span class="comment"># Doble click para probar</span><br>
+    ├── <span class="dir">documentación/</span> <span class="comment"># Docs del proyecto</span><br>
+    ├── <span class="dir">tasks/</span><br>
+    │&nbsp;&nbsp;&nbsp;├── <span class="file">todo.md</span> <span class="comment"># Backlog de tareas</span><br>
+    │&nbsp;&nbsp;&nbsp;└── <span class="file">lessons.md</span> <span class="comment"># Lecciones aprendidas</span><br>
+    ├── <span class="dir">.agent/workflows/</span> <span class="comment"># Framework de orquestación</span><br>
+    └── <span class="dir">app/</span> <span class="comment"># Proyecto React + Vite</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">package.json</span> <span class="comment"># React 19.1 + Vite 6.0</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">vite.config.js</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">dist/</span> <span class="comment"># Build de producción</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="dir">src/</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">App.jsx</span> <span class="comment"># Monolito (1,979 líneas)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="file">main.jsx</span> <span class="comment"># Entry point</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="new">constants.js</span> <span class="comment"># ✅ Extraído</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">utils/</span> <span class="comment"># ✅ Extraído</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="new">formatters.js</span> <span class="comment"># fmt, fmtC, pct</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <span class="new">financial.js</span> <span class="comment"># 9 funciones financieras</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="dir">components/</span> <span class="comment"># ✅ 4 de ~13</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="new">Card.jsx</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="new">TabButton.jsx</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── <span class="new">Tip.jsx</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <span class="new">Toggle.jsx</span><br>
+  </div>
+
+  <h3>Stack Tecnológico</h3>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-label">Framework</div>
+      <div class="stat-value" style="color: var(--blue); font-size: 0.95rem;">React 19.1</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Bundler</div>
+      <div class="stat-value" style="color: var(--amber); font-size: 0.95rem;">Vite 6.0</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Estado (actual)</div>
+      <div class="stat-value" style="color: var(--text-muted); font-size: 0.95rem;">71× useState</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Estado (target)</div>
+      <div class="stat-value" style="color: var(--green); font-size: 0.95rem;">Zustand store</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. METRICAS -->
+<div class="section" id="metricas">
+  <h2><span class="section-icon" style="background: var(--green-soft);">📊</span>6. Métricas Técnicas</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Métrica</th>
+        <th>Valor</th>
+        <th>Observación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Build status</td>
+        <td><span class="tag tag-done">✅ Exitoso</span></td>
+        <td>28 módulos, ~760ms</td>
+      </tr>
+      <tr>
+        <td>Bundle size (gzip)</td>
+        <td style="color: var(--text); font-weight: 600;">97.88 KB</td>
+        <td>Archivo JS único (<code>index-*.js</code>)</td>
+      </tr>
+      <tr>
+        <td>Dev server</td>
+        <td><span class="tag tag-done">✅ Funcional</span></td>
+        <td>localhost:3000 con HMR</td>
+      </tr>
+      <tr>
+        <td>Preview build</td>
+        <td><span class="tag tag-done">✅ Funcional</span></td>
+        <td>localhost:4173 vía ABRIR-DEMO.bat</td>
+      </tr>
+      <tr>
+        <td>Git</td>
+        <td><span class="tag tag-done">✅ Inicializado</span></td>
+        <td>Baseline commit: <code>9537a53</code></td>
+      </tr>
+      <tr>
+        <td>Tests</td>
+        <td><span class="tag tag-pending">⏳ Sin configurar</span></td>
+        <td>Pendiente para Fase 2</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 7. BLOQUEANTES -->
+<div class="section" id="bloqueantes">
+  <h2><span class="section-icon" style="background: var(--red-soft);">🔴</span>7. Decisiones Bloqueantes del Equipo Fundador</h2>
+
+  <div class="alert alert-warning">
+    <strong>⚠️ Sin estas 3 decisiones no podemos implementar:</strong> pagos (Stripe), paywall, autenticación, ni documentos legales (T&C / Privacy Policy). Todo lo que no depende de estas decisiones está avanzando normalmente.
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Decisión</th>
+        <th>Qué Bloquea</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight: 700; color: var(--red);">D1</td>
+        <td>Precio del plan Basic:<br>$9.99 / $14.99 / $19.99 / A/B test</td>
+        <td>Stripe Checkout, pricing page</td>
+        <td><span class="tag tag-blocked">ESPERANDO</span></td>
+      </tr>
+      <tr>
+        <td style="font-weight: 700; color: var(--red);">D2</td>
+        <td>Estructura jurídica:<br>LLC USA / SAS Argentina / Persona Física</td>
+        <td>T&C, Privacy Policy, cuenta Stripe</td>
+        <td><span class="tag tag-blocked">ESPERANDO</span></td>
+      </tr>
+      <tr>
+        <td style="font-weight: 700; color: var(--red);">D3</td>
+        <td>Momento de captura del email:<br>Antes del MN / Para desbloquearlo / Al final</td>
+        <td>Paywall, lead form, auth flow</td>
+        <td><span class="tag tag-blocked">ESPERANDO</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info" style="margin-top: 0.75rem;">
+    <strong>📄 Se envió un documento de decisiones</strong> al equipo fundador en formato multiple-choice para facilitar la respuesta (<code>Decisiones-Fundadores-MagicNumber.html</code>).
+  </div>
+</div>
+
+<!-- 8. PENDIENTES -->
+<div class="section" id="pendientes">
+  <h2><span class="section-icon" style="background: var(--amber-soft);">🗓️</span>8. Pendientes y Próximos Pasos</h2>
+
+  <h3>Inmediato (No requiere decisiones)</h3>
+  <ul class="check-list">
+    <li><span class="icon">1️⃣</span> <strong>Integrar imports en App.jsx</strong> — Que App.jsx use constants.js, utils/, y components/ en vez de definiciones inline duplicadas</li>
+    <li><span class="icon">2️⃣</span> <strong>Extraer los 9 componentes restantes</strong> — NI, ANum, ST, Gauge, Slider, MiniChart, MultiLineChart, AdvisorCTA, NavButtons</li>
+    <li><span class="icon">3️⃣</span> <strong>Crear custom hook <code>useFinancials</code></strong> — Centralizar los 55 useState de sesión y ~20 useMemo derivados</li>
+    <li><span class="icon">4️⃣</span> <strong>Extraer 16 tabs a <code>src/tabs/</code></strong> — Cada tab en su propio archivo para mantenibilidad</li>
+    <li><span class="icon">5️⃣</span> <strong>Implementar Zustand</strong> — Reemplazar prop-drilling por un store centralizado</li>
+  </ul>
+
+  <h3>Requiere Decisiones (D1+D2+D3)</h3>
+  <ul class="check-list">
+    <li><span class="icon" style="color: var(--red);">🔒</span> Supabase Auth — Login/registro</li>
+    <li><span class="icon" style="color: var(--red);">🔒</span> Supabase DB — Perfiles de usuario</li>
+    <li><span class="icon" style="color: var(--red);">🔒</span> Stripe Checkout — Cobros</li>
+    <li><span class="icon" style="color: var(--red);">🔒</span> Paywall con seguridad backend (token Supabase)</li>
+    <li><span class="icon" style="color: var(--red);">🔒</span> T&C y Privacy Policy (Termly/Iubenda)</li>
+  </ul>
+
+  <h3>Fases 3–5 (Futuro)</h3>
+  <ul class="check-list">
+    <li><span class="icon">📋</span> Lead form + CRM + CTA asesor financiero</li>
+    <li><span class="icon">🤝</span> Trust layer + outreach piloto a asesores</li>
+    <li><span class="icon">📱</span> Validación + contenido TikTok</li>
+    <li><span class="icon">🌐</span> i18n + region-awareness (Sprint 7+)</li>
+    <li><span class="icon">📊</span> PostHog analytics con eventos pre-definidos</li>
+  </ul>
+</div>
+
+<!-- 9. LECCIONES -->
+<div class="section" id="lecciones">
+  <h2><span class="section-icon" style="background: var(--amber-soft);">📝</span>9. Lecciones Aprendidas</h2>
+
+  <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+    Registro de errores cometidos durante el desarrollo y patrones de corrección implementados para no repetirlos.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Error</th>
+        <th>Corrección</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight: 700; color: var(--accent);">1</td>
+        <td>Iniciar trabajo sin verificar frameworks operativos del proyecto</td>
+        <td>Siempre leer <code>lessons.md</code> → <code>senior-orchestration.md</code> → <code>todo.md</code> antes de comenzar</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 700; color: var(--accent);">2</td>
+        <td>Over-engineering: 6+ iteraciones de scripts complejos en vez de pedir ayuda</td>
+        <td>Si el mismo error aparece 2+ veces, escalar al usuario. Herramientas rotas → preguntar inmediatamente</td>
+      </tr>
+      <tr>
+        <td style="font-weight: 700; color: var(--accent);">3</td>
+        <td>Re-ejecutar script de limpieza sobre archivo ya verificado, rompiendo el build</td>
+        <td>Nunca modificar un archivo verificado sin correr Babel parse check primero. Preferir verificación en dev mode</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SUMMARY BOX -->
+<div class="alert alert-success" style="margin-top: 1.5rem;">
+  <strong>✅ Estado general:</strong> El proyecto está saludable. Build compila limpio, la app funciona correctamente, y la base de código está progresando hacia una arquitectura modular. Los únicos bloqueantes son las 3 decisiones del equipo fundador (D1, D2, D3), que ya fueron enviadas en formato fácil de responder.
+</div>
+
+<div class="footer">
+  Magic Number PRO v0.1.0 — Informe generado el 25 de Marzo de 2026<br>
+  Preparado con el framework de Senior Orchestration Workflow
+</div>
+
+</body>
+</html>
