@@ -1,0 +1,387 @@
+/* ================================================================
+   Magic Number PRO — Premium Fintech Design System v3 Light Mode
+   Palette: White/Slate backgrounds × Electric Cyan × Deep Blue
+   ================================================================ */
+
+/* --- Google Fonts: Inter (body) + Fraunces (display) --- */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ----------------------------------------------------------------
+   Design Tokens — Light Mode
+   ---------------------------------------------------------------- */
+:root {
+  /* Backgrounds */
+  --bg-base:      #f0f4fa;
+  --bg-surface:   rgba(255, 255, 255, 0.90);
+  --bg-elevated:  rgba(255, 255, 255, 0.98);
+  --bg-input:     rgba(248, 250, 253, 0.98);
+  --bg-header:    rgba(255, 255, 255, 0.92);
+
+  /* Accent — Electric Cyan / Deep Blue */
+  --cyan:         #0099cc;
+  --cyan-dim:     rgba(0, 153, 204, 0.08);
+  --cyan-border:  rgba(0, 153, 204, 0.22);
+  --cyan-glow:    rgba(0, 153, 204, 0.18);
+
+  /* Accent — Purple */
+  --purple:       #7c3aed;
+  --purple-dim:   rgba(124, 58, 237, 0.08);
+
+  /* Positive / Negative */
+  --green:        #059669;
+  --green-dim:    rgba(5, 150, 105, 0.08);
+  --green-border: rgba(5, 150, 105, 0.22);
+  --red:          #dc2626;
+  --amber:        #d97706;
+
+  /* Text */
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+  --text-label:     #64748b;
+
+  /* Borders */
+  --border-subtle: rgba(15, 23, 42, 0.07);
+  --border-mid:    rgba(15, 23, 42, 0.12);
+  --border-neon:   rgba(0, 153, 204, 0.20);
+
+  /* Radii */
+  --r-xl:   20px;
+  --r-lg:   16px;
+  --r-md:   12px;
+  --r-sm:   8px;
+  --r-pill: 100px;
+
+  /* Shadows — light mode = softer, more elevation-based */
+  --shadow-card:  0 2px 12px rgba(15, 23, 42, 0.07), 0 1px 3px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(15,23,42,0.05);
+  --shadow-neon:  0 0 20px rgba(0, 153, 204, 0.10);
+  --shadow-glow:  0 0 30px rgba(0, 153, 204, 0.14);
+  --shadow-input: 0 1px 4px rgba(15, 23, 42, 0.08);
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --t1:   all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --t2:   all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --max-w:    1100px;
+  --header-h: 60px;
+}
+
+/* ----------------------------------------------------------------
+   Reset & Base
+   ---------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body, #root {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ----------------------------------------------------------------
+   Subtle Mesh Background (Light)
+   ---------------------------------------------------------------- */
+.mn-root {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 100% 50% at 5% -5%, rgba(0,153,204,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 40% at 95% 15%, rgba(124,58,237,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 35% at 50% 100%, rgba(5,150,105,0.04) 0%, transparent 45%),
+    linear-gradient(160deg, #eef3fb 0%, #f0f4fa 40%, #f4f7fc 70%, #eef3fb 100%);
+  position: relative;
+}
+.mn-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(0,153,204,0.05) 0%, transparent 40%),
+    radial-gradient(circle at 85% 75%, rgba(124,58,237,0.03) 0%, transparent 35%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ----------------------------------------------------------------
+   Sticky Premium Header
+   ---------------------------------------------------------------- */
+.mn-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: var(--bg-header);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 1px 12px rgba(15, 23, 42, 0.06);
+}
+
+.mn-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mn-logo-icon {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  box-shadow: 0 0 12px var(--cyan-glow);
+  flex-shrink: 0;
+}
+.mn-logo .pro-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mn-lang-btn {
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--r-md);
+  padding: 7px 14px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: var(--t1);
+  letter-spacing: 0.3px;
+}
+.mn-lang-btn:hover {
+  border-color: var(--cyan-border);
+  color: var(--cyan);
+  background: var(--cyan-dim);
+}
+
+/* ----------------------------------------------------------------
+   Tab Navigation Bar
+   ---------------------------------------------------------------- */
+.mn-tabs {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: var(--header-h);
+  z-index: 90;
+}
+.mn-tabs::-webkit-scrollbar { display: none; }
+
+.mn-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 24px;
+  height: 48px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-bottom: 2px solid transparent;
+  transition: var(--t1);
+  letter-spacing: -0.1px;
+  position: relative;
+}
+.mn-tab:hover:not(.disabled) { color: var(--text-secondary); }
+.mn-tab.active {
+  color: var(--cyan);
+  font-weight: 700;
+  border-bottom: 2px solid var(--cyan);
+}
+.mn-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+.mn-tab.disabled { opacity: 0.35; cursor: not-allowed; }
+.mn-tab-icon { font-size: 15px; }
+
+/* ----------------------------------------------------------------
+   Main Content Container
+   ---------------------------------------------------------------- */
+.mn-content {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .mn-content { padding: 24px 16px 80px; }
+  .mn-header { padding: 0 20px; }
+  .mn-tabs { padding: 0 12px; }
+}
+
+/* Brand tagline — connects MaNu with Magic Number */
+.mn-tagline {
+  text-align: center;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ----------------------------------------------------------------
+   Cards
+   ---------------------------------------------------------------- */
+.mn-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-card);
+  transition: var(--t2);
+  overflow: hidden;
+  position: relative;
+}
+.mn-card.glow-cyan {
+  border-color: var(--cyan-border);
+  box-shadow: var(--shadow-card), var(--shadow-neon);
+}
+.mn-card.glow-green {
+  border-color: var(--green-border);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(5,150,105,0.08);
+}
+.mn-card.glow-orange {
+  border-color: rgba(217,119,6,0.22);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(217,119,6,0.06);
+}
+.mn-card.glow-red {
+  border-color: rgba(220,38,38,0.22);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(220,38,38,0.06);
+}
+.mn-card.glow-purple {
+  border-color: rgba(124,58,237,0.22);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(124,58,237,0.06);
+}
+.mn-card.glow-gold {
+  border-color: rgba(217,119,6,0.22);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(217,119,6,0.06);
+}
+.mn-card.glow-blue {
+  border-color: rgba(59,130,246,0.22);
+  box-shadow: var(--shadow-card), 0 0 20px rgba(59,130,246,0.08);
+}
+.mn-card.clickable { cursor: pointer; }
+.mn-card.clickable:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-mid);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.10), 0 2px 6px rgba(15,23,42,0.06);
+}
+
+/* ----------------------------------------------------------------
+   Buttons
+   ---------------------------------------------------------------- */
+.bp {
+  background: linear-gradient(135deg, var(--cyan), #006699);
+  color: #fff;
+  border: none;
+  padding: 14px 32px;
+  border-radius: var(--r-lg);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--cyan-glow);
+  transition: var(--t2);
+  letter-spacing: -0.2px;
+}
+.bp:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,153,204,0.30); }
+.bp:active { transform: translateY(0); }
+.bp:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.bs {
+  background: var(--cyan-dim);
+  color: var(--cyan);
+  border: 1px solid var(--cyan-border);
+  border-radius: var(--r-md);
+  padding: 8px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: var(--t1);
+}
+.bs:hover { background: rgba(0,153,204,0.14); }
+
+/* ----------------------------------------------------------------
+   Animations
+   ---------------------------------------------------------------- */
+.fi { animation: fadeSlideIn 0.3s var(--ease) forwards; }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ba { animation: barGrow 0.9s var(--ease) forwards; }
+@keyframes barGrow { from { width: 0% } }
+
+/* ----------------------------------------------------------------
+   Form Elements
+   ---------------------------------------------------------------- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+input[type="range"] { -webkit-appearance: none; appearance: none; background: transparent; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 1px; height: 1px; opacity: 0; }
+
+/* ----------------------------------------------------------------
+   Scrollbar hiding
+   ---------------------------------------------------------------- */
+.ts::-webkit-scrollbar { display: none; }
+.ts { -ms-overflow-style: none; scrollbar-width: none; }

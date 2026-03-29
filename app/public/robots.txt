@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://magic-number.app/sitemap.xml
