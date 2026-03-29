@@ -3,13 +3,13 @@ export const RET_NOM = 0.04;
 export const SCENARIO_SPREAD = 0.02;
 
 export const PROFILES = [
-  { id:"vault",name:"Vault",nomReturn:0,realReturn:-0.025,desc:"Cash under the mattress. Loses to inflation.",icon:"🔒",color:"#64748b",risk:0,vol:0},
-  { id:"cash",name:"Cash Investor",nomReturn:0.03,realReturn:0.005,desc:"Short-duration treasuries (BIL/SHV).",icon:"💵",color:"#94a3b8",risk:1,vol:0.01},
-  { id:"cds",name:"CDs",nomReturn:0.035,realReturn:0.01,desc:"Certificates of Deposit. FDIC insured.",icon:"🏦",color:"#a78bfa",risk:2,vol:0},
-  { id:"treasuries",name:"Treasuries",nomReturn:0.04,realReturn:0.015,desc:"Long-term US Treasury bonds (TLT).",icon:"🏛️",color:"#60a5fa",risk:3,vol:0.12},
-  { id:"6040",name:"60 / 40",nomReturn:0.065,realReturn:0.04,desc:"60% stocks, 40% bonds. Balanced.",icon:"⚖️",color:"#34d399",risk:4,vol:0.10},
-  { id:"8020",name:"80 / 20",nomReturn:0.075,realReturn:0.05,desc:"80% stocks, 20% bonds. Growth-tilted.",icon:"📈",color:"#22c55e",risk:5,vol:0.13},
-  { id:"equities",name:"100% Equities",nomReturn:0.09,realReturn:0.065,desc:"All stocks (S&P 500). Highest return and volatility.",icon:"🚀",color:"#f59e0b",risk:6,vol:0.15},
+  { id:"vault",name:"Vault",nomReturn:0,realReturn:-0.025,desc:"Cash under the mattress. Loses to inflation.",icon:"lock",color:"#64748b",risk:0,vol:0},
+  { id:"cash",name:"Cash Investor",nomReturn:0.03,realReturn:0.005,desc:"Short-duration treasuries (BIL/SHV).",icon:"coins",color:"#94a3b8",risk:1,vol:0.01},
+  { id:"cds",name:"CDs",nomReturn:0.035,realReturn:0.01,desc:"Certificates of Deposit. FDIC insured.",icon:"bank",color:"#a78bfa",risk:2,vol:0},
+  { id:"treasuries",name:"Treasuries",nomReturn:0.04,realReturn:0.015,desc:"Long-term US Treasury bonds (TLT).",icon:"landmark",color:"#60a5fa",risk:3,vol:0.12},
+  { id:"6040",name:"60 / 40",nomReturn:0.065,realReturn:0.04,desc:"60% stocks, 40% bonds. Balanced.",icon:"scales",color:"#34d399",risk:4,vol:0.10},
+  { id:"8020",name:"80 / 20",nomReturn:0.075,realReturn:0.05,desc:"80% stocks, 20% bonds. Growth-tilted.",icon:"chart-line-up",color:"#22c55e",risk:5,vol:0.13},
+  { id:"equities",name:"100% Equities",nomReturn:0.09,realReturn:0.065,desc:"All stocks (S&P 500). Highest return and volatility.",icon:"rocket",color:"#f59e0b",risk:6,vol:0.15},
 ];
 
 export const DEFAULT_EXP = [
@@ -39,19 +39,19 @@ export const BENCH_NW = [
 ];
 
 export const TABS = [
-  {id:"achieve",label:"Your MN",icon:"🎯"},
-  {id:"inaction",label:"Cost of Inaction",icon:"💤"},
-  {id:"assumptions",label:"You",icon:"🧑"},
-  {id:"situation",label:"Income & Exp",icon:"💰"},
-  {id:"debts",label:"Debts",icon:"💳"},
-  {id:"invest",label:"Invest Options",icon:"📈"},
-  {id:"portfolio",label:"Your Portfolio",icon:"🎛️"},
-  {id:"retirement",label:"Retirement",icon:"🎯"},
-  {id:"save",label:"Save More?",icon:"✂️"},
-  {id:"earn",label:"Earn",icon:"💡"},
-  {id:"cost",label:"Opp. Cost",icon:"🏷️"},
-  {id:"goals",label:"Int. Needs",icon:"🏠"},
-  {id:"score",label:"Score",icon:"🏆"},
-  {id:"reports",label:"Reports",icon:"📄"},
-  {id:"learn",label:"Guide",icon:"📖"},
+  {id:"achieve",label:"Your MN",icon:"target"},
+  {id:"inaction",label:"Cost of Inaction",icon:"hourglass"},
+  {id:"assumptions",label:"You",icon:"user"},
+  {id:"situation",label:"Income & Exp",icon:"wallet"},
+  {id:"debts",label:"Debts",icon:"credit-card"},
+  {id:"invest",label:"Invest Options",icon:"trend-up"},
+  {id:"portfolio",label:"Your Portfolio",icon:"sliders"},
+  {id:"retirement",label:"Retirement",icon:"umbrella"},
+  {id:"save",label:"Save More?",icon:"scissors"},
+  {id:"earn",label:"Earn",icon:"lightbulb"},
+  {id:"cost",label:"Opp. Cost",icon:"tag"},
+  {id:"goals",label:"Int. Needs",icon:"house"},
+  {id:"score",label:"Score",icon:"trophy"},
+  {id:"reports",label:"Reports",icon:"file-text"},
+  {id:"learn",label:"Guide",icon:"book-open"},
 ];

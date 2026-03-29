@@ -1,10 +1,15 @@
-export default function TabButton({ active, label, onClick, color }) {
-  color = color || "#00D4FF";
+import Icon from './Icon.jsx';
+
+export default function TabButton({ active, label, onClick, color, iconName }) {
+  color = color || "#0055AA";
   var rgb = hexToRgb(color);
   return (
     <button
       onClick={onClick}
       style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
         padding: "7px 16px",
         borderRadius: 10,
         border: active ? ("1px solid rgba(" + rgb + ",0.25)") : "1px solid transparent",
@@ -20,14 +25,15 @@ export default function TabButton({ active, label, onClick, color }) {
         whiteSpace: "nowrap",
       }}
     >
+      {iconName && <Icon name={iconName} size={14} weight={active ? "regular" : "light"} />}
       {label}
     </button>
   );
 }
 
 function hexToRgb(hex) {
-  if (!hex || hex.length < 7) return "0,212,255";
+  if (!hex || hex.length < 7) return "0,85,170";
   try {
     return parseInt(hex.slice(1,3),16)+","+parseInt(hex.slice(3,5),16)+","+parseInt(hex.slice(5,7),16);
-  } catch(e) { return "0,212,255"; }
+  } catch(e) { return "0,85,170"; }
 }
