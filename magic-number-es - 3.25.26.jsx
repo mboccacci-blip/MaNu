@@ -822,7 +822,7 @@ export default function App(){
     {nAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
       {[{l:"Edad",v:nAge},{l:"Jubilación",v:nRetAge},{l:"Años de jubilación",v:nYP},{l:"Ahorros",v:fmt(nEx)}].map(function(b){return(
         <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{b.l}: <strong>{b.v}</strong></div>)})}
-      <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>✏️ Editarar en Tu MN</div>
+      <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>✏️ Editar en Tu MN</div>
     </div>}
     <Toggle value={coupleMode} onChange={setCoupleMode} label="Modo Pareja / Familia" sub="Combinar ambos ingresos"/>
     <Toggle value={hasRental} onChange={setHasRental} label="Tengo propiedades de inversión o alquiler" sub="Inmuebles que generan ingresos"/>
@@ -1050,7 +1050,7 @@ export default function App(){
       {[{l:"Edad",v:nAge},{l:"Jubilación",v:nRetAge},{l:"Años de jubilación",v:nYP},{l:"Años restantes",v:ytr},{l:"Deseado",v:fmt(nDes)+"/mes"},{l:"Ahorros",v:fmt(nEx)}].map(function(b){return(
         <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{b.l}: <strong>{b.v}</strong></div>)})}
       {nSS>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac"}}>Ret. income: {fmt(nSS)}/mo {"$ de hoy"}</div>}
-      <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>✏️ Editarar en Tu MN</div>
+      <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>✏️ Editar en Tu MN</div>
     </div>
     {nMortPay>0&&nMortYrs>ytr&&ytr>0&&<div style={{padding:"12px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#fde68a",lineHeight:1.6,marginBottom:16}}>
       ⚠️ <strong>La hipoteca se extiende {nMortYrs-ytr} años después de la jubilación.</strong> Asegurate que tu ingreso deseado incluya capital + interés de <strong>{fmt(nMortPay)}/mes</strong>.

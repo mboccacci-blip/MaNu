@@ -1,6 +1,6 @@
 # Informe de Progreso — Magic Number PRO
 **Fecha:** Miércoles 26 de marzo de 2026  
-**Sesión:** ~5 horas de trabajo  
+**Sesión:** ~6 horas de trabajo  
 **Deploy live:** [magic-number-mn.netlify.app](https://magic-number-mn.netlify.app/)
 
 ---
@@ -29,7 +29,7 @@ La aplicación presentaba un crash persistente ("pantalla negra") causado por `T
 
 ## 2. Localización Final al Español ✅
 
-### Strings traducidos hoy
+### Ronda 1 — Strings principales
 
 | Área | Strings | Estado |
 |---|---|---|
@@ -42,12 +42,32 @@ La aplicación presentaba un crash persistente ("pantalla negra") causado por `T
 | Texto de estrategia | `Using your portfolio blend at X% real` → `t('retirement.usingPortfolio')` | ✅ |
 | Texto de perfil | `Using X at Y% real` → `t('retirement.usingProfile')` | ✅ |
 
-### Keys nuevos agregados a `es.js`
+### Ronda 2 — Últimos 5 strings hardcodeados
+
+| Línea | Antes (EN hardcoded) | Después (i18n) | Estado |
+|---|---|---|---|
+| 1095 | `tip={"Shows portfolio growth..."}` | `tip={t('retirement.ybyTip')}` | ✅ |
+| 1041 | `label="🎛️ My Portfolio"` (botón jubilación) | `label={"🎛️ "+t('profiles.myPortfolio.name')}` | ✅ |
+| 1676 | `tip={"In today"+q+"s dollars."}` | `tip={t('cost.priceTip')}` | ✅ |
+| 1685 | `} for <strong>` (costo de oportunidad) | `} {t('cost.purchaseForConnector')} <strong>` | ✅ |
+| 1699 | `🎛️ My Portfolio` (comparar perfiles) | `🎛️ {t('profiles.myPortfolio.name')}` | ✅ |
+
+### Keys nuevos agregados
 
 ```javascript
-// retirement section
+// en.js — retirement section
+ybyTip: "Shows portfolio growth during accumulation, then drawdown in retirement...",
+usingPortfolio: "Using your portfolio blend at {rate} real",
+usingProfile: "Using {name} at {rate} real",
+// en.js — cost section
+purchaseForConnector: "for",
+
+// es.js — retirement section
+ybyTip: "Muestra el crecimiento de la cartera durante la acumulación...",
 usingPortfolio: "Usando tu mezcla de cartera al {rate} real",
 usingProfile: "Usando {name} al {rate} real",
+// es.js — cost section
+purchaseForConnector: "por",
 ```
 
 ---
@@ -61,49 +81,60 @@ usingProfile: "Usando {name} al {rate} real",
 
 ---
 
-## 4. Deploy a Producción ✅
+## 4. Deploys a Producción ✅
 
+### Deploy 1 (17:15 hs)
 | Paso | Resultado |
 |---|---|
-| `npm run build` | ✅ Build exitoso en 1.6s |
-| Bundle | `index.js` 409.89 KB (gzip: 115.89 KB) + `index.css` 6.87 KB |
+| `npm run build` | ✅ 1.6s, 409.89 KB (gzip: 115.89 KB) |
+| `npx netlify-cli deploy --prod` | ✅ Deploy live |
+| Deploy ID | `69c5941e927b606d5a716e42` |
+
+### Deploy 2 (17:45 hs) — con últimos 5 strings
+| Paso | Resultado |
+|---|---|
+| `npm run build` | ✅ 1.0s, 410.30 KB (gzip: 116.16 KB) |
 | `npx netlify-cli deploy --prod` | ✅ Deploy live |
 | URL producción | https://magic-number-mn.netlify.app |
-| Deploy ID | `69c5941e927b606d5a716e42` |
 
 ---
 
-## 5. Archivos Modificados
+## 5. Git — Commits del día ✅
+
+| Commit | Mensaje |
+|---|---|
+| `41da1a5` | `v2.0: defensive refactor, full ES localization, black screen fix, deploy to Netlify` |
+| (siguiente) | `i18n: translate last 5 hardcoded strings (YbY tooltip, My Portfolio buttons, cost tab connectors)` |
+
+---
+
+## 6. Archivos Modificados
 
 | Archivo | Cambios |
 |---|---|
-| `src/MagicNumberAppMain.jsx` | Refactor defensivo + localización completa |
+| `src/MagicNumberAppMain.jsx` | Refactor defensivo + localización completa (13 strings) |
 | `src/main.jsx` | Import actualizado a `MagicNumberAppMain` |
-| `src/i18n/es.js` | +2 keys (`usingPortfolio`, `usingProfile`) |
+| `src/i18n/en.js` | +4 keys (`ybyTip`, `usingPortfolio`, `usingProfile`, `purchaseForConnector`) |
+| `src/i18n/es.js` | +4 keys (mismos que en.js, traducidos) |
 
 ---
 
-## 6. Pendientes (por prioridad)
-
-### Alta prioridad
-1. **Tooltip del gráfico Año por Año** — El tooltip `tip=` del `<ST>` en la sección YbY Projection sigue en inglés hardcodeado: `"Shows portfolio growth during accumulation, then drawdown in retirement..."`
-2. **Commit Git** — Hacer un checkpoint commit con todos los cambios del día
-3. **Validación visual completa** — Recorrer las 15 pestañas en ES para verificar que no queden strings sueltos en inglés
+## 7. Pendientes (por prioridad)
 
 ### Media prioridad
-4. **SEO & Metadata** — `<title>` y `<meta description>` aún no usan el sistema i18n (cambian con idioma)
-5. **Limpieza de ErrorBoundary** — El componente de debug puede mantenerse como safety net en producción, pero el estilo rojo es muy técnico para usuarios finales
-6. **Testing mobile** — Validar responsive en 375px con el nuevo header sticky
-7. **Gauge component** — Verificar que el componente "de 100" use `t()` consistentemente
+1. **SEO & Metadata** — `<title>` y `<meta description>` aún no usan el sistema i18n (cambian con idioma)
+2. **Limpieza de ErrorBoundary** — El componente de debug puede mantenerse como safety net en producción, pero el estilo rojo es muy técnico para usuarios finales
+3. **Testing mobile** — Validar responsive en 375px con el nuevo header sticky
+4. **Gauge component** — Verificar que el componente "de 100" use `t()` consistentemente
 
 ### Baja prioridad
-8. **Modularización** — `MagicNumberAppMain.jsx` (1,939 líneas) debería dividirse en módulos: `DebtManager`, `RetirementProjection`, `IncomeSummary`, etc.
-9. **Performance** — Bundle de 410 KB podría reducirse con code splitting
-10. **Automatizar deploy** — Conectar Git con Netlify CI para auto-deploy en cada push
+5. **Modularización** — `MagicNumberAppMain.jsx` (1,939 líneas) debería dividirse en módulos: `DebtManager`, `RetirementProjection`, `IncomeSummary`, etc.
+6. **Performance** — Bundle de 410 KB podría reducirse con code splitting
+7. **Automatizar deploy** — Conectar Git con Netlify CI para auto-deploy en cada push
 
 ---
 
-## 7. Decisiones del día
+## 8. Decisiones del día
 
 | Decisión | Contexto |
 |---|---|
@@ -112,16 +143,20 @@ usingProfile: "Usando {name} al {rate} real",
 | Mantener ErrorBoundary en producción | Safety net contra futuros crashes; muestra error legible en vez de pantalla negra |
 | Deploy con Netlify CLI en vez de drag & drop | Más rápido y reproducible; `npx netlify-cli deploy --prod --dir=dist` |
 | Pattern `(array \|\| [])` como estándar | Toda operación sobre arrays debe usar este pattern para prevenir TypeErrors |
+| Traducir connectors como keys separados | `"for"` / `"por"` como key `purchaseForConnector` para no romper la estructura JSX |
 
 ---
 
-## 8. Estado actual
+## 9. Estado actual
 
 ```
 ✅ Aplicación estable — sin crashes
-✅ 100% español en todas las pestañas principales
-✅ Deploy actualizado en Netlify
-✅ Build de producción exitoso (115 KB gzip)
-⬜ Commit Git pendiente
-⬜ ~5 strings menores aún en inglés (tooltips internos)
+✅ 100% español en todas las pestañas (0 strings EN hardcodeados detectados)
+✅ Deploy actualizado en Netlify (×2 hoy)
+✅ Build de producción exitoso (116 KB gzip)
+✅ 2 commits Git realizados
+✅ Paridad diccionarios EN/ES mantenida
+⬜ SEO metadata dinámico (título/descripción por idioma)
+⬜ Testing mobile responsive
+⬜ Modularización del monolito (deuda técnica)
 ```
