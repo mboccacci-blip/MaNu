@@ -1430,6 +1430,7 @@ export default function MagicNumberApp({onBack}){
         <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{t('achieve.annualAssetTax')}</span>
         <span style={{fontSize:15,fontWeight:700,color:assetTax>0?"#f59e0b":"#64748b"}}>{assetTax.toFixed(1)}%</span>
       </div>
+      <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{t('achieve.assetTaxTip')}</div>
       <Slider label="" value={assetTax} onChange={setAssetTax} min={0} max={3} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/>
       {assetTax>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginTop:4}}>
         ⚠️ {t('achieve.assetTaxExplain',{tax:assetTax.toFixed(1)})}
