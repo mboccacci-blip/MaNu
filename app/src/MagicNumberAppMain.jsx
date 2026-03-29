@@ -7,6 +7,7 @@ import Cd from './components/Card.jsx';
 import Toggle from './components/Toggle.jsx';
 import TabBtn from './components/TabButton.jsx';
 import { useTranslation } from './i18n/index.jsx';
+import { saveState, loadState, clearState } from './hooks/usePersistedState.js';
 
 // Tip: imported from ./components/Tip.jsx
 
@@ -223,6 +224,107 @@ export default function MagicNumberApp({onBack}){
   const [ciBase, setCiBase] = useState(0); // 0=Vault, 1=Cash, 2=CDs
   const [ciSav, setCiSav] = useState(null);
   const [ciMo, setCiMo] = useState(null);
+
+  // ── LocalStorage Persistence ──────────────────────────────────────
+  // Load saved state on mount
+  const [loaded, setLoaded] = useState(false);
+  useEffect(function() {
+    var s = loadState();
+    if (!s) { setLoaded(true); return; }
+    // Restore all persisted fields
+    if (s.age != null) setAge(s.age);
+    if (s.monthlyIncome != null) setMonthlyIncome(s.monthlyIncome);
+    if (s.expenses != null && s.expenses.length > 0) { setExpenses(s.expenses); nEId.current = Math.max.apply(null, s.expenses.map(function(e){return e.id})) + 1; }
+    if (s.ownsHome != null) setOwnsHome(s.ownsHome);
+    if (s.vacationAnnual != null) setVacationAnnual(s.vacationAnnual);
+    if (s.coupleMode != null) setCoupleMode(s.coupleMode);
+    if (s.partner2Income != null) setPartner2Income(s.partner2Income);
+    if (s.hasRental != null) setHasRental(s.hasRental);
+    if (s.rentalEquity != null) setRentalEquity(s.rentalEquity);
+    if (s.rentalNetIncome != null) setRentalNetIncome(s.rentalNetIncome);
+    // Debts
+    if (s.debts != null && s.debts.length > 0) { setDebts(s.debts); nDId.current = Math.max.apply(null, s.debts.map(function(d){return d.id})) + 1; }
+    if (s.noDebts != null) setNoDebts(s.noDebts);
+    if (s.noMortgage != null) setNoMortgage(s.noMortgage);
+    if (s.mortgageBalance != null) setMortgageBalance(s.mortgageBalance);
+    if (s.mortgageRate != null) setMortgageRate(s.mortgageRate);
+    if (s.mortgagePayment != null) setMortgagePayment(s.mortgagePayment);
+    if (s.mortgageYearsLeft != null) setMortgageYearsLeft(s.mortgageYearsLeft);
+    if (s.noCarLoan != null) setNoCarLoan(s.noCarLoan);
+    if (s.carBalance != null) setCarBalance(s.carBalance);
+    if (s.carRate != null) setCarRate(s.carRate);
+    if (s.carPayment != null) setCarPayment(s.carPayment);
+    if (s.carYearsLeft != null) setCarYearsLeft(s.carYearsLeft);
+    // Retirement
+    if (s.retirementAge != null) setRetirementAge(s.retirementAge);
+    if (s.yearsPostRet != null) setYearsPostRet(s.yearsPostRet);
+    if (s.desiredIncome != null) setDesiredIncome(s.desiredIncome);
+    if (s.existingSavings != null) setExistingSavings(s.existingSavings);
+    if (s.socialSecurity != null) setSocialSecurity(s.socialSecurity);
+    if (s.legacy != null) setLegacy(s.legacy);
+    if (s.assetTax != null) setAssetTax(s.assetTax);
+    if (s.manualMonthlySav != null) setManualMonthlySav(s.manualMonthlySav);
+    // Investment
+    if (s.customInflation != null) setCustomInflation(s.customInflation);
+    if (s.customReturn != null) setCustomReturn(s.customReturn);
+    if (s.portAlloc != null) setPortAlloc(s.portAlloc);
+    if (s.portContribAlloc != null) setPortContribAlloc(s.portContribAlloc);
+    // Extra income
+    if (s.extraIncome != null) setExtraIncome(s.extraIncome);
+    if (s.eiTemporary != null) setEiTemporary(s.eiTemporary);
+    if (s.eiYears != null) setEiYears(s.eiYears);
+    // Goals
+    if (s.goals != null && s.goals.length > 0) { setGoals(s.goals); nGId.current = Math.max.apply(null, s.goals.map(function(g){return g.id})) + 1; }
+    // Tier & email
+    if (s.tier != null) setTier(s.tier);
+    if (s.userEmail != null) setUserEmail(s.userEmail);
+    setLoaded(true);
+  }, []);
+
+  // Auto-save on state changes (debounced 800ms)
+  useEffect(function() {
+    if (!loaded) return; // don't save during initial load
+    var timer = setTimeout(function() {
+      saveState({
+        age, monthlyIncome, expenses, ownsHome, vacationAnnual,
+        coupleMode, partner2Income, hasRental, rentalEquity, rentalNetIncome,
+        debts, noDebts, noMortgage, mortgageBalance, mortgageRate, mortgagePayment, mortgageYearsLeft,
+        noCarLoan, carBalance, carRate, carPayment, carYearsLeft,
+        retirementAge, yearsPostRet, desiredIncome, existingSavings, socialSecurity,
+        legacy, assetTax, manualMonthlySav,
+        customInflation, customReturn, portAlloc, portContribAlloc,
+        extraIncome, eiTemporary, eiYears, goals,
+        tier, userEmail
+      });
+    }, 800);
+    return function() { clearTimeout(timer); };
+  }, [loaded, age, monthlyIncome, expenses, ownsHome, vacationAnnual,
+      coupleMode, partner2Income, hasRental, rentalEquity, rentalNetIncome,
+      debts, noDebts, noMortgage, mortgageBalance, mortgageRate, mortgagePayment, mortgageYearsLeft,
+      noCarLoan, carBalance, carRate, carPayment, carYearsLeft,
+      retirementAge, yearsPostRet, desiredIncome, existingSavings, socialSecurity,
+      legacy, assetTax, manualMonthlySav,
+      customInflation, customReturn, portAlloc, portContribAlloc,
+      extraIncome, eiTemporary, eiYears, goals,
+      tier, userEmail]);
+
+  // Clear all data function (for UI reset button)
+  function clearAllData() {
+    clearState();
+    setAge(""); setMonthlyIncome(""); setExpenses(DEFAULT_EXP);
+    setOwnsHome(false); setVacationAnnual(""); setCoupleMode(false); setPartner2Income("");
+    setHasRental(false); setRentalEquity(""); setRentalNetIncome("");
+    setDebts([{id:1,name:"",balance:"",rate:"",minPayment:""}]); setNoDebts(false);
+    setNoMortgage(false); setMortgageBalance(""); setMortgageRate(""); setMortgagePayment(""); setMortgageYearsLeft("");
+    setNoCarLoan(false); setCarBalance(""); setCarRate(""); setCarPayment(""); setCarYearsLeft("");
+    setRetirementAge(""); setYearsPostRet(""); setDesiredIncome(""); setExistingSavings(""); setSocialSecurity("");
+    setLegacy(""); setAssetTax(0); setManualMonthlySav("");
+    setCustomInflation(2.5); setCustomReturn(""); setPortAlloc([0,0,0,0,30,40,30]); setPortContribAlloc([0,0,0,0,20,30,50]);
+    setExtraIncome(""); setEiTemporary(false); setEiYears("5");
+    setGoals([{id:1,name:"",amount:"",years:"",profileIdx:4}]);
+    setTier("free"); setUserEmail("");
+    nEId.current = 6; nDId.current = 2; nGId.current = 2;
+  }
 
   const q="'";
   const INFL=customInflation/100;
@@ -647,6 +749,7 @@ export default function MagicNumberApp({onBack}){
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>← {lang==="en"?"Home":"Inicio"}</button>}
+          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s"}}>🗑 {lang==="en"?"Reset":"Limpiar"}</button>}
           <button className="mn-lang-btn" onClick={toggleLang}>{lang==="en"?"🇺🇸 EN":"🇦🇷 ES"}</button>
         </div>
       </header>
