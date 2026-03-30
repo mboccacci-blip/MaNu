@@ -129,7 +129,10 @@ export default function MagicNumberApp({onBack}){
   const {t, lang, toggleLang} = useTranslation();
   const [tab, setTab] = useState("achieve");
   const [setupDone, setSetupDone] = useState(false);
-  const [tier, setTier] = useState("free"); // free | email | paid
+  // Demo mode: ?demo=1 in URL grants full paid access
+  const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === '1';
+  const [tier, setTier] = useState(isDemo ? "paid" : "free"); // free | email | paid
+  const [demoBannerVisible, setDemoBannerVisible] = useState(isDemo);
   const [userEmail, setUserEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const FREE_TABS = ["achieve", "inaction", "learn"];
@@ -276,8 +279,8 @@ export default function MagicNumberApp({onBack}){
     if (s.eiYears != null) setEiYears(s.eiYears);
     // Goals
     if (s.goals != null && s.goals.length > 0) { setGoals(s.goals); nGId.current = Math.max.apply(null, s.goals.map(function(g){return g.id})) + 1; }
-    // Tier & email
-    if (s.tier != null) setTier(s.tier);
+    // Tier & email (skip tier restore in demo mode — always paid)
+    if (s.tier != null && !isDemo) setTier(s.tier);
     if (s.userEmail != null) setUserEmail(s.userEmail);
     setLoaded(true);
   }, []);
@@ -742,6 +745,8 @@ export default function MagicNumberApp({onBack}){
   return(<>
 
     <div className="mn-root">
+      {/* Demo mode banner */}
+      {demoBannerVisible&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{lang==="en"?"DEMO MODE — Full access":"MODO DEMO — Acceso completo"}</span><button onClick={function(){setDemoBannerVisible(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
       <header className="mn-header">
         <div className="mn-logo" onClick={onBack} style={{cursor:onBack?"pointer":"default"}}>
           <span className="mn-logo-icon">MN</span>
@@ -1440,16 +1445,16 @@ export default function MagicNumberApp({onBack}){
     {nAge>0&&nRetAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}><div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{ytr>0?t('achieve.yearsToGo',{n:ytr}):t('achieve.atRetirement')}</div>{nYP>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('achieve.planToAge',{age:nRetAge+nYP})}</div>}{mSav>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac"}}>{hasIncomeData?t('achieve.savingActual',{amt:fmt(mSav)}):t('achieve.savingEstimate',{amt:fmt(mSav)})}</div>}</div>}
   </Cd>
   {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
-    {/* FREE TIER: Range ±20% + Email CTA */}
-    {tier==="free"&&<>
+    {/* FREE TIER: Range (asymmetric 0.75×–1.30× + $50K rounding) + Email CTA */}
+    {tier==="free"&&!isDemo&&<>
     <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}>
       <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
       <div style={{position:"relative"}}>
         <div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div>
         <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#94a3b8",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number está entre"}</div>
-        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.8))}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.75/50000)*50000)}</div>
         <div style={{fontSize:16,fontWeight:700,color:"#94a3b8",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
-        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.2))}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.30/50000)*50000)}</div>
         <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
           {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")}
         </div>
