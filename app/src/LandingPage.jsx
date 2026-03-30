@@ -103,7 +103,7 @@ const T = {
     freePill:     '100% gratis · Sin registro · Sin tarjeta',
     h1a:          'Calculá tu',
     h1b:          'Magic Number.',
-    sub:          'Descubrí exactamente cuánto necesitás para jubilarte libre. Sin formularios, sin datos personales — solo abrís y empezás.',
+    sub:          'Descubrí exactamente cuánto necesitás para alcanzar tu libertad financiera. Sin formularios, sin datos personales — solo abrís y empezás.',
     noReg1:       'Sin registro',
     noReg2:       'Sin tarjeta de crédito',
     noReg3:       'Resultado en segundos',
@@ -157,7 +157,7 @@ const T = {
     freePill:     '100% free · No signup · No credit card',
     h1a:          'Calculate your',
     h1b:          'Magic Number.',
-    sub:          'Find exactly how much you need to retire free. No forms, no personal data — just open and start.',
+    sub:          'Find exactly how much you need to achieve financial freedom. No forms, no personal data — just open and start.',
     noReg1:       'No signup required',
     noReg2:       'No credit card',
     noReg3:       'Results in seconds',
@@ -320,7 +320,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
       {/* ---- NAVBAR ---- */}
       {/* a11y: skip-to-content link for keyboard users */}
       <nav className="lp-nav">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="lp-nav-left">
           <a className="lp-nav-logo" href="#" onClick={e => e.preventDefault()}>
             <div className="lp-nav-logo-icon">MN</div>
             <span className="lp-nav-logo-name">MaNu <span>PRO</span></span>

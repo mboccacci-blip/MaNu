@@ -75,6 +75,12 @@
   padding: 0 40px;
 }
 
+.lp-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .lp-nav-logo {
   display: flex;
   align-items: center;
@@ -280,11 +286,12 @@
 
 /* Hero headline */
 .lp-hero-headline {
-  font-size: clamp(42px, 5.5vw, 68px);
+  font-size: clamp(38px, 5.5vw, 68px);
   font-weight: 900;
-  line-height: 1.04;
+  line-height: 1.12;
   letter-spacing: -2px;
   color: var(--lp-text);
+  overflow: visible;
 }
 
 .lp-hero-headline .hl-gradient {
@@ -293,6 +300,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  padding-bottom: 4px;
 }
 
 .lp-hero-sub {
@@ -787,6 +795,15 @@
 }
 
 @media (max-width: 480px) {
+  .lp-nav { padding: 0 12px; }
+  .lp-nav-left { gap: 6px; }
+  .lp-nav-free-badge { display: none; }
+  .lp-nav-logo-name { font-size: 15px; white-space: nowrap; }
+  .lp-nav-actions { gap: 6px; }
+  .lp-btn-ghost { padding: 7px 10px; font-size: 13px; }
+  .lp-btn-cyan { padding: 7px 12px; font-size: 13px; white-space: nowrap; }
+  .lp-lang-btn { padding: 6px 8px; font-size: 11px; }
+
   .lp-stats {
     grid-template-columns: 1fr 1fr;
     gap: 24px;

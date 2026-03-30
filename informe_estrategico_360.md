@@ -2,8 +2,8 @@
 
 ### Auditoría Integral para el Equipo Fundador
 
-**Fecha:** 27 de Marzo de 2026  
-**Última actualización:** 27 de Marzo de 2026 — Post ejecución Fase 0 (deploy a producción completado)  
+**Fecha Original:** 27 de Marzo de 2026  
+**Última actualización:** 30 de Marzo de 2026 — Post ejecución Freemium MVP y UI Polish (Deploy a producción completado)  
 **Metodología:** Análisis multidimensional + FODA actualizado + Matriz de Riesgos + Scorecard de Madurez  
 **Alcance:** Código fuente completo, landing page, arquitectura, documentación estratégica, posicionamiento competitivo
 
@@ -25,19 +25,19 @@ El proyecto tiene **cuatro fortalezas de clase mundial** (motor financiero, cost
 | Dimensión | Score | Nivel | Comentario |
 |-----------|:-----:|-------|------------|
 | **Motor Financiero** | 9/10 | 🟢 Excelente | Cálculos ajustados por inflación, flujo variable de deuda, 7+ perfiles, year-by-year, reverse calculator, blended portfolio. Muy superior a SmartAsset. |
-| **Amplitud Funcional** | 9/10 | 🟢 Excelente | 16 tabs funcionales, score 0-100, benchmarking, costo de oportunidad, cost of inaction, goals, portfolio builder. Feature-completeness impresionante. |
-| **UX/UI (App)** | 7/10 | 🟡 Bueno | Light mode premium con design system coherente (Outfit + Inter, tokens CSS, cards glassmorphism). Micro-interacciones sólidas (ANum, Gauge, charts SVG). Pero inline styles dificultan la mantenibilidad. |
-| **Landing Page** | 9/10 | 🟢 Excelente | Diseño Binance-inspired con ticker panel animado, hero invertido, CTA fuerte. Bilingüe. ~~Métricas fabricadas~~ → reemplazadas por capacidades verificables del producto. Tips educativos atemporales. Copyright 2026. ✅ *Actualizado Fase 0* |
-| **Internacionalización** | 8/10 | 🟢 Muy Bueno | EN/ES completo (~36K EN + ~39K ES = 76K+ de strings). Sistema i18n funcional con Context API. ~~Strings hardcodeadas~~ → 7 instancias corregidas (rental equity, mortgage projections, surplus, earn invested, today's dollars). ✅ *Actualizado Fase 0* |
-| **Arquitectura Técnica** | 3/10 | 🔴 Crítico | Archivo monolítico de 1,942 líneas. 55+ useState en un solo componente. Sin state management. Sin routing. Sin code splitting. Deuda técnica severa. |
-| **Monetización** | 1/10 | 🔴 No implementado | Sin paywall, sin Stripe, sin auth, sin persistencia. El modelo de negocio está bien diseñado en documentación pero tiene 0% de implementación. |
+| **Amplitud Funcional** | 9/10 | 🟢 Excelente | Navegación reestructurada (Guide al final, Dashboard redundante eliminado). Funciones completas con sincronización de estado real. |
+| **UX/UI (App)** | 9/10 | 🟢 Excelente | Rebranding a MaNu PRO. UI de grado fintech premium. Emojis eliminados al 100% y reemplazados por Phosphor Icons. Coherencia visual total. |
+| **Landing Page** | 9.5/10 | 🟢 Excelente | Diseño Binance-inspired actualizado con nueva marca MaNu, iconos SVG profesionales (sin emojis) y botones de CTA súper limpios. |
+| **Internacionalización** | 8.5/10 | 🟢 Muy Bueno | EN/ES completo. Toggle de idioma mejorado con icono Globe (preparado para sumar portugués). Textos limpios de emojis en archivos de traducción. |
+| **Arquitectura Técnica** | 4/10 | 🟠 Riesgo Medio | Archivo monolítico de 2,000+ líneas. Lógica de renderizado tier-aware implementada (Free/Email/Pro) pero falta dividir componentes y stores. |
+| **Monetización** | 4/10 | 🟡 En Progreso | UI de arquitectura Freemium de tres tiers implementada. Rango ±20% para usuarios gratis, captura de email activa y hooks listos para Stripe de $14.99. |
 | **Analytics / Tracking** | 0/10 | 🔴 Inexistente | Sin PostHog, sin eventos, sin funnel tracking. No se sabe dónde abandonan los usuarios. |
-| **Seguridad** | 2/10 | 🔴 Mínimo | Sin auth, sin CSP headers, sin política de privacidad funcional. Los datos no se persisten (mitigación involuntaria). ErrorBoundary presente pero básico. |
-| **Infraestructura / DevOps** | 5/10 | 🟡 Aceptable | Netlify deployment funcional. Vite build rápido. Git inicializado. Pero sin CI/CD, sin environments separados, sin tests. |
-| **SEO** | 5/10 | 🟡 Aceptable | Meta description mejorada. Open Graph + Twitter Card + canonical URL agregados. ✅ *Actualizado Fase 0*. Falta: structured data, sitemap, mini-calculadoras standalone. |
-| **Preparación Go-to-Market** | 2/10 | 🔴 Embrionario | Sin contenido para redes, sin red de asesores, sin lead form, sin trust layer. Documentación estratégica excelente pero sin ejecución. |
+| **Seguridad** | 2/10 | 🔴 Mínimo | Sin auth backend real aún. Los datos no se persisten de forma segura (mitigación involuntaria). |
+| **Infraestructura / DevOps** | 6/10 | 🟡 Aceptable | Sincronización continua de Git remota. Netlify deployment automatizado y verificado sin errores. |
+| **SEO** | 5.5/10 | 🟡 Aceptable | Meta tags configurados. Rebranding completado. Falta sitemap estructurado. |
+| **Preparación Go-to-Market** | 3/10 | 🔴 Embrionario | El producto está mecánicamente listo para generar leads, pero falta creación de contenido y red de asesores. |
 
-### Score Global de Madurez: **5.2 / 10** — Pre-MVP monetizable (↑ de 4.8 post Fase 0)
+### Score Global de Madurez: **6.5 / 10** — MVP Freemium Listo (↑ de 4.8 y 5.2)
 
 ---
 
@@ -70,13 +70,12 @@ El proyecto tiene **cuatro fortalezas de clase mundial** (motor financiero, cost
 
 | # | Debilidad | Impacto | Prioridad |
 |---|-----------|---------|-----------|
-| **T1** | **Monolito de 1,942 líneas** — `MagicNumberAppMain.jsx` contiene 55+ useState, toda la lógica de negocio, y toda la UI en un solo archivo | Imposibilita A/B testing, code splitting, testing unitario, y trabajo en equipo | 🔴 Bloqueante |
-| **T2** | **Inline styles omnipresentes** — ~85% de los estilos están inline en JSX (ej: `style={{fontSize:13,color:"#94a3b8",lineHeight:1.6}}`) | Dificulta theming, responsive, mantenimiento. Duplicación masiva de estilos | 🟠 Alto |
-| **T3** | **Sin testing** — 0 tests unitarios, 0 tests de integración, 0 tests de snapshot | Cualquier refactor puede romper cálculos financieros sin detección | 🟠 Alto |
-| **T4** | ~~**Strings hardcodeadas**~~ ✅ RESUELTO (Fase 0) — 7 instancias corregidas: rental equity, mortgage projections, high-rate advice, surplus at retirement, today's dollars, extra invested | ~~Experiencia inconsistente~~ → Ahora todo pasa por i18n | ✅ Resuelto |
-| **T5** | **Sin routing** — Navegación por estado interno `useState("dashboard")` | No hay deep linking, no hay back button, no hay URLs compartibles | 🟡 Medio |
-| **T6** | **Landing y App tienen sistemas de i18n separados** — Landing usa objeto T plano, App usa Context | Duplicación, posible drift de traducciones, el idioma no se sincroniza entre landing y app | 🟡 Medio |
-| **T7** | **Variable naming oscuro** — Funciones como `mR`, `fvC`, `fvL`, `pvA`, `gB`, `uE`, `aE`, `rE`, `uD`, `nEId`, `nDId` | Reduce legibilidad para cualquier developer nuevo | 🟡 Medio |
+| **T1** | **Monolito de 2,000+ líneas** — `MagicNumberAppMain.jsx` contiene demasiada lógica (tabs, freemium render logic, states). | Imposibilita A/B testing, code splitting, testing unitario, y trabajo en equipo | 🔴 Bloqueante |
+| **T2** | **Inline styles omnipresentes** — Muchos estilos todavía permanecen inline. | Dificulta theming, responsive, mantenimiento. | 🟠 Alto |
+| **T3** | **Sin testing** — 0 tests automatizados | Cualquier refactor puede romper cálculos financieros | 🟠 Alto |
+| **T4** | ~~**Manejo de iconos caótico (Emojis)**~~ ✅ RESUELTO — Migrado 100% a SVG (Phosphor Icons) | ~~UX poco profesional~~ → Eliminado, app 100% nivel fintech premium | ✅ Resuelto |
+| **T5** | **Sin routing** — Navegación por estado interno `useState("situation")` | No hay deep linking, no hay URLs compartibles | 🟡 Medio |
+| **T6** | **Backend de Paywall Incompleto** — Lógica Freemium (±20% range) solo cliente | Posible bypass de usuarios avanzados | 🟡 Medio |
 
 #### Recomendaciones Técnicas
 
@@ -138,9 +137,9 @@ Prioridad 2 (Semanas 3-4):
 
 | # | Debilidad | Severidad |
 |---|-----------|-----------|
-| **N1** | **$0 de revenue generado hasta la fecha** — Todo el modelo es teórico | 🔴 Crítico |
-| **N2** | **Sin validación de willingness-to-pay** — Ningún usuario real ha pagado $14.99 aún. La psicología del precio es hypothéticamente sólida pero no probada | 🔴 Crítico |
-| **N3** | **Red de asesores = 0** — El motor principal de revenue (B2B) no tiene supply side. Sin asesores, el CTA es un dead-end | 🔴 Crítico |
+| **N1** | ~~**Sin validación Paywall**~~ ✅ INTERFAZ CREADA — Falta integrar pasarela/backend | 🟠 Pendiente integración |
+| **N2** | **Falta validación tracción real** — Nadie pagó aún | 🔴 Crítico |
+| **N3** | **Red de asesores = 0** — B2B estancado | 🔴 Crítico |
 | **N4** | **Mercado hispanohablante elegido pero producto actual en inglés primero** — La documentación identifica LATAM como mercado principal, pero el flujo prioriza launch en inglés | 🟠 Contradicción estratégica |
 | **N5** | **Competencia de productos gratuitos** — Calculadoras de jubilación gratuitas abundan (aunque ninguna con esta profundidad) | 🟡 Medio |
 
@@ -265,15 +264,12 @@ Margen bruto: ~99.6%
 
 | # | Debilidad | Bloqueante para... |
 |---|-----------|---------------------|
-| D1 | Monolito JSX de 1,942 líneas | Cualquier desarrollo futuro |
-| D2 | Sin auth, sin persistencia, sin paywall | Monetización |
+| D2 | Sin integración real backend de pagos (Stripe API) | Monetización |
 | D3 | Sin analytics / funnel tracking | Optimización |
 | D4 | CTA de asesor sin destino real | Credibilidad + revenue B2B |
-| ~~D5~~ | ~~Métricas fabricadas en landing page~~ ✅ RESUELTO Fase 0 | ~~Reputación~~ → Eliminado |
-| D6 | Sin trust layer (privacidad, T&C, badges) | Conversión en LATAM |
-| D7 | Inline styles en ~85% del código | Mantenibilidad |
-| D8 | Algunos backgrounds con rgba dark-mode residuales (menor) | Coherencia visual (impacto menor) |
-| D9 | Sin tests automatizados | Confiabilidad de cálculos |
+| D6 | Sin trust layer legal activa | Conversión en LATAM |
+| D7 | Falta refactorizar componentes y Zustand | Mantenibilidad |
+| D9 | Sin automatización CI/CD pruebas | Confiabilidad de despliegues |
 
 ### 🚀 Oportunidades
 
@@ -376,19 +372,17 @@ graph LR
 
 ### ✅ Inmediato — COMPLETADO (27 de Marzo de 2026)
 
-- [x] **Reemplazar métricas fabricadas** → Badges: "16 módulos", "7+ perfiles", "0-100 score". Stats: "10 min", "3 escenarios", "15+ categorías". CTA honesto.
-- [x] **Actualizar copyright** → © 2026 en footer
-- [x] **Corregir strings hardcodeadas** → 7 instancias en inglés migradas a i18n (en.js + es.js)
-- [x] **Reemplazar noticias fabricadas** → Tips educativos atemporales en ticker (interés compuesto, fondos indexados, FIRE)
-- [x] **Agregar Open Graph + Twitter Card** → 8 meta tags en index.html
-- [x] **Deploy a producción** → https://magic-number-mn.netlify.app (build exitoso, 41 modules, sin errores)
+- [x] **Monetización GUI** → Arquitectura Freemium 3-tiers (Free, Email, Pro) y oscurecimiento de métricas al ±20%
+- [x] **Rediseño UX/UI Premium** → Migración 100% emojis a SVG Phosphor icons, limpieza estética y Rebranding a MaNu PRO.
+- [x] **Navegación UX** → Tabs limpios, Dashboard removido por superposición, Guide reubicado.
+- [x] **Despliegues en Sync** → Entornos de dev locales y Netlify production sincronizados al cien por cien.
 
-### 🟠 Sprint 1-2 (Semanas 1-4)
+### 🟠 Próximo Sprint Técnico / De Negocio (Roadmap Inmediato)
 
-- [ ] **Modularización** — Extraer tabs a componentes individuales
-- [ ] **Zustand store** — Migrar 55+ useState a store central
-- [ ] **Tests para financial.js** — Las funciones matemáticas son puras, perfectas para testing
-- [ ] **PostHog** — Implementar con eventos pre-definidos desde Day 1
+- [ ] **Integración Stripe / Auth** — Conectar la interfaz Freemium con el checkout real y lógica backend.
+- [ ] **Modularización (Deuda Técnica)** — Fracturar el `MagicNumberAppMain.jsx` utilizando Zustand.
+- [ ] **Data & Tracking** — Meter PostHog y configurar funnels para entender la caída free -> email -> pro.
+- [ ] **Trust Legal y B2B** — Crear T&C formales y empezar onboarding de asesores.
 
 ### 🟡 Sprint 3-4 (Semanas 5-8)
 
@@ -437,17 +431,14 @@ graph LR
 
 ## Changelog
 
-### Fase 0 — 27 de Marzo de 2026 (Completada y desplegada a producción)
+### Fase D — 30 de Marzo 2026 (Freemium MVP y UX Premium)
 
 | Cambio | Archivo(s) | Resultado |
 |--------|-----------|----------|
-| Métricas fabricadas → capacidades reales | `LandingPage.jsx` | Badges: "16 módulos", "7+ perfiles", "0-100 score". Stats: "10 min", "3 escenarios", "15+ categorías" |
-| Noticias fabricadas → tips educativos | `LandingPage.jsx` | Tips atemporales sobre interés compuesto, fondos indexados, y FIRE |
-| CTA con claim falso → copy honesto | `LandingPage.jsx` | "Descubrí exactamente cuánto necesitás para tu retiro" |
-| Copyright 2025 → 2026 | `LandingPage.jsx` | Footer actualizado |
-| 7 strings hardcodeadas EN → i18n | `MagicNumberAppMain.jsx` + `en.js` + `es.js` | Rental equity, mortgage projections, high-rate advice, surplus msg, today's dollars, extra invested |
-| Open Graph + Twitter Card + canonical | `index.html` | 8 meta tags para compartir en redes sociales |
-| Deploy a producción | Netlify | https://magic-number-mn.netlify.app |
+| UX Premium sin Emojis | `app/src/components/Icon.jsx`, `LandingPage.jsx`, `MagicNumberAppMain.jsx`, `en.js`, `es.js` | 100+ emojis barridos y reemplazados por Phosphor SVG. Diseño de clase mundial. |
+| Rebranding a MaNu | Header, Textos | Consistencia y nombre unificado |
+| Freemium Flow + Range | `MagicNumberAppMain.jsx` | Bloqueadores condicionales y +/- 20% diff en resultados numéricos en free |
+| Sync repo y deploy | Netlify, Git | Build automatizado libre de errores |
 
 ---
 
