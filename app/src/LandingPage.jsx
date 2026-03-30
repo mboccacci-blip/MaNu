@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './landing.css';
+import Icon from './components/Icon';
 
 /* ----------------------------------------------------------------
    Financial metrics — Magic Number PRO context
@@ -7,7 +8,7 @@ import './landing.css';
 const INITIAL_METRICS = [
   {
     id: 'mn',
-    icon: '🔮',
+    icon: 'magic-wand',
     iconBg: 'rgba(0,212,255,0.10)',
     iconColor: '#00D4FF',
     name: 'Magic Number',
@@ -18,7 +19,7 @@ const INITIAL_METRICS = [
   },
   {
     id: 'fire',
-    icon: '🔥',
+    icon: 'fire',
     iconBg: 'rgba(249,115,22,0.12)',
     iconColor: '#F97316',
     name: 'FIRE Rate',
@@ -29,7 +30,7 @@ const INITIAL_METRICS = [
   },
   {
     id: 'savings',
-    icon: '💰',
+    icon: 'currency-dollar',
     iconBg: 'rgba(16,185,129,0.12)',
     iconColor: '#10B981',
     name: 'Ahorro mensual',
@@ -40,7 +41,7 @@ const INITIAL_METRICS = [
   },
   {
     id: 'inv',
-    icon: '📈',
+    icon: 'chart-line-up',
     iconBg: 'rgba(167,139,250,0.12)',
     iconColor: '#A78BFA',
     name: 'Retorno anual',
@@ -51,7 +52,7 @@ const INITIAL_METRICS = [
   },
   {
     id: 'years',
-    icon: '⏳',
+    icon: 'hourglass',
     iconBg: 'rgba(240,185,11,0.10)',
     iconColor: '#F0B90B',
     name: 'Años p/ retiro',
@@ -103,10 +104,10 @@ const T = {
     h1a:          'Calculá tu',
     h1b:          'Magic Number.',
     sub:          'Descubrí exactamente cuánto necesitás para jubilarte libre. Sin formularios, sin datos personales — solo abrís y empezás.',
-    noReg1:       '✓ Sin registro',
-    noReg2:       '✓ Sin tarjeta de crédito',
-    noReg3:       '✓ Resultado en segundos',
-    cta:          '🚀 Calcular mi número — es gratis',
+    noReg1:       'Sin registro',
+    noReg2:       'Sin tarjeta de crédito',
+    noReg3:       'Resultado en segundos',
+    cta:          'Calcular mi número — es gratis',
     g1:           'Gratis para siempre',
     g2:           'Sin crear cuenta',
     g3:           'Corre en tu navegador',
@@ -138,8 +139,8 @@ const T = {
     stat4lbl:     'Gratis · Siempre',
     ctaH2:        'Tu futuro empieza hoy.',
     ctaP:         'Descubrí exactamente cuánto necesitás para tu retiro.',
-    ctaFreeNote:  '✓ Sin registro · Sin datos · Sin tarjeta',
-    ctaMain:      '🚀 Empezar gratis ahora',
+    ctaFreeNote:  'Sin registro · Sin datos · Sin tarjeta',
+    ctaMain:      'Empezar gratis ahora',
     ctaSecond:    'Ver demo',
     footerCopy:   'MaNu PRO · Calculá. Planificá. Retírate libre.',
     footerPriv:   'Privacidad',
@@ -157,10 +158,10 @@ const T = {
     h1a:          'Calculate your',
     h1b:          'Magic Number.',
     sub:          'Find exactly how much you need to retire free. No forms, no personal data — just open and start.',
-    noReg1:       '✓ No signup required',
-    noReg2:       '✓ No credit card',
-    noReg3:       '✓ Results in seconds',
-    cta:          '🚀 Calculate my number — it\'s free',
+    noReg1:       'No signup required',
+    noReg2:       'No credit card',
+    noReg3:       'Results in seconds',
+    cta:          'Calculate my number — it\'s free',
     g1:           'Free forever',
     g2:           'No account needed',
     g3:           'Runs in your browser',
@@ -192,8 +193,8 @@ const T = {
     stat4lbl:     'Free · Always',
     ctaH2:        'Your future starts today.',
     ctaP:         'Find exactly how much you need for retirement.',
-    ctaFreeNote:  '✓ No signup · No data · No credit card',
-    ctaMain:      '🚀 Start for free now',
+    ctaFreeNote:  'No signup · No data · No credit card',
+    ctaMain:      'Start for free now',
     ctaSecond:    'View demo',
     footerCopy:   'MaNu PRO · Calculate. Plan. Retire free.',
     footerPriv:   'Privacy',
@@ -252,7 +253,7 @@ function TickerPanel({ lang, t, onEnter }) {
               <div key={m.id} className="lp-metric-row" onClick={onEnter}>
                 <div className="lp-metric-left">
                   <div className="lp-metric-icon" style={{ background: m.iconBg, color: m.iconColor }}>
-                    {m.icon}
+                    <Icon name={m.icon} size={20} weight="regular" />
                   </div>
                   <div>
                     <div className="lp-metric-name">{m.name}</div>
@@ -371,7 +372,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }} className="lp-fade-up lp-fade-up-d3">
             {[t.noReg1, t.noReg2, t.noReg3].map((item, i) => (
               <div key={i} className="lp-no-reg">
-                <span style={{ color: '#10B981', fontWeight: 700 }}>{item}</span>
+                <span style={{ color: '#10B981', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: 6 }}><Icon name="check-circle" size={14} weight="fill" color="#10B981" /> {item}</span>
               </div>
             ))}
           </div>
@@ -381,12 +382,12 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
             <button className="lp-cta-main" onClick={onEnter}>{t.cta}</button>
             <div className="lp-cta-guarantees">
               {[
-                { icon: '♾️', label: t.g1 },
-                { icon: '🔓', label: t.g2 },
-                { icon: '⚡', label: t.g3 },
+                { icon: 'infinity', label: t.g1 },
+                { icon: 'lock-open', label: t.g2 },
+                { icon: 'lightning', label: t.g3 },
               ].map((g, i) => (
                 <div key={i} className="lp-guarantee">
-                  <span className="lp-guarantee-icon">{g.icon}</span>
+                  <span className="lp-guarantee-icon"><Icon name={g.icon} size={16} weight="regular" /></span>
                   <span>{g.label}</span>
                 </div>
               ))}
@@ -417,17 +418,17 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
       <section className="lp-features" id="features">
         <div className="lp-features-inner">
           <div className="lp-feat">
-            <div className="lp-feat-icon">🔮</div>
+            <div className="lp-feat-icon"><Icon name="magic-wand" size={24} weight="regular" /></div>
             <h2 className="lp-feat-title">{t.feat1title}</h2>
             <p className="lp-feat-desc">{t.feat1desc}</p>
           </div>
           <div className="lp-feat">
-            <div className="lp-feat-icon purple">🔥</div>
+            <div className="lp-feat-icon purple"><Icon name="fire" size={24} weight="regular" /></div>
             <h2 className="lp-feat-title">{t.feat2title}</h2>
             <p className="lp-feat-desc">{t.feat2desc}</p>
           </div>
           <div className="lp-feat">
-            <div className="lp-feat-icon gold">📊</div>
+            <div className="lp-feat-icon gold"><Icon name="chart-bar" size={24} weight="regular" /></div>
             <h2 className="lp-feat-title">{t.feat3title}</h2>
             <p className="lp-feat-desc">{t.feat3desc}</p>
           </div>

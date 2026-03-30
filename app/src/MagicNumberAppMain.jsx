@@ -397,7 +397,7 @@ export default function MagicNumberApp({onBack}){
   var custR=Number(customReturn)||0;
   var allProfiles=useMemo(function(){
     var p=adjProfiles.slice();
-    if(custR>0)p.push({id:"custom",name:t('profiles.custom.name')||"Custom",nomReturn:custR/100-TAX,realReturn:custR/100-INFL-TAX,desc:t('profiles.custom.desc')||"Your custom return rate.",icon:"⚙️",color:"#e879f9",risk:7,vol:0});
+    if(custR>0)p.push({id:"custom",name:t('profiles.custom.name')||"Custom",nomReturn:custR/100-TAX,realReturn:custR/100-INFL-TAX,desc:t('profiles.custom.desc')||"Your custom return rate.",icon:"gear",color:"#e879f9",risk:7,vol:0});
     return p;
   },[adjProfiles,custR,INFL,TAX,lang]);
 
@@ -440,7 +440,7 @@ export default function MagicNumberApp({onBack}){
     return p?p.realReturn:adjProfiles[4].realReturn;
   },[allProfiles,adjProfiles,retProfileIdx,blendedPortReturn]);
   var retProfLabel=(function(){
-    if(retProfileIdx===-1&&hasPortfolio)return"🎛️ " + t('profiles.myPortfolio.name');
+    if(retProfileIdx===-1&&hasPortfolio)return t('profiles.myPortfolio.name');
     var p=allProfiles[Math.max(retProfileIdx,0)];
     return p?p.name:adjProfiles[4].name;
   })();
@@ -485,7 +485,7 @@ export default function MagicNumberApp({onBack}){
       const r=blendedPortReturn,proj=fvVariable(nEx,mSav,r,ytr,debtEvents);
       const gap=Math.max(magic.real-proj,0);let mo=0;
       if(gap>0){const m=mR(r),n=ytr*12;mo=r===0||m===0?gap/n:gap/((Math.pow(1+m,n)-1)/m)}
-      list.unshift({id:"myportfolio",name:t('profiles.myPortfolio.name'),icon:"🎛️",realReturn:r,nomReturn:r+INFL,color:"#e879f9",monthly:mo,surplus:gap<=0?proj-magic.real:0,projected:proj});
+      list.unshift({id:"myportfolio",name:t('profiles.myPortfolio.name'),icon:"sliders-h",realReturn:r,nomReturn:r+INFL,color:"#e879f9",monthly:mo,surplus:gap<=0?proj-magic.real:0,projected:proj});
     }
     return list;
   },[magic.real,nEx,mSav,ytr,adjProfiles,debtEvents,hasPortfolio,blendedPortReturn,INFL]);
@@ -688,7 +688,7 @@ export default function MagicNumberApp({onBack}){
     var ps=nEx>0&&mSav>0?20:nEx>0||mSav>0?12:3;
     s+=ps;bd.push({l:t('score.savingsHabit'),s:ps,m:20,st:ps>=15?"good":ps>=8?"ok":"bad",det:ps>=15?t('score.savingMonthly'):t('score.savingTip')});
     if(ps<15)recs.push({cat:t('score.savingsHabit'),priority:3,text:t('score.buildConsistency')});
-    if(emergencyMonths<6&&totalMonthlyObligations>0)recs.push({cat:t('dashboard.emergencyFund').replace('⚠️ ',''),priority:emergencyMonths<3?1:2,text:emergencyMonths<3?t('score.emergencyCrit'):t('score.emergencyOk', {months: emergencyMonths.toFixed(0)})});
+    if(emergencyMonths<6&&totalMonthlyObligations>0)recs.push({cat:t('dashboard.emergencyFund'),priority:emergencyMonths<3?1:2,text:emergencyMonths<3?t('score.emergencyCrit'):t('score.emergencyOk', {months: emergencyMonths.toFixed(0)})});
     recs.sort(function(a,b){return a.priority-b.priority});
     return{s:s,bd:bd,recs:recs};
   },[savRate,noDebts,probDebts,totalDebtAll,totalIncome,magic.real,nEx,mSav,ytr,emergencyMonths,totExp,debtEvents]);
@@ -750,8 +750,8 @@ export default function MagicNumberApp({onBack}){
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>← {lang==="en"?"Home":"Inicio"}</button>}
-          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s"}}>🗑 {lang==="en"?"Reset":"Limpiar"}</button>}
-          <button className="mn-lang-btn" onClick={toggleLang}>{lang==="en"?"🇺🇸 EN":"🇦🇷 ES"}</button>
+          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s",display:"inline-flex",alignItems:"center",gap:4}}><Icon name="trash" size={13} weight="regular" /> {lang==="en"?"Reset":"Limpiar"}</button>}
+          <button className="mn-lang-btn" onClick={toggleLang} style={{display:"inline-flex",alignItems:"center",gap:4}}><Icon name="globe" size={14} weight="regular" /> {lang==="en"?"EN":"ES"}</button>
         </div>
       </header>
       <nav className="mn-tabs">
@@ -764,7 +764,7 @@ export default function MagicNumberApp({onBack}){
 
 {/* === DASHBOARD === */}
 {tab==="dashboard"&&<div className="fi">{!hasData?
-  <Cd><div style={{textAlign:"center",padding:"40px 20px"}}><div style={{fontSize:48,marginBottom:16}}>🎯</div><h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,marginBottom:12}}>{t('dashboard.welcome')}</h2><p style={{color:"#94a3b8",fontSize:15,lineHeight:1.6,maxWidth:400,margin:"0 auto 24px"}}>{t('dashboard.welcomeSub')}</p><button className="bp" onClick={function(){goTab("learn")}}>{t('dashboard.start')}</button></div></Cd>
+  <Cd><div style={{textAlign:"center",padding:"40px 20px"}}><div style={{fontSize:48,marginBottom:16}}><Icon name="crosshair" size={48} weight="regular" color="#60a5fa" /></div><h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,marginBottom:12}}>{t('dashboard.welcome')}</h2><p style={{color:"#94a3b8",fontSize:15,lineHeight:1.6,maxWidth:400,margin:"0 auto 24px"}}>{t('dashboard.welcomeSub')}</p><button className="bp" onClick={function(){goTab("learn")}}>{t('dashboard.start')}</button></div></Cd>
 :<>
   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
     {[{l:t('dashboard.monthlySavings'),v:fmt(mSav),c:mSav>0?"#22c55e":"#ef4444",tab:"situation"},{l:t('dashboard.healthScore'),v:hScore.s+"/100",c:hScore.s>=70?"#22c55e":hScore.s>=40?"#eab308":"#ef4444",tab:"score"}].map(function(s){return(
@@ -774,7 +774,7 @@ export default function MagicNumberApp({onBack}){
     <div style={{fontSize:10,color:"#3b82f6",textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>{t('dashboard.yourMN')} {nSS>0&&<span style={{color:"#22c55e",fontSize:9}}>{t('dashboard.afterRetIncome')}</span>}</div>
     <div style={{fontFamily:"Outfit,sans-serif",fontSize:34,fontWeight:800,color:"#60a5fa"}}>{fmt(magic.real)}</div>
     <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('app.tapToExplore')}</div>
-    {nEx>0&&<div style={{marginTop:10}}><div style={{height:6,borderRadius:3,background:"rgba(255,255,255,0.05)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:3,width:Math.min(mD.p,100)+"%",background:mD.bc,transition:"width 1s"}}/></div><div style={{fontSize:10,color:mD.gc,marginTop:3,fontWeight:600}}>{mD.p>=100?"🎉 "+mD.p.toFixed(0)+"% — "+t('app.ahead'):mD.p.toFixed(1)+"% "+t('app.saved')}</div></div>}
+    {nEx>0&&<div style={{marginTop:10}}><div style={{height:6,borderRadius:3,background:"rgba(255,255,255,0.05)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:3,width:Math.min(mD.p,100)+"%",background:mD.bc,transition:"width 1s"}}/></div><div style={{fontSize:10,color:mD.gc,marginTop:3,fontWeight:600}}>{mD.p>=100?mD.p.toFixed(0)+"% — "+t('app.ahead'):mD.p.toFixed(1)+"% "+t('app.saved')}</div></div>}
   </Cd>}
   <Cd onClick={function(){goTab("situation")}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -794,14 +794,14 @@ export default function MagicNumberApp({onBack}){
 {/* === LEARN === */}
 {tab==="learn"&&<div className="fi">
   <Cd style={{textAlign:"center",padding:"28px 24px"}}>
-    <div style={{fontSize:40,marginBottom:12}}>📖</div>
+    <div style={{fontSize:40,marginBottom:12}}><Icon name="book-open-text" size={40} weight="regular" color="#60a5fa" /></div>
     <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('learn.title')}</h2>
     <p style={{color:"#94a3b8",fontSize:14,lineHeight:1.6,maxWidth:420,margin:"0 auto"}}>
       {t('learn.subtitle')}
     </p>
   </Cd>
 
-  <Cd><ST>🎯 {t('learn.magicNumber')}</ST>
+  <Cd><ST><Icon name="crosshair" size={16} weight="regular" /> {t('learn.magicNumber')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.magicNumberDesc')}
     </p>
@@ -810,13 +810,13 @@ export default function MagicNumberApp({onBack}){
     </p>
   </Cd>
 
-  <Cd><ST>💵 {t('learn.futureDollars')}</ST>
+  <Cd><ST><Icon name="money" size={16} weight="regular" /> {t('learn.futureDollars')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.futureDollarsDesc')}
     </p>
   </Cd>
 
-  <Cd><ST>📈 {t('learn.nomVsReal')}</ST>
+  <Cd><ST><Icon name="chart-line-up" size={16} weight="regular" /> {t('learn.nomVsReal')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.nomVsRealDesc')}
     </p>
@@ -825,7 +825,7 @@ export default function MagicNumberApp({onBack}){
     </p>
   </Cd>
 
-  <Cd><ST>🏦 {t('learn.investProfiles')}</ST>
+  <Cd><ST><Icon name="bank" size={16} weight="regular" /> {t('learn.investProfiles')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginBottom:12}}>
       {t('learn.investProfilesDesc')}
     </p>
@@ -844,13 +844,13 @@ export default function MagicNumberApp({onBack}){
     </p>
   </Cd>
 
-  <Cd><ST>📊 {t('learn.volatility')}</ST>
+  <Cd><ST><Icon name="chart-bar" size={16} weight="regular" /> {t('learn.volatility')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.volatilityDesc')}
     </p>
   </Cd>
 
-  <Cd><ST>💰 {t('learn.currentVsMonthly')}</ST>
+  <Cd><ST><Icon name="currency-dollar" size={16} weight="regular" /> {t('learn.currentVsMonthly')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.currentDesc')}
     </p>
@@ -859,13 +859,13 @@ export default function MagicNumberApp({onBack}){
     </p>
   </Cd>
 
-  <Cd><ST>📐 {t('learn.inflation')}</ST>
+  <Cd><ST><Icon name="ruler" size={16} weight="regular" /> {t('learn.inflation')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.inflationDesc')}
     </p>
   </Cd>
 
-  <Cd><ST>🏠 {t('learn.realEstate')}</ST>
+  <Cd><ST><Icon name="house" size={16} weight="regular" /> {t('learn.realEstate')}</ST>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
       {t('learn.realEstateDesc')}
     </p>
@@ -895,7 +895,7 @@ export default function MagicNumberApp({onBack}){
       <NI label={t('you.rentalEquity')} value={rentalEquity} onChange={setRentalEquity} tip={t('you.rentalEquityTip')}/>
       <NI label={t('you.rentalIncome')} value={rentalNetIncome} onChange={setRentalNetIncome} tip={t('you.rentalIncomeTip')}/>
       {nRentalEq>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.5,marginBottom:12}}>
-        📐 {t('you.rentalEquityExplain',{equity:fmt(nRentalEq),totalAssets:fmt(totalNetWorth),rentalIncome:fmt(nRentalNet)})}
+        <Icon name="ruler" size={13} weight="regular" /> {t('you.rentalEquityExplain',{equity:fmt(nRentalEq),totalAssets:fmt(totalNetWorth),rentalIncome:fmt(nRentalNet)})}
         {nAge>0&&nRetAge>0&&nYP>0&&<span> {t('you.rentalEquityFuture',{age:nRetAge+nYP,amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))})}</span>}
       </div>}
     </>}
@@ -917,7 +917,7 @@ export default function MagicNumberApp({onBack}){
     }
     <NI label={t('income.vacationLabel')} value={vacationAnnual} onChange={setVacationAnnual} placeholder="" tip={t('income.vacationTip')}/>
     {(nEx>0||nRentalEq>0)&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:12,color:"#93c5fd"}}>
-      💰 {t('income.investSavings')}: <strong>{fmt(nEx)}</strong>{nRentalEq>0?" + 🏨️ rental equity: "+fmt(nRentalEq)+" = total assets: "+fmt(totalNetWorth):""} <span style={{color:"#475569"}}>{t('income.setInYouTab')}</span>
+      <Icon name="currency-dollar" size={13} weight="regular" /> {t('income.investSavings')}: <strong>{fmt(nEx)}</strong>{nRentalEq>0?" + rental equity: "+fmt(nRentalEq)+" = total assets: "+fmt(totalNetWorth):""} <span style={{color:"#475569"}}>{t('income.setInYouTab')}</span>
     </div>}
   </Cd>
   <Cd>
@@ -946,19 +946,19 @@ export default function MagicNumberApp({onBack}){
       <input type="text" value={displayName} onChange={function(e){uE(exp.id,"name",e.target.value)}} placeholder={t('income.category')} style={{flex:1,minWidth:0,background:"rgba(248,250,253,0.98)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,color:"#0f172a",fontSize:13,padding:"11px 12px",fontFamily:"Outfit,sans-serif",outline:"none"}}/>
       <div style={{display:"flex",alignItems:"center",background:"rgba(248,250,253,0.98)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"0 12px",width:120,flexShrink:0}}><span style={{color:"#64748b",fontSize:13,fontWeight:600,marginRight:4}}>$</span>
         <input type="text" inputMode="numeric" value={(exp.amount&&!isNaN(Number(exp.amount))&&Number(exp.amount)>=1000)?Number(exp.amount).toLocaleString("en-US"):exp.amount} onChange={function(e){uE(exp.id,"amount",e.target.value.replace(/,/g,"").replace(/[^0-9]/g,""))}} placeholder="" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#0f172a",fontSize:15,fontWeight:600,padding:"11px 0",fontFamily:"Outfit,sans-serif",width:"100%"}}/></div>
-      <button onClick={function(){uE(exp.id,"discretionary",!exp.discretionary)}} style={{padding:"6px 8px",borderRadius:8,fontSize:10,fontWeight:600,border:"none",cursor:"pointer",flexShrink:0,background:exp.discretionary!==false?"rgba(245,158,11,0.1)":"rgba(96,165,250,0.1)",color:exp.discretionary!==false?"#f59e0b":"#60a5fa"}}>{exp.discretionary!==false?"✂️":"📌"}</button>
+      <button onClick={function(){uE(exp.id,"discretionary",!exp.discretionary)}} style={{padding:"6px 8px",borderRadius:8,fontSize:10,fontWeight:600,border:"none",cursor:"pointer",flexShrink:0,background:exp.discretionary!==false?"rgba(245,158,11,0.1)":"rgba(96,165,250,0.1)",color:exp.discretionary!==false?"#f59e0b":"#60a5fa",display:"flex",alignItems:"center"}}>{exp.discretionary!==false?<Icon name="scissors" size={12} weight="regular" />:<Icon name="push-pin" size={12} weight="regular" />}</button>
       {expenses.length>1&&<button onClick={function(){rE(exp.id)}} style={{width:34,height:34,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>×</button>}
     </div>)})})()}
-    <div style={{display:"flex",gap:12,marginTop:8,fontSize:11,color:"#475569"}}><span>✂️ {t('income.discretionary')}</span><span>📌 {t('income.essential')}</span></div>
+    <div style={{display:"flex",gap:12,marginTop:8,fontSize:11,color:"#475569"}}><span style={{display:"inline-flex",alignItems:"center",gap:3}}><Icon name="scissors" size={11} weight="regular" /> {t('income.discretionary')}</span><span style={{display:"inline-flex",alignItems:"center",gap:3}}><Icon name="push-pin" size={11} weight="regular" /> {t('income.essential')}</span></div>
     {(function(){var filled=expenses.filter(function(e){return e.amount!==""}).length;return filled<5?
       <div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6}}>
-        ⚠️ {t('income.fillWarning',{count:filled})}
+        <Icon name="warning" size={13} weight="regular" /> {t('income.fillWarning',{count:filled})}
       </div>
       :<div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#86efac"}}>
-        ✅ {t('income.fillComplete',{count:filled})}
+        <Icon name="check-circle" size={13} weight="regular" /> {t('income.fillComplete',{count:filled})}
       </div>})()}
   </Cd>
-  {nVac>0&&<Cd style={{padding:16}}><div style={{fontSize:12,color:"#64748b"}}>📅 {t('common.vacation')}: <strong style={{color:"#0f172a"}}>{fmt(Number(vacationAnnual))}{t('app.perYear')}</strong> = <strong style={{color:"#f87171"}}>{fmt(nVac)}{t('app.perMonth')}</strong> {t('common.addedToExpenses')}</div></Cd>}
+  {nVac>0&&<Cd style={{padding:16}}><div style={{fontSize:12,color:"#64748b"}}><Icon name="calendar" size={12} weight="regular" /> {t('common.vacation')}: <strong style={{color:"#0f172a"}}>{fmt(Number(vacationAnnual))}{t('app.perYear')}</strong> = <strong style={{color:"#f87171"}}>{fmt(nVac)}{t('app.perMonth')}</strong> {t('common.addedToExpenses')}</div></Cd>}
   <Cd glow={mSav>0?"green":mSav<0?"red":null}>
     <h3 style={{fontFamily:"Outfit,sans-serif",fontSize:17,fontWeight:600,color:"#0f172a",marginBottom:14}}>{t('income.monthlySummary')}</h3>
     {totalIncome>0&&<div style={{height:26,borderRadius:8,overflow:"hidden",background:"rgba(15,23,42,0.06)",display:"flex",marginBottom:14}}>
@@ -969,7 +969,7 @@ export default function MagicNumberApp({onBack}){
       <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.totalIncome')}{coupleMode||nRentalNet>0?" (total)":""}</span><span style={{fontSize:15,fontWeight:700,color:"#0f172a"}}>{fmt(totalIncome)}</span></div>
       {(coupleMode||nRentalNet>0)&&<div style={{paddingLeft:12,display:"grid",gap:4}}>
         {coupleMode&&<div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#475569"}}><span>{t('common.you')}: {fmt(nInc)}</span><span>{t('common.partner')}: {fmt(nP2I)}</span></div>}
-        {nRentalNet>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#475569"}}><span>🏘️ {t('common.netRentalIncome')}</span><span>{fmt(nRentalNet)}</span></div>}
+        {nRentalNet>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#475569"}}><span><Icon name="house-line" size={11} weight="regular" /> {t('common.netRentalIncome')}</span><span>{fmt(nRentalNet)}</span></div>}
       </div>}
       <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.totalExpenses')}{nVac>0?" ("+t('common.incVacation')+")":""}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>−{fmt(totExp)}</span></div>
       {nMortPay>0&&<div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.mortgagePI')}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>−{fmt(nMortPay)}</span></div>}
@@ -977,10 +977,10 @@ export default function MagicNumberApp({onBack}){
       <div style={{borderTop:"1px solid rgba(15,23,42,0.08)",paddingTop:8,display:"flex",justifyContent:"space-between"}}><span style={{fontSize:14,fontWeight:600,color:"#0f172a"}}>{t('income.monthlySavingsLabel')}</span><span style={{fontSize:19,fontWeight:800,color:mSav>0?"#22c55e":mSav<0?"#ef4444":"#94a3b8"}}>{fmt(mSav)}</span></div>
     </div>
     {mSav<0&&nEx>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.1)",fontSize:12,color:"#fca5a5",lineHeight:1.6,marginBottom:12}}>
-      ⚠️ {t('income.negSavingsWarning',{amount:fmt(Math.abs(mSav)),savings:fmt(nEx),yearly:fmt(Math.abs(mSav)*12)})}
+      <Icon name="warning" size={13} weight="regular" /> {t('income.negSavingsWarning',{amount:fmt(Math.abs(mSav)),savings:fmt(nEx),yearly:fmt(Math.abs(mSav)*12)})}
     </div>}
     {debtEvents.length>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",lineHeight:1.6}}>
-      📈 {t('income.debtEndBoost')}{(debtEvents||[]).map(function(ev){return " "+ev.name+" "+(lang==="en"?"ends in ":"termina en ")+ev.endsAtYear+(lang==="en"?" years":" años")+" (+"+fmt(ev.monthlyAmount)+t('app.perMonth')+")"}).join(",")}
+      <Icon name="chart-line-up" size={12} weight="regular" /> {t('income.debtEndBoost')}{(debtEvents||[]).map(function(ev){return " "+ev.name+" "+(lang==="en"?"ends in ":"termina en ")+ev.endsAtYear+(lang==="en"?" years":" años")+" (+"+fmt(ev.monthlyAmount)+t('app.perMonth')+")"}).join(",")}
     </div>}
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1003,7 +1003,7 @@ export default function MagicNumberApp({onBack}){
     {!noMortgage&&<>
       <NI label={t('debts.yearsLeft')} value={mortgageYearsLeft} onChange={setMortgageYearsLeft} prefix="" placeholder="" style={{marginBottom:8}} tip={t('debts.yearsLeftTip')}/>
       <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.5,marginBottom:12}}>
-        📐 {t('debts.projectionsExplain',{payment:fmt(nMortPay),yearsInfo:nMortYrs>0?" ("+nMortYrs+")":"",ageInfo:nMortYrs>0?" "+(lang==="en"?"at age ":"a los ")+(nAge+nMortYrs):""})}
+        <Icon name="ruler" size={12} weight="regular" /> {t('debts.projectionsExplain',{payment:fmt(nMortPay),yearsInfo:nMortYrs>0?" ("+nMortYrs+")":"",ageInfo:nMortYrs>0?" "+(lang==="en"?"at age ":"a los ")+(nAge+nMortYrs):""})}
       </div>
       <div style={{fontSize:13,fontWeight:500,color:"#64748b",marginBottom:8}}>{t('debts.optionalDetails')}</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
@@ -1011,13 +1011,13 @@ export default function MagicNumberApp({onBack}){
         <NI label={t('debts.fixedRate')} value={mortgageRate} onChange={setMortgageRate} prefix="" placeholder="" style={{marginBottom:0}}/>
       </div>
       {(Number(mortgageRate)||0)>0&&(Number(mortgageRate)||0)<4&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#86efac",lineHeight:1.6,marginTop:8}}>
-        ✅ {t('debts.goodRate',{rate:mortgageRate})}
+        <Icon name="check-circle" size={13} weight="regular" /> {t('debts.goodRate',{rate:mortgageRate})}
       </div>}
       {(Number(mortgageRate)||0)>=4&&(Number(mortgageRate)||0)<6&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(234,179,8,0.06)",border:"1px solid rgba(234,179,8,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6,marginTop:8}}>
-        📊 {t('debts.moderateRate',{rate:mortgageRate})}
+        <Icon name="chart-bar" size={13} weight="regular" /> {t('debts.moderateRate',{rate:mortgageRate})}
       </div>}
       {(Number(mortgageRate)||0)>=6&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.1)",fontSize:12,color:"#fca5a5",lineHeight:1.6,marginTop:8}}>
-        🔥 <strong>{t('debts.highRate',{rate:mortgageRate})}</strong>
+        <Icon name="fire" size={13} weight="regular" /> <strong>{t('debts.highRate',{rate:mortgageRate})}</strong>
         {nEx>0&&mortBal>0?" "+t('debts.highRateAdvice',{savings:fmt(nEx),rate:mortgageRate}):""}
         {(Number(mortgageRate)||0)>=8?" "+t('debts.veryHighRate',{rate:mortgageRate}):""}
       </div>}
@@ -1077,10 +1077,10 @@ export default function MagicNumberApp({onBack}){
         <span style={{fontSize:14,fontWeight:600,color:"#0f172a"}}>{d.name||"Unnamed"}</span>
         <div><span style={{fontWeight:700,fontSize:14,color:d.sev==="low"?"#94a3b8":"#f87171"}}>{fmt(d.bal)}</span><span style={{fontSize:12,marginLeft:6,color:d.sev==="low"?"#64748b":"#ef4444"}}>@ {d.rate}%</span></div></div>
       <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.5}}>
-        {d.sev==="critical"?<span>🚨 {t('debts.debtCritical',{rate:d.rate})}</span>
-        :d.sev==="high"?<span>⚠️ {t('debts.debtHigh',{rate:d.rate,strategies:PROFILES.filter(function(p){return p.nomReturn>=d.rate/100}).map(function(p){return p.name}).join(", ")})}</span>
-        :d.sev==="moderate"?<span>📊 {t('debts.debtModerate',{rate:d.rate})}</span>
-        :<span>✅ {t('debts.debtLow',{rate:d.rate})}</span>}
+        {d.sev==="critical"?<span><Icon name="siren" size={13} weight="regular" /> {t('debts.debtCritical',{rate:d.rate})}</span>
+        :d.sev==="high"?<span><Icon name="warning" size={13} weight="regular" /> {t('debts.debtHigh',{rate:d.rate,strategies:PROFILES.filter(function(p){return p.nomReturn>=d.rate/100}).map(function(p){return p.name}).join(", ")})}</span>
+        :d.sev==="moderate"?<span><Icon name="chart-bar" size={13} weight="regular" /> {t('debts.debtModerate',{rate:d.rate})}</span>
+        :<span><Icon name="check-circle" size={13} weight="regular" /> {t('debts.debtLow',{rate:d.rate})}</span>}
       </div></div>)})}
     {probDebts.length===0&&debtAn.length>0&&<div style={{fontSize:13,color:"#86efac",marginTop:4}}>{t('debts.allDebtsBelowReturns')}</div>}
   </Cd>}
@@ -1104,7 +1104,7 @@ export default function MagicNumberApp({onBack}){
         :t('debts.efCritical',{target:fmt(totalMonthlyObligations*6)})}
       </div>
       <div style={{fontSize:10,color:"#475569",marginTop:6}}>{t('debts.efBasedOn',{amt:fmt(totalMonthlyObligations)})}</div>
-    </>:<div style={{fontSize:12,color:"#92400e"}}>⚠️ {t('debts.enterSavingsEF')}</div>}
+    </>:<div style={{fontSize:12,color:"#92400e"}}><Icon name="warning" size={13} weight="regular" /> {t('debts.enterSavingsEF')}</div>}
   </Cd>}
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
 </div>}
@@ -1119,18 +1119,18 @@ export default function MagicNumberApp({onBack}){
       <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(15,23,42,0.08)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>{t('retirement.editInMN')}</div>
     </div>
     {nMortPay>0&&nMortYrs>ytr&&ytr>0&&<div style={{padding:"12px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6,marginBottom:16}}>
-      ⚠️ <strong>{t('retirement.mortgageExtends', {n: nMortYrs-ytr})}</strong> {t('common.makeSureDes')} <strong>{fmt(nMortPay)}/mo</strong>.
+      <Icon name="warning" size={14} weight="regular" /> <strong>{t('retirement.mortgageExtends', {n: nMortYrs-ytr})}</strong> {t('common.makeSureDes')} <strong>{fmt(nMortPay)}/mo</strong>.
     </div>}
     {nMortPay>0&&nMortYrs>0&&nMortYrs<=ytr&&ytr>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#86efac",lineHeight:1.5,marginBottom:16}}>
-      ✅ {t('retirement.mortgagePaidOff', {n: ytr-nMortYrs})}
+      <Icon name="check-circle" size={13} weight="regular" /> {t('retirement.mortgagePaidOff', {n: ytr-nMortYrs})}
     </div>}
     {nSS>0&&nDes>0&&desiredAfterSS>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#86efac",lineHeight:1.5,marginBottom:16}}>
-      ✅ {t('retirement.retIncomeCover', {amt: fmt(nSS)})} <strong>{pct(nSS/nDes)}</strong> {t('retirement.ofMonthlyNeeds')} {t('retirement.onlyNeedFund')} <strong>{fmt(desiredAfterSS)}/mo</strong> {t('retirement.fromSavings')}.
+      <Icon name="check-circle" size={13} weight="regular" /> {t('retirement.retIncomeCover', {amt: fmt(nSS)})} <strong>{pct(nSS/nDes)}</strong> {t('retirement.ofMonthlyNeeds')} {t('retirement.onlyNeedFund')} <strong>{fmt(desiredAfterSS)}/mo</strong> {t('retirement.fromSavings')}.
     </div>}
   </Cd>
 
   {nDes>0&&nYP>0&&ytr>0&&desiredAfterSS===0&&<Cd glow="green" style={{textAlign:"center",padding:"32px 24px"}}>
-    <div style={{fontSize:48,marginBottom:12}}>🎉</div>
+    <div style={{fontSize:48,marginBottom:12}}><Icon name="confetti" size={48} weight="regular" color="#22c55e" /></div>
     <div style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#22c55e",marginBottom:8}}>{t('retirement.retiCovered')}</div>
     <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.6,maxWidth:440,margin:"0 auto"}}>
       {t('retirement.retIncomeCover', {amt: fmt(nSS)})} {t('retirement.meetsExceeds')} {fmt(nDes)}/mo.
@@ -1152,7 +1152,7 @@ export default function MagicNumberApp({onBack}){
         <div style={{marginTop:14,marginBottom:14}}>
           <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{t('retirement.stratDuring')}</div>
           <div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center"}}>
-            {hasPortfolio&&<TabBtn active={retProfileIdx===-1} label={"🎛️ "+t('profiles.myPortfolio.name')} onClick={function(){setRetProfileIdx(-1)}} color="#e879f9"/>}
+            {hasPortfolio&&<TabBtn active={retProfileIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setRetProfileIdx(-1)}} color="#e879f9"/>}
             {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={retProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setRetProfileIdx(i)}} color={p.color}/>})}
           </div>
         </div>
@@ -1163,7 +1163,7 @@ export default function MagicNumberApp({onBack}){
               <div style={{fontSize:19,fontWeight:700,color:mD.gc}}>{mD.p>=100?"+"+fmt(mD.sur):fmt(mD.gap)}</div></div>
           </div>
           <div style={{height:10,borderRadius:5,background:"rgba(255,255,255,0.05)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(mD.p,100)+"%",background:mD.bc,transition:"width 1s"}}/></div>
-          <div style={{fontSize:11,marginTop:6,color:mD.gc,fontWeight:600}}>{mD.p>=100?"🎉 "+mD.p.toFixed(0)+"% — "+t('retirement.aheadTarget'):mD.p>=60?"⚡ "+mD.p.toFixed(1)+"% — "+t('retirement.gettingClose'):"📈 "+mD.p.toFixed(1)+"% — "+t('retirement.letsExplore')}</div>
+          <div style={{fontSize:11,marginTop:6,color:mD.gc,fontWeight:600}}>{mD.p>=100?mD.p.toFixed(0)+"% — "+t('retirement.aheadTarget'):mD.p>=60?mD.p.toFixed(1)+"% — "+t('retirement.gettingClose'):mD.p.toFixed(1)+"% — "+t('retirement.letsExplore')}</div>
         </div>
       </div>
     </Cd>
@@ -1179,7 +1179,7 @@ export default function MagicNumberApp({onBack}){
         <div>
           <div style={{fontSize:10,color:"#94a3b8",textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{t('retirement.conservative')}</div>
           <div style={{fontFamily:"Outfit,sans-serif",fontSize:24,fontWeight:800,color:"#94a3b8"}}>{fmtC(magic.conservative)}</div>
-          <div style={{fontSize:10,color:"#475569",marginTop:2}}>💵 Cash Investor ({pct(magic.conservativeRate)} real)</div>
+          <div style={{fontSize:10,color:"#475569",marginTop:2}}><Icon name="money" size={11} weight="regular" /> Cash Investor ({pct(magic.conservativeRate)} real)</div>
         </div>
       </div>
       <div style={{marginTop:14,padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.6,textAlign:"center"}}>
@@ -1195,11 +1195,11 @@ export default function MagicNumberApp({onBack}){
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:16}}><Icon name={p.icon} size={14} weight="light"/></span><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{p.name}</span><span style={{fontSize:10,color:"#475569"}}>{pct(p.realReturn)} real</span></div>
             <div style={{textAlign:"right"}}>
-              {covered?<span style={{fontSize:14,fontWeight:700,color:"#22c55e"}}>✅ {t('retirement.covered')}</span>
+              {covered?<span style={{fontSize:14,fontWeight:700,color:"#22c55e"}}><Icon name="check-circle" size={14} weight="regular" /> {t('retirement.covered')}</span>
               :<span style={{fontSize:14,fontWeight:700,color:"#f87171"}}>{fmt(p.monthly)}{t('app.perMonth')}</span>}
             </div>
           </div>
-          {!covered&&<div style={{fontSize:10,color:"#f87171",marginTop:3}}>⚠️ {t('retirement.needExtraBeyond',{extra:fmt(p.monthly),current:fmt(mSav)})}</div>}
+          {!covered&&<div style={{fontSize:10,color:"#f87171",marginTop:3}}><Icon name="warning" size={11} weight="regular" /> {t('retirement.needExtraBeyond',{extra:fmt(p.monthly),current:fmt(mSav)})}</div>}
           {covered&&<div style={{fontSize:10,color:"#22c55e",marginTop:3}}>{t('retirement.surplusMsg',{amt:fmt(p.surplus)})}</div>}
         </div>)})}
     </Cd>
@@ -1209,17 +1209,17 @@ export default function MagicNumberApp({onBack}){
       <ST tip={t('retirement.ybyTip')}>{t('retirement.ybyProjection')}</ST>
       {/* Two-phase profile selectors */}
       <div style={{marginBottom:14}}>
-        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}>📈 {t('retirement.accumulation')}</div>
+        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}><Icon name="chart-line-up" size={13} weight="regular" /> {t('retirement.accumulation')}</div>
         <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:4}}>
-          {hasPortfolio&&<TabBtn active={chartProfileIdx===-1} label={"🎛️ "+t('profiles.myPortfolio.name')} onClick={function(){setChartProfileIdx(-1)}} color="#e879f9"/>}
+          {hasPortfolio&&<TabBtn active={chartProfileIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setChartProfileIdx(-1)}} color="#e879f9"/>}
           {allProfiles.map(function(p,i){return <TabBtn key={p.id} active={chartProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartProfileIdx(i)}} color={p.color}/>})}
         </div>
         <div style={{fontSize:11,color:chartProfileIdx===-1?"#e879f9":"#93c5fd",marginBottom:12}}>
           {chartProfileIdx===-1&&hasPortfolio?t('retirement.usingPortfolio', {rate: pct(chartAccumReturn)}):t('retirement.usingProfile', {name: (chartProfileIdx>=0?(chartProfileIdx<adjProfiles.length?adjProfiles[chartProfileIdx]:allProfiles[chartProfileIdx]).name:"60/40"), rate: pct(chartAccumReturn)})}
         </div>
-        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}>🏖️ {t('retirement.retirementPhase')}</div>
+        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}><Icon name="umbrella" size={13} weight="regular" /> {t('retirement.retirementPhase')}</div>
         <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:4}}>
-          {hasPortfolio&&<TabBtn active={chartRetireIdx===-1} label={"🎛️ "+t('profiles.myPortfolio.name')} onClick={function(){setChartRetireIdx(-1)}} color="#e879f9"/>}
+          {hasPortfolio&&<TabBtn active={chartRetireIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setChartRetireIdx(-1)}} color="#e879f9"/>}
           {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={chartRetireIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartRetireIdx(i)}} color={p.color}/>})}
         </div>
         <div style={{fontSize:11,color:chartRetireIdx===-1?"#e879f9":"#93c5fd"}}>
@@ -1248,15 +1248,15 @@ export default function MagicNumberApp({onBack}){
             {peakY!==ytr&&<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(167,139,250,0.08)",fontSize:11,color:"#c4b5fd"}}>{t('retirement.peak')} <strong>{fmtC(peakV)}</strong> at age {nAge+peakY}</div>}
           </div>
           <div style={{textAlign:"center"}}>
-            {depleteY?<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#fca5a5",display:"inline-block"}}>⚠️ {t('retirement.moneyRunsOut', {age: nAge+depleteY, n: depleteY-ytr})}</div>
-            :<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"inline-block"}}>✅ {t('retirement.moneyLasts', {amt: fmtC(lastBal), age: nAge+ytr+nYP})}</div>}
+            {depleteY?<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#fca5a5",display:"inline-block"}}><Icon name="warning" size={12} weight="regular" /> {t('retirement.moneyRunsOut', {age: nAge+depleteY, n: depleteY-ytr})}</div>
+            :<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"inline-block"}}><Icon name="check-circle" size={12} weight="regular" /> {t('retirement.moneyLasts', {amt: fmtC(lastBal), age: nAge+ytr+nYP})}</div>}
           </div>
         </div>)})()}
       {/* Debt payoff milestones */}
       {debtEvents.length>0&&<div style={{display:"grid",gap:6,marginTop:12}}>
         {debtEvents.filter(function(ev){return ev.endsAtYear<ytr}).map(function(ev,i){return(
           <div key={i} style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"flex",justifyContent:"space-between"}}>
-            <span>📈 {t('retirement.paidOffAt', {name: ev.name, age: nAge+ev.endsAtYear})}</span>
+            <span><Icon name="chart-line-up" size={12} weight="regular" /> {t('retirement.paidOffAt', {name: ev.name, age: nAge+ev.endsAtYear})}</span>
             <span style={{fontWeight:600}}>{t('retirement.savingsBoost', {amt: fmt(ev.monthlyAmount)})}</span>
           </div>)})}
       </div>}
@@ -1277,7 +1277,7 @@ export default function MagicNumberApp({onBack}){
       </div>
     </div>
     <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:16}}>
-      📐 {t('achieve.illustrativeProj')} (<span style={{cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("portfolio")}}>{t('achieve.yourPortfolio')}</span>).
+      <Icon name="ruler" size={12} weight="regular" /> {t('achieve.illustrativeProj')} (<span style={{cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("portfolio")}}>{t('achieve.yourPortfolio')}</span>).
     </div>
     <div style={{display:"flex",gap:8,marginBottom:16}}>
       {[5,10,20,30,40,50].map(function(y){return <TabBtn key={y} active={projYears===y} label={y+(lang==="en"?" yr":" a")} onClick={function(){setProjYears(y)}}/>})}
@@ -1310,7 +1310,7 @@ export default function MagicNumberApp({onBack}){
     <Toggle value={showScenarios} onChange={setShowScenarios} label={showScenarios?t('invest.scenarios'):t('invest.showScenarios')} sub={t('invest.scenariosSub')}/>
     {showScenarios&&<>
       <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:8,marginBottom:12}}>
-        {hasPortfolio&&<TabBtn active={scenProfileIdx===-1} label={"🎛️ "+t('invest.myPortfolio')} onClick={function(){setScenProfileIdx(-1)}} color="#e879f9"/>}
+        {hasPortfolio&&<TabBtn active={scenProfileIdx===-1} label={t('invest.myPortfolio')} onClick={function(){setScenProfileIdx(-1)}} color="#e879f9"/>}
         {allProfiles.map(function(p,i){return <TabBtn key={p.id} active={scenProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setScenProfileIdx(i)}} color={p.color}/>})}
       </div>
     </>}
@@ -1324,7 +1324,7 @@ export default function MagicNumberApp({onBack}){
           </div>)})}
       </div>
       <div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.1)",fontSize:12,color:"#93c5fd",lineHeight:1.6,textAlign:"center"}}>
-        📐 {t('invest.scenariosDisclaimer',{todayDollar:t('common.todayDollar'),profile:scenProfileIdx===-1&&hasPortfolio?t('invest.myPortfolio'):((allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).name),rate:pct(scenProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).realReturn),debtBoost:debtEvents.length>0?t('invest.includesDebtBoost'):""})}
+        <Icon name="ruler" size={12} weight="regular" /> {t('invest.scenariosDisclaimer',{todayDollar:t('common.todayDollar'),profile:scenProfileIdx===-1&&hasPortfolio?t('invest.myPortfolio'):((allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).name),rate:pct(scenProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).realReturn),debtBoost:debtEvents.length>0?t('invest.includesDebtBoost'):""})}
       </div>
     </div>}
   </Cd>
@@ -1334,7 +1334,7 @@ export default function MagicNumberApp({onBack}){
     <div style={{fontSize:11,fontWeight:600,color:"#b45309",textTransform:"uppercase",letterSpacing:3,marginBottom:4,textAlign:"center"}}>{t('inaction.costOfNotInvesting')}</div>
     <div style={{fontSize:12,color:"#d97706",textAlign:"center",marginBottom:10}}>{t('inaction.whatHappens20yr')}</div>
     <div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center",marginBottom:14}}>
-      {hasPortfolio&&<TabBtn active={costNSProfileIdx===-1} label={"🎛️ "+t('invest.myPortfolio')} onClick={function(){setCostNSProfileIdx(-1)}} color="#e879f9"/>}
+      {hasPortfolio&&<TabBtn active={costNSProfileIdx===-1} label={t('invest.myPortfolio')} onClick={function(){setCostNSProfileIdx(-1)}} color="#e879f9"/>}
       {allProfiles.filter(function(_,i){return i>=1}).map(function(p,i){var idx=i+1;return <TabBtn key={p.id} active={costNSProfileIdx===idx} iconName={p.icon} label={p.name} onClick={function(){setCostNSProfileIdx(idx)}} color={p.color}/>})}
     </div>
     <div style={{overflowX:"auto"}}>
@@ -1405,7 +1405,7 @@ export default function MagicNumberApp({onBack}){
 {/* === YOUR MAGIC NUMBER === */}
 {tab==="achieve"&&<div className="fi">
   <Cd style={{textAlign:"center",padding:"24px 20px"}}>
-    <div style={{fontSize:36,marginBottom:10}}>🎯</div>
+    <div style={{fontSize:36,marginBottom:10}}><Icon name="crosshair" size={36} weight="regular" color="#60a5fa" /></div>
     <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('achieve.title')}</h2>
     <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.7,maxWidth:440,margin:"0 auto"}}>
       {t('achieve.intro', {q: q})}
@@ -1424,7 +1424,7 @@ export default function MagicNumberApp({onBack}){
     {nSSRaw>0&&ytr>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:12}}>{fmt(nSSRaw)}/mo {t('retirement.atRetirement')} = <strong>{fmt(nSS)}/mo {t('retirement.todayDollar')}</strong> <span style={{color:"#475569"}}>({t('retirement.inflAdjusted', {y: ytr})})</span></div>}
     <NI label={t('achieve.currentSavings')} value={existingSavings} onChange={setExistingSavings} tip={t('achieve.currentSavingsTip')}/>
     <NI label={t('achieve.estMonthlySav')} value={manualMonthlySav} onChange={setManualMonthlySav} tip={t('achieve.estMonthlySavTip')}/>
-    {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",marginBottom:12}}>✅ {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> — {t('achieve.overridesEstimate')}.</div>}
+    {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> — {t('achieve.overridesEstimate')}.</div>}
     <NI label={t('achieve.legacy')} value={legacy} onChange={setLegacy} tip={t('achieve.legacyTip')}/>
     <div style={{marginTop:8,marginBottom:16}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
@@ -1434,7 +1434,7 @@ export default function MagicNumberApp({onBack}){
       <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{t('achieve.assetTaxTip')}</div>
       <Slider label="" value={assetTax} onChange={setAssetTax} min={0} max={3} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/>
       {assetTax>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginTop:4}}>
-        ⚠️ {t('achieve.assetTaxExplain',{tax:assetTax.toFixed(1)})}
+        <Icon name="warning" size={12} weight="regular" /> {t('achieve.assetTaxExplain',{tax:assetTax.toFixed(1)})}
       </div>}
     </div>
     {nAge>0&&nRetAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}><div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{ytr>0?t('achieve.yearsToGo',{n:ytr}):t('achieve.atRetirement')}</div>{nYP>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('achieve.planToAge',{age:nRetAge+nYP})}</div>}{mSav>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac"}}>{hasIncomeData?t('achieve.savingActual',{amt:fmt(mSav)}):t('achieve.savingEstimate',{amt:fmt(mSav)})}</div>}</div>}
@@ -1456,7 +1456,7 @@ export default function MagicNumberApp({onBack}){
       </div>
     </Cd>
     <Cd glow="gold" style={{textAlign:"center",padding:"32px 24px"}}>
-      <div style={{fontSize:28,marginBottom:10}}>🔓</div>
+      <div style={{fontSize:28,marginBottom:10}}><Icon name="lock-open" size={28} weight="regular" color="#eab308" /></div>
       <div style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Want your exact Magic Number?":"¿Querés conocer tu Magic Number exacto?"}</div>
       <p style={{fontSize:14,color:"#64748b",lineHeight:1.6,maxWidth:380,margin:"0 auto 20px"}}>{lang==="en"?"Enter your email and we'll reveal your precise number — plus send you a personalized PDF report.":"Dejá tu email y te revelamos tu número preciso — además te enviamos un informe PDF personalizado."}</p>
       <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
@@ -1464,7 +1464,7 @@ export default function MagicNumberApp({onBack}){
         <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return}setTier("email");setEmailError("")}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal":"Revelar"} →</button>
       </div>
       {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
-      <div style={{fontSize:11,color:"#94a3b8",marginTop:10}}>🔒 {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
+      <div style={{fontSize:11,color:"#94a3b8",marginTop:10}}><Icon name="lock" size={11} weight="regular" /> {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
     </Cd>
     <AdvisorCTA/>
     </>}
@@ -1472,20 +1472,20 @@ export default function MagicNumberApp({onBack}){
     {tier!=="free"&&<>
     <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nSS>0?" (además de "+fmt(nSS)+"/mes de jubilación)":"")+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" años."}</div></div></Cd>
     <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
-      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>💰 {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*3,500000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#93c5fd",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
-      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>📅 {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*3,10000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#86efac",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
-      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>📈 {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={0} max={12} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div></div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*3,500000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#93c5fd",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*3,10000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#86efac",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={0} max={12} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div></div>
       {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>↩ {t('achieve.resetToActual')}</button></div>:null}
     </Cd>
-    <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{"📈 "+(lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+".")}</div></div></Cd>
+    <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
     {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#fca5a5"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#86efac"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#93c5fd",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
-    {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}>🎉 {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
+    {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
     <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')}/>
     {tier==="email"&&<Cd glow="gold" style={{textAlign:"center",padding:"28px 24px"}}>
-      <div style={{fontSize:28,marginBottom:10}}>⭐</div>
+      <div style={{fontSize:28,marginBottom:10}}><Icon name="star" size={28} weight="fill" color="#eab308" /></div>
       <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"Desbloqueá tu Perfil Full"}</div>
       <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis: detailed gap analysis, exact retirement age, year-by-year projections, and a premium PDF report.":"Obtené tu análisis financiero completo: brecha detallada, edad exacta de jubilación, proyecciones año por año, e informe PDF premium."}</p>
-      <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"¡Integración con Stripe próximamente! Precio: $14.99")}}>💎 {lang==="en"?"Unlock Full Profile — $14.99":"Desbloquear Perfil Full — $14.99"}</button>
+      <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"¡Integración con Stripe próximamente! Precio: $14.99")}}>{lang==="en"?"Unlock Full Profile — $14.99":"Desbloquear Perfil Full — $14.99"}</button>
     </Cd>}
     </>}
   </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}
@@ -1495,7 +1495,7 @@ export default function MagicNumberApp({onBack}){
   {nAge>0&&<>
   <Cd style={{marginTop:24,borderTop:"2px solid rgba(96,165,250,0.15)",paddingTop:28}}>
     <div style={{textAlign:"center",marginBottom:20}}>
-      <div style={{fontSize:28,marginBottom:8}}>🗓️</div>
+      <div style={{fontSize:28,marginBottom:8}}><Icon name="calendar" size={28} weight="regular" color="#60a5fa" /></div>
       <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",marginBottom:6}}>{t('achieve.whenCanIRetire')}</h2>
       <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.6,maxWidth:400,margin:"0 auto"}}>
         {t('achieve.reverseIntro')}
@@ -1511,7 +1511,7 @@ export default function MagicNumberApp({onBack}){
       <NI label={t('achieve.revMonthlySavings')} value={revMo} onChange={setRevMo} placeholder={mSav>0?Math.round(mSav).toLocaleString("en-US"):""} tip={t('achieve.revMonthlySavingsTip')}/>
     </div>
     {(revDes===""||revYrs===""||revSav===""||revMo==="")&&(nDes>0||nEx>0)&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:12}}>
-      📐 {t('achieve.revEmptyFieldsNote')}
+      <Icon name="ruler" size={12} weight="regular" /> {t('achieve.revEmptyFieldsNote')}
     </div>}
     <div style={{marginBottom:14}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
@@ -1568,7 +1568,7 @@ export default function MagicNumberApp({onBack}){
 {/* === COST OF INACTION === */}
 {tab==="inaction"&&<div className="fi">
   <Cd style={{textAlign:"center",padding:"24px 20px"}}>
-    <div style={{fontSize:36,marginBottom:10}}>💤</div>
+    <div style={{fontSize:36,marginBottom:10}}><Icon name="hourglass" size={36} weight="regular" color="#f59e0b" /></div>
     <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('inaction.title')}</h2>
     <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.7,maxWidth:440,margin:"0 auto"}}>
       {t('inaction.intro')}
@@ -1613,7 +1613,7 @@ export default function MagicNumberApp({onBack}){
           <div style={{fontSize:18,fontWeight:700,color:"#22c55e"}}>{fmt(iMo)}/mo</div>
         </div>
       </div>
-      {nEx<=0&&mSav<=0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginBottom:8}}>⚠️ {t('inaction.usingDefaults')}</div>}
+      {nEx<=0&&mSav<=0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginBottom:8}}><Icon name="warning" size={12} weight="regular" /> {t('inaction.usingDefaults')}</div>}
       <div style={{textAlign:"center"}}><span style={{fontSize:11,color:"#60a5fa",cursor:"pointer",fontWeight:600}} onClick={function(){goTab("achieve")}}>{t('inaction.editInMN')} →</span></div>
     </Cd>
 
@@ -1685,7 +1685,7 @@ export default function MagicNumberApp({onBack}){
             <div key={d.delay} style={{marginBottom:8,padding:"8px 14px",borderRadius:10,background:isToday?"rgba(34,197,94,0.04)":"rgba(0,0,0,0.1)",border:isToday?"1px solid rgba(34,197,94,0.1)":"1px solid rgba(255,255,255,0.03)"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
                 <div>
-                  <span style={{fontSize:12,fontWeight:600,color:isToday?"#22c55e":"#0f172a"}}>{isToday?"🟢 "+t('inaction.startToday'):"⏳ "+t('inaction.waitYr',{n:d.delay})}</span>
+                  <span style={{fontSize:12,fontWeight:600,color:isToday?"#22c55e":"#0f172a"}}>{isToday?t('inaction.startToday'):t('inaction.waitYr',{n:d.delay})}</span>
                   <span style={{fontSize:10,color:"#475569",marginLeft:6}}>({t('inaction.yrInvesting',{n:d.yrs})})</span>
                 </div>
                 <span style={{fontSize:14,fontWeight:700,color:isToday?"#22c55e":lost>0?"#f87171":"#0f172a"}}>{fmtC(d.val)}</span>
@@ -1718,7 +1718,7 @@ export default function MagicNumberApp({onBack}){
 {/* === SAVE MORE === */}
 {tab==="save"&&<div className="fi">
   <Cd><ST tip={t('save.tip')} sub={t('save.sub')}>{t('save.title')}</ST>
-    {savOpps.length===0?<div style={{textAlign:"center",padding:"30px 20px",color:"#64748b"}}><div style={{fontSize:36,marginBottom:12}}>🔍</div><p>{t('save.addFirst')} <span style={{color:"#22c55e",cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("situation")}}>{t('save.addFirstLink')}</span> {t('save.addFirstSuffix')}</p></div>
+    {savOpps.length===0?<div style={{textAlign:"center",padding:"30px 20px",color:"#64748b"}}><div style={{fontSize:36,marginBottom:12}}><Icon name="lightbulb" size={36} weight="regular" color="#64748b" /></div><p>{t('save.addFirst')} <span style={{color:"#22c55e",cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("situation")}}>{t('save.addFirstLink')}</span> {t('save.addFirstSuffix')}</p></div>
     :savOpps.map(function(o,i){return(<div key={o.id} style={{padding:16,borderRadius:14,marginBottom:12,background:i===0?"rgba(34,197,94,0.04)":"rgba(0,0,0,0.12)",border:i===0?"1px solid rgba(34,197,94,0.1)":"1px solid rgba(15,23,42,0.06)"}}>
       <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{o.name}</span><span style={{fontSize:13,fontWeight:600,color:"#f87171"}}>{fmt(o.cur)}/mo</span></div>
       <Slider label={t('save.cutBy',{pct:o.cutPct})} value={o.cutPct} onChange={function(v){setSavSliders(function(p){var n=Object.assign({},p);n[o.id]=v;return n})}} min={0} max={100} step={5} format={function(v){return fmt(o.cur*(v/100))+t('save.moSaved')}} color="#22c55e"/>
@@ -1733,7 +1733,7 @@ export default function MagicNumberApp({onBack}){
     </div>)})}
   </Cd>
   {savOpps.length>0&&<Cd glow="green">
-    <h3 style={{fontFamily:"Outfit,sans-serif",fontSize:17,fontWeight:600,color:"#22c55e",marginBottom:8}}>💡 {t('save.combinedImpact')}</h3>
+    <h3 style={{fontFamily:"Outfit,sans-serif",fontSize:17,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="lightbulb" size={16} weight="regular" /> {t('save.combinedImpact')}</h3>
     <div style={{fontSize:15,fontWeight:700,color:"#0f172a",marginBottom:12}}>Extra {fmt(totalSavOpp.mo)}/mo</div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,textAlign:"center"}}>
       {[{l:t('save.yrLabel',{n:10}),v:totalSavOpp.imp10},{l:t('save.yrLabel',{n:20}),v:totalSavOpp.imp20},{l:t('save.yrLabel',{n:30}),v:totalSavOpp.imp30}].map(function(t){return(
@@ -1754,7 +1754,7 @@ export default function MagicNumberApp({onBack}){
   </Cd>}
   <Cd style={{padding:"12px 16px"}}>
     <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6}}>
-      ⚠️ <strong>{t('save.scenariosOnly')}</strong> — {t('save.saveScenariosExplain')}
+      <Icon name="warning" size={13} weight="regular" /> <strong>{t('save.scenariosOnly')}</strong> — {t('save.saveScenariosExplain')}
     </div>
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1778,12 +1778,12 @@ export default function MagicNumberApp({onBack}){
           <div style={{fontSize:9,color:"#475569"}}>60/40</div>
         </div>)})}
     </div>
-    {eiTemporary&&<div style={{marginTop:10,fontSize:11,color:"#92400e",textAlign:"center"}}>⏱️ {t('earn.tempContrib',{years:nEIYrs})}</div>}
+    {eiTemporary&&<div style={{marginTop:10,fontSize:11,color:"#92400e",textAlign:"center"}}><Icon name="hourglass" size={12} weight="regular" /> {t('earn.tempContrib',{years:nEIYrs})}</div>}
   </Cd>}
 
   {/* Combined: Save + Earn */}
   {(totalSavOpp.mo>0||nEI>0)&&<Cd glow="gold">
-    <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:12}}>🔥 {t('earn.combined')}</div>
+    <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:12}}><Icon name="fire" size={14} weight="regular" /> {t('earn.combined')}</div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
       <div style={{padding:12,borderRadius:10,background:"rgba(0,0,0,0.15)",textAlign:"center"}}>
         <div style={{fontSize:10,color:"#64748b"}}>{t('earn.saveLess')}</div>
@@ -1805,7 +1805,7 @@ export default function MagicNumberApp({onBack}){
   </Cd>}
   <Cd style={{padding:"12px 16px"}}>
     <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6}}>
-      ⚠️ <strong>{t('earn.scenariosOnly')}</strong> — {t('earn.earnScenariosExplain')}
+      <Icon name="warning" size={13} weight="regular" /> <strong>{t('earn.scenariosOnly')}</strong> — {t('earn.earnScenariosExplain')}
     </div>
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1823,7 +1823,7 @@ export default function MagicNumberApp({onBack}){
   </Cd>
   {costInRet&&ytr>0&&<>
     <Cd glow="orange" style={{textAlign:"center",padding:"32px 24px"}}>
-      <div style={{fontSize:48,marginBottom:12}}>😱</div>
+      <div style={{fontSize:48,marginBottom:12}}><Icon name="lightning" size={48} weight="regular" color="#d97706" /></div>
       <div style={{fontSize:14,color:"#d97706",marginBottom:8}}>{costItemName||t('cost.thatPurchase')} {t('cost.purchaseForConnector')} <strong style={{color:"#f59e0b"}}>{fmt(Number(costItemPrice))}</strong></div>
       <div style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",lineHeight:1.4,marginBottom:12}}>
         {t('cost.ifInvestedFull',{rate:pct(costInRet.prof.realReturn),years:ytr})}
@@ -1838,7 +1838,7 @@ export default function MagicNumberApp({onBack}){
     <Cd><ST>{t('cost.compare')}</ST>
       {hasPortfolio&&blendedPortReturn!=null&&(function(){var fv=fvL(Number(costItemPrice)||0,blendedPortReturn,ytr);var mult=fv/(Number(costItemPrice)||1);return(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",borderRadius:8,marginBottom:4,background:"rgba(232,121,249,0.06)"}}>
-          <span style={{fontSize:12,color:"#e879f9",fontWeight:600}}>🎛️ {t('profiles.myPortfolio.name')}</span>
+          <span style={{fontSize:12,color:"#e879f9",fontWeight:600}}><Icon name="sliders-h" size={12} weight="regular" /> {t('profiles.myPortfolio.name')}</span>
           <div><span style={{fontSize:13,fontWeight:700,color:"#e879f9"}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}×)</span></div>
         </div>)})()}
       {allProfiles.map(function(p){var fv=fvL(Number(costItemPrice)||0,p.realReturn,ytr);var mult=fv/(Number(costItemPrice)||1);return(
@@ -1906,7 +1906,7 @@ export default function MagicNumberApp({onBack}){
 
   {/* Retirement impact */}
   {goalRetImpact&&<Cd glow="gold">
-    <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:10}}>⚠️ {t('goals.impactOnRetirement')}</div>
+    <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:10}}><Icon name="warning" size={13} weight="regular" /> {t('goals.impactOnRetirement')}</div>
     <div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6,marginBottom:12}}>
       {t('goals.directing',{amt:fmt(totalGoalMo)})}
     </div>
@@ -1922,7 +1922,7 @@ export default function MagicNumberApp({onBack}){
     </div>
     <div style={{textAlign:"center",marginTop:8,fontSize:12,color:"#f87171"}}>{t('goals.retReduction')} <strong>{fmt(goalRetImpact.diff)}</strong> ({t('goals.mnPercent',{pct:goalRetImpact.pctOfMagic.toFixed(1)})})</div>
     <div style={{marginTop:8,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>
-      📐 {t('goals.oppCostExplain',{rate:pct(goalImpactRate)})}
+      <Icon name="ruler" size={12} weight="regular" /> {t('goals.oppCostExplain',{rate:pct(goalImpactRate)})}
     </div>
   </Cd>}
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -2012,14 +2012,14 @@ export default function MagicNumberApp({onBack}){
         </div>
       </div>
       <button onClick={function(){
-        var text="💰 "+t('reports.whatIfSaved')+"\n\n";
+        var text=t('reports.whatIfSaved')+"\n\n";
         savOpps.slice(0,3).forEach(function(o){text+="• "+t('reports.cutBy',{name:o.name,pct:o.cutPct})+": +"+fmt(o.saved)+"/mo\n"});
         text+="\n"+t('reports.smallChanges')+": "+fmtC(totalSavOpp.imp20)+" ("+t('reports.todayDollars6040')+")\n\n"+t('reports.generatedBy');
         navigator.clipboard.writeText(text).then(function(){alert(t('reports.copiedAlert'))})
       }} style={{width:"100%",background:"linear-gradient(135deg,#a78bfa,#7c3aed)",color:"#fff",border:"none",padding:"14px 24px",borderRadius:14,fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",cursor:"pointer",boxShadow:"0 4px 20px rgba(167,139,250,0.25)"}}>
         {t('reports.copyToShare')}
       </button>
-    </>:<div style={{textAlign:"center",padding:20,color:"#64748b"}}><div style={{fontSize:36,marginBottom:12}}>📊</div><p>{t('reports.addDataFirst')}</p></div>}
+    </>:<div style={{textAlign:"center",padding:20,color:"#64748b"}}><div style={{fontSize:36,marginBottom:12}}><Icon name="chart-bar" size={36} weight="regular" color="#64748b" /></div><p>{t('reports.addDataFirst')}</p></div>}
   </Cd>
 
   {/* Financial Snapshot / Print */}
@@ -2059,7 +2059,7 @@ export default function MagicNumberApp({onBack}){
           </div>)})}
       </div>
       {nRentalEq>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:12,color:"#93c5fd",lineHeight:1.6,marginBottom:16}}>
-        📐 <strong>{t('reports.rentalEquityNote',{amt:fmt(nRentalEq)})}</strong>
+        <Icon name="ruler" size={12} weight="regular" /> <strong>{t('reports.rentalEquityNote',{amt:fmt(nRentalEq)})}</strong>
         {nAge>0&&nRetAge>0&&nYP>0?" "+t('reports.rentalEquityFuture',{age:nRetAge+nYP,rate:customInflation.toFixed(1),amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))}):""}
       </div>}
       <button onClick={function(){window.print()}} style={{width:"100%",background:"linear-gradient(135deg,#3b82f6,#2563eb)",color:"#fff",border:"none",padding:"14px 24px",borderRadius:14,fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",cursor:"pointer",boxShadow:"0 4px 20px rgba(59,130,246,0.25)"}}>
