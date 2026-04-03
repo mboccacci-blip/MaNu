@@ -319,7 +319,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
     <div className="lp-root">
       {/* ---- NAVBAR ---- */}
       {/* a11y: skip-to-content link for keyboard users */}
-      <nav className="lp-nav">
+      <nav className="lp-nav" role="navigation" aria-label="Main navigation">
         <div className="lp-nav-left">
           <a className="lp-nav-logo" href="#" onClick={e => e.preventDefault()}>
             <div className="lp-nav-logo-icon">MN</div>
@@ -482,8 +482,8 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
             © 2026 <span>MaNu PRO</span>. {t.footerCopy}
           </span>
           <div className="lp-footer-links">
-            <a className="lp-footer-link" href="#">{t.footerPriv}</a>
-            <a className="lp-footer-link" href="#">{t.footerTerms}</a>
+            <a className="lp-footer-link" href="/privacy.html" target="_blank" rel="noopener">{t.footerPriv}</a>
+            <a className="lp-footer-link" href="/terms.html" target="_blank" rel="noopener">{t.footerTerms}</a>
             <a className="lp-footer-link" href="#">{t.footerContact}</a>
           </div>
         </div>

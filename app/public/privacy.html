@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad — MaNu PRO</title>
+  <meta name="description" content="Política de Privacidad de MaNu PRO, la calculadora de retiro Magic Number. Cómo tratamos tus datos financieros.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    :root { --bg: #f0f4fa; --surface: #ffffff; --text: #0f172a; --muted: #64748b; --cyan: #0099cc; --border: rgba(15,23,42,0.08); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--cyan); text-decoration: none; font-size: 13px; font-weight: 600; margin-bottom: 32px; }
+    .back-link:hover { text-decoration: underline; }
+    h1 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .update-date { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+    h2 { font-size: 18px; font-weight: 700; margin: 32px 0 12px; color: var(--text); }
+    p, li { color: #334155; margin-bottom: 12px; }
+    ul { padding-left: 24px; }
+    li { margin-bottom: 8px; }
+    .disclaimer { margin-top: 40px; padding: 20px 24px; border-radius: 12px; background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.18); }
+    .disclaimer p { color: #92400e; font-size: 13px; margin-bottom: 0; }
+    .disclaimer strong { color: #78350f; }
+    .lang-toggle { position: fixed; top: 16px; right: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--muted); z-index: 10; }
+    .lang-toggle:hover { color: var(--cyan); border-color: var(--cyan); }
+    .section-es, .section-en { display: none; }
+    .section-es.active, .section-en.active { display: block; }
+    @media (max-width: 600px) { .container { padding: 32px 16px 60px; } h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+  <div class="container">
+    <a href="/" class="back-link">← MaNu PRO</a>
+
+    <!-- ESPAÑOL -->
+    <div class="section-es active" id="sec-es">
+      <h1>Política de Privacidad</h1>
+      <p class="update-date">Última actualización: 3 de abril de 2026</p>
+
+      <h2>1. ¿Quiénes somos?</h2>
+      <p>MaNu PRO ("Magic Number PRO") es una aplicación web de planificación financiera para el retiro. Está diseñada para ayudarte a calcular tu "Número Mágico" — la cifra exacta que necesitás acumular para vivir de tus inversiones.</p>
+
+      <h2>2. ¿Qué datos recopilamos?</h2>
+      <p><strong>Ningún dato personal se envía a nuestros servidores.</strong> MaNu PRO es una aplicación 100% client-side:</p>
+      <ul>
+        <li><strong>Datos financieros que ingresás</strong> (ingresos, gastos, ahorros, deudas, edad, metas de retiro): se almacenan <strong>exclusivamente en tu navegador</strong> usando <code>localStorage</code>. Nunca salen de tu dispositivo.</li>
+        <li><strong>Preferencia de idioma</strong> (ES/EN): se almacena localmente en tu navegador.</li>
+        <li><strong>No usamos cookies</strong> de tracking, publicidad ni de terceros.</li>
+        <li><strong>No recopilamos</strong> nombre, email, dirección, teléfono ni ningún dato identificable — salvo que voluntariamente nos lo proporciones (por ejemplo, al contactarnos).</li>
+      </ul>
+
+      <h2>3. Analytics</h2>
+      <p>Podemos utilizar herramientas de analytics anónimas (como PostHog) para entender cómo se usa la aplicación de forma agregada. En caso de activarse:</p>
+      <ul>
+        <li>Se registran eventos de navegación (qué pestañas se abren, qué botones se presionan) <strong>sin vincularlos a tu identidad.</strong></li>
+        <li>No se transmiten tus datos financieros ingresados.</li>
+        <li>Podés identificar si analytics está activo revisando las solicitudes de red de tu navegador.</li>
+      </ul>
+
+      <h2>4. Almacenamiento local</h2>
+      <p>Tus datos se guardan en <code>localStorage</code> de tu navegador bajo la clave <code>mn_pro_state</code>. Esto significa:</p>
+      <ul>
+        <li>Los datos <strong>persisten</strong> entre sesiones en el mismo navegador.</li>
+        <li>Podés <strong>borrarlos en cualquier momento</strong> usando el botón "Limpiar" dentro de la app, o limpiando los datos del sitio en tu navegador.</li>
+        <li>Los datos <strong>no se sincronizan</strong> entre dispositivos ni navegadores.</li>
+        <li>Si usás navegación privada/incógnito, los datos se borran al cerrar la ventana.</li>
+      </ul>
+
+      <h2>5. Terceros</h2>
+      <p>MaNu PRO utiliza los siguientes servicios de terceros:</p>
+      <ul>
+        <li><strong>Google Fonts</strong>: para cargar las tipografías Inter, Outfit y Fraunces. Google puede registrar la dirección IP de tu dispositivo según su <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad</a>.</li>
+        <li><strong>Netlify</strong>: para hospedar y distribuir la aplicación. Netlify puede registrar logs de acceso según su <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">política de privacidad</a>.</li>
+      </ul>
+
+      <h2>6. Seguridad</h2>
+      <p>La aplicación se sirve sobre HTTPS con headers de seguridad estrictos (Content-Security-Policy, HSTS, X-Frame-Options). Sin embargo, dado que los datos se almacenan localmente en tu navegador, <strong>la seguridad de tus datos depende también de la seguridad de tu dispositivo</strong>. Recomendamos:</p>
+      <ul>
+        <li>No usar MaNu PRO en dispositivos compartidos o públicos sin modo incógnito.</li>
+        <li>Mantener tu navegador actualizado.</li>
+      </ul>
+
+      <h2>7. Menores de edad</h2>
+      <p>MaNu PRO no está dirigido a menores de 18 años. No recopilamos datos de menores intencionalmente.</p>
+
+      <h2>8. Cambios a esta política</h2>
+      <p>Podemos actualizar esta política ocasionalmente. La fecha de "Última actualización" al inicio del documento refleja la versión vigente.</p>
+
+      <h2>9. Contacto</h2>
+      <p>Si tenés preguntas sobre esta política, podés contactarnos a través de los canales disponibles en la aplicación.</p>
+
+      <div class="disclaimer">
+        <p><strong>Aviso legal:</strong> Este documento es informativo y describe las prácticas actuales de tratamiento de datos de MaNu PRO. No constituye asesoramiento legal. Para cuestiones legales específicas sobre protección de datos en tu jurisdicción, consultá con un profesional habilitado.</p>
+      </div>
+    </div>
+
+    <!-- ENGLISH -->
+    <div class="section-en" id="sec-en">
+      <h1>Privacy Policy</h1>
+      <p class="update-date">Last updated: April 3, 2026</p>
+
+      <h2>1. Who are we?</h2>
+      <p>MaNu PRO ("Magic Number PRO") is a web application for retirement financial planning. It helps you calculate your "Magic Number" — the exact amount you need to accumulate so your investments cover your lifestyle.</p>
+
+      <h2>2. What data do we collect?</h2>
+      <p><strong>No personal data is sent to our servers.</strong> MaNu PRO is a 100% client-side application:</p>
+      <ul>
+        <li><strong>Financial data you enter</strong> (income, expenses, savings, debts, age, retirement goals): stored <strong>exclusively in your browser</strong> using <code>localStorage</code>. It never leaves your device.</li>
+        <li><strong>Language preference</strong> (ES/EN): stored locally in your browser.</li>
+        <li><strong>We do not use</strong> tracking cookies, advertising cookies, or third-party cookies.</li>
+        <li><strong>We do not collect</strong> your name, email, address, phone, or any identifiable data — unless you voluntarily provide it (e.g., when contacting us).</li>
+      </ul>
+
+      <h2>3. Analytics</h2>
+      <p>We may use anonymous analytics tools (such as PostHog) to understand how the application is used in aggregate. If activated:</p>
+      <ul>
+        <li>Navigation events (which tabs are opened, which buttons are pressed) are recorded <strong>without linking them to your identity.</strong></li>
+        <li>Your entered financial data is NOT transmitted.</li>
+        <li>You can check if analytics is active by reviewing your browser's network requests.</li>
+      </ul>
+
+      <h2>4. Local storage</h2>
+      <p>Your data is saved in your browser's <code>localStorage</code> under the key <code>mn_pro_state</code>. This means:</p>
+      <ul>
+        <li>Data <strong>persists</strong> between sessions in the same browser.</li>
+        <li>You can <strong>delete it at any time</strong> using the "Reset" button inside the app, or by clearing site data in your browser settings.</li>
+        <li>Data is <strong>not synced</strong> between devices or browsers.</li>
+        <li>If you use private/incognito browsing, data is deleted when you close the window.</li>
+      </ul>
+
+      <h2>5. Third parties</h2>
+      <p>MaNu PRO uses the following third-party services:</p>
+      <ul>
+        <li><strong>Google Fonts</strong>: to load Inter, Outfit, and Fraunces typefaces. Google may log your device's IP address per their <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>.</li>
+        <li><strong>Netlify</strong>: to host and serve the application. Netlify may record access logs per their <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">privacy policy</a>.</li>
+      </ul>
+
+      <h2>6. Security</h2>
+      <p>The application is served over HTTPS with strict security headers (Content-Security-Policy, HSTS, X-Frame-Options). However, since data is stored locally in your browser, <strong>data security also depends on your device's security</strong>. We recommend:</p>
+      <ul>
+        <li>Not using MaNu PRO on shared or public devices without incognito mode.</li>
+        <li>Keeping your browser up to date.</li>
+      </ul>
+
+      <h2>7. Children</h2>
+      <p>MaNu PRO is not directed at individuals under 18 years of age. We do not knowingly collect data from minors.</p>
+
+      <h2>8. Changes to this policy</h2>
+      <p>We may update this policy occasionally. The "Last updated" date at the top reflects the current version.</p>
+
+      <h2>9. Contact</h2>
+      <p>If you have questions about this policy, you can reach us through the channels available in the application.</p>
+
+      <div class="disclaimer">
+        <p><strong>Legal notice:</strong> This document is informational and describes MaNu PRO's current data handling practices. It does not constitute legal advice. For specific legal questions about data protection in your jurisdiction, please consult a qualified professional.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentLang = 'es';
+    function toggleLang() {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      document.getElementById('sec-es').className = 'section-es' + (currentLang === 'es' ? ' active' : '');
+      document.getElementById('sec-en').className = 'section-en' + (currentLang === 'en' ? ' active' : '');
+      document.getElementById('langBtn').textContent = currentLang === 'es' ? 'EN' : 'ES';
+      document.documentElement.lang = currentLang;
+    }
+  </script>
+</body>
+</html>

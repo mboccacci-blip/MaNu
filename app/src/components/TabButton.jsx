@@ -1,7 +1,7 @@
 import Icon from './Icon.jsx';
 
 export default function TabButton({ active, label, onClick, color, iconName }) {
-  color = color || "#0055AA";
+  color = color || "#0099cc";
   var rgb = hexToRgb(color);
   return (
     <button

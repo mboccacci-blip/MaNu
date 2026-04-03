@@ -82,7 +82,7 @@ body, #root {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
