@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-03-29 — refleja estado real verificado
+> Actualizado: 2026-04-10 — refleja estado real verificado
 
 ---
 
@@ -56,18 +56,29 @@
 - [ ] **83 líneas con emojis inline en `MagicNumberAppMain.jsx`** (88 emojis) — section headers, badges, decoración dentro de tabs — NO reemplazados
 - [ ] **22 emojis en `LandingPage.jsx`** — íconos de métricas, garantías, CTAs
 
+### Sprint 10-Abr-2026 — Feedback del Socio ✅
+- [x] Informe de estatus para socios generado y enviado
+- [x] Auditoría delta (análisis adversarial 3-Abr vs estado real 9-Abr)
+- [x] **Feedback #1**: "No arrancar con Ingresos y Gastos" → ya estaba así, confirmado
+- [x] **Feedback #2**: Gráfico Year-by-Year duplicado en tab "Tu MN" (achieve)
+  - [x] Versión completa (paid/email): `MultiLineChart` + selectores de perfil acumulación/retiro + badges
+  - [x] Versión simplificada (free): perfil fijo, sin selectores, con teaser de upgrade
+- [x] `npm run build` verificado — sin errores
+- [x] Verificación visual en browser — gráfico visible, selectores interactivos funcionan
+- [ ] **Pendiente**: commit + push de los cambios del gráfico YbY
+
 ---
 
 ## Deuda Técnica & Design System
 | #  | Ítem                      | Estado      | Detalle |
 |----|---------------------------|-------------|---------|
-| 1  | Emojis inline en app      | ❌ Pendiente | 83 líneas / 88 emojis en `MagicNumberAppMain.jsx` (2080 líneas) |
+| 1  | Emojis inline en app      | ❌ Pendiente | 83 líneas / 88 emojis en `MagicNumberAppMain.jsx` |
 | 2  | Emojis en landing          | ❌ Pendiente | 22 emojis en `LandingPage.jsx` |
 | 3  | Fuente body                | ❌ Pendiente | `index.css` body usa `Outfit` como base. Inter tiene presencia pero Outfit domina el `body {}` principal |
 | 4  | Color CSS global `--cyan`  | ❌ Pendiente | `--cyan` sigue siendo `#0099cc` en tokens. TabButton hardcodea `#0055AA` — inconsistencia |
 | 5  | Font-size base             | ❌ Pendiente | Sigue en `14px` — se planificó subir a `15px` |
 | 6  | Card glows                 | 🟡 Revisar  | 7 variantes `.mn-card.glow-*` con box-shadow cromático en CSS — evaluar si mantener |
-| 7  | Desacoplar monolito        | ❌ Pendiente | ~2080 líneas en archivo principal, 9+ componentes inline |
+| 7  | Desacoplar monolito        | ❌ Pendiente | **~2,166 líneas** en archivo principal (+81 del gráfico YbY), 9+ componentes inline |
 
 ---
 
@@ -90,8 +101,15 @@
 
 ---
 
+## Quick Wins Identificados (del informe de estatus)
+- [ ] **QW1** — Activar PostHog (~5 min): crear cuenta, copiar API key → `VITE_POSTHOG_KEY` en Netlify. El stub `analytics.js` ya existe.
+- [ ] **QW2** — Contactar 3 asesores financieros (1 hr): LinkedIn, mensaje de 3 líneas, validación B2B
+- [ ] **QW3** — Compartir link con 10 personas (~20 min): WhatsApp, feedback > 0 feedback
+
+---
+
 ## Git Status
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
 - **Último commit:** `42893ac` — feat: Phase D - Phosphor Icons, copy refinements, exclude large media
-- **Estado:** Local = Remoto ✅ sincronizado
+- **Estado:** Local tiene cambios sin commitear (gráfico YbY en achieve tab)
