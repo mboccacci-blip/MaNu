@@ -65,7 +65,7 @@
   - [x] Versión simplificada (free): perfil fijo, sin selectores, con teaser de upgrade
 - [x] `npm run build` verificado — sin errores
 - [x] Verificación visual en browser — gráfico visible, selectores interactivos funcionan
-- [ ] **Pendiente**: commit + push de los cambios del gráfico YbY
+- [x] Commit + push + deploy a producción ✅ (`fe99476`)
 
 ---
 
@@ -111,5 +111,6 @@
 ## Git Status
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **Último commit:** `42893ac` — feat: Phase D - Phosphor Icons, copy refinements, exclude large media
-- **Estado:** Local tiene cambios sin commitear (gráfico YbY en achieve tab)
+- **Último commit:** `fe99476` — feat: Year-by-Year chart in achieve tab + status report docs + todo update
+- **Estado:** Local = Remoto ✅ sincronizado
+- **Producción:** https://magic-number.app ✅ deploy live

@@ -179,7 +179,7 @@ export default function MagicNumberApp({onBack}){
   const [socialSecurity, setSocialSecurity] = useState("");
   const [magicRevealed, setMagicRevealed] = useState(false);
   const [retProfileIdx, setRetProfileIdx] = useState(4);
-  const [chartProfileIdx, setChartProfileIdx] = useState(-1);
+  const [chartProfileIdx, setChartProfileIdx] = useState(4);
   const [chartRetireIdx, setChartRetireIdx] = useState(3);
 
   // Investment Settings
