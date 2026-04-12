@@ -8,7 +8,7 @@ description: Deploy de la app MaNu PRO a Netlify (producción)
 
 ## Pre-requisitos
 - Netlify CLI ya está configurado y linkeado al proyecto `magic-number-mn`
-- El directorio de trabajo es `c:\Users\mbocc\OneDrive\Desktop Martin\Magic Number\app`
+- El directorio de trabajo es `C:\Users\mbocc\Dev\Magic Number\app`
 
 ## Pasos
 
@@ -33,10 +33,10 @@ Abrir https://magic-number-mn.netlify.app/ (o https://magic-number.app/) y verif
 ### 5. (Opcional) Commit local
 Si no se hizo ya:
 ```
-git -C "c:\Users\mbocc\OneDrive\Desktop Martin\Magic Number\app" add -A
+git -C "C:\Users\mbocc\Dev\Magic Number\app" add -A
 ```
 ```
-git -C "c:\Users\mbocc\OneDrive\Desktop Martin\Magic Number\app" commit -m "DESCRIPCIÓN DEL CAMBIO"
+git -C "C:\Users\mbocc\Dev\Magic Number\app" commit -m "DESCRIPCIÓN DEL CAMBIO"
 ```
 
 ## Notas
