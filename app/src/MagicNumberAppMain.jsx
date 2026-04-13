@@ -20,6 +20,8 @@ import MultiLineChartComponent from './components/MultiLineChart.jsx';
 import AdvisorCTAComponent from './components/AdvisorCTA.jsx';
 import NavButtonsComponent from './components/NavButtons.jsx';
 import { track, pageView, EVENTS } from './utils/analytics.js';
+import AssumptionsTab from './tabs/AssumptionsTab.jsx';
+import LearnTab from './tabs/LearnTab.jsx';
 
 // Tip: imported from ./components/Tip.jsx
 
@@ -637,122 +639,10 @@ export default function MagicNumberApp({onBack}){
 
 
 {/* === LEARN === */}
-{tab==="learn"&&<div className="fi">
-  <Cd style={{textAlign:"center",padding:"28px 24px"}}>
-    <div style={{fontSize:40,marginBottom:12}}><Icon name="book-open-text" size={40} weight="regular" color="#60a5fa" /></div>
-    <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('learn.title')}</h2>
-    <p style={{color:"#94a3b8",fontSize:14,lineHeight:1.6,maxWidth:420,margin:"0 auto"}}>
-      {t('learn.subtitle')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="crosshair" size={16} weight="regular" /> {t('learn.magicNumber')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.magicNumberDesc')}
-    </p>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginTop:10}}>
-      {t('learn.magicNumberDepends')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="money" size={16} weight="regular" /> {t('learn.futureDollars')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.futureDollarsDesc')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="chart-line-up" size={16} weight="regular" /> {t('learn.nomVsReal')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.nomVsRealDesc')}
-    </p>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginTop:10}}>
-      {t('learn.nomVsRealExample')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="bank" size={16} weight="regular" /> {t('learn.investProfiles')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginBottom:12}}>
-      {t('learn.investProfilesDesc')}
-    </p>
-    <div style={{display:"grid",gap:8}}>
-      {PROFILES.map(function(p){return(
-        <div key={p.id} style={{padding:"10px 14px",borderRadius:10,background:"rgba(0,0,0,0.15)",border:"1px solid rgba(15,23,42,0.06)"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name={p.icon} size={14} weight="light"/> {t('profiles.'+p.id+'.name')||p.name}</span>
-            <span style={{fontSize:12,color:p.color}}>{(p.nomReturn*100).toFixed(1)}% {t('common.nom')} / {(p.realReturn*100).toFixed(1)}% {t('common.real')}</span>
-          </div>
-          <div style={{fontSize:12,color:"#64748b",marginTop:4,lineHeight:1.5}}>{t('profiles.'+p.id+'.desc')||p.desc}</div>
-        </div>)})}
-    </div>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginTop:12}}>
-      {t('learn.portfolioExplain')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="chart-bar" size={16} weight="regular" /> {t('learn.volatility')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.volatilityDesc')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="currency-dollar" size={16} weight="regular" /> {t('learn.currentVsMonthly')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.currentDesc')}
-    </p>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7,marginTop:10}}>
-      {t('learn.monthlyDesc')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="ruler" size={16} weight="regular" /> {t('learn.inflation')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.inflationDesc')}
-    </p>
-  </Cd>
-
-  <Cd><ST><Icon name="house" size={16} weight="regular" /> {t('learn.realEstate')}</ST>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.7}}>
-      {t('learn.realEstateDesc')}
-    </p>
-  </Cd>
-
-  <Cd glow="green" style={{textAlign:"center",padding:"24px 20px"}}>
-    <div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}>{t('learn.readyToStart')}</div>
-    <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.6,marginBottom:16}}>
-      {t('learn.readyToStartDesc')}
-    </p>
-    <button className="bp" onClick={function(){goTab("achieve")}}>{t('learn.letsGo')}</button>
-  </Cd>
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
-</div>}
+{tab==="learn"&&<LearnTab tab={tab} goTab={goTab} tier={tier} />}
 
 {/* === YOU === */}
-{tab==="assumptions"&&<div className="fi">
-  <Cd><ST sub={t('you.subtitle')}>{t('you.title')}</ST>
-    {nAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
-      {[{l:t('you.age'),v:nAge},{l:t('you.retireAt'),v:nRetAge},{l:t('you.yearsInRetirement'),v:nYP},{l:t('you.savings'),v:fmt(nEx)}].map(function(b){return(
-        <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{b.l}: <strong>{b.v}</strong></div>)})}
-      <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(15,23,42,0.08)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>{t('you.editInMN')}</div>
-    </div>}
-    <Toggle value={coupleMode} onChange={setCoupleMode} label={t('you.coupleMode')} sub={t('you.coupleSub')}/>
-    <Toggle value={hasRental} onChange={setHasRental} label={t('you.rentalToggle')} sub={t('you.rentalSub')}/>
-    {hasRental&&<>
-      <NI label={t('you.rentalEquity')} value={rentalEquity} onChange={setRentalEquity} tip={t('you.rentalEquityTip')}/>
-      <NI label={t('you.rentalIncome')} value={rentalNetIncome} onChange={setRentalNetIncome} tip={t('you.rentalIncomeTip')}/>
-      {nRentalEq>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.5,marginBottom:12}}>
-        <Icon name="ruler" size={13} weight="regular" /> {t('you.rentalEquityExplain',{equity:fmt(nRentalEq),totalAssets:fmt(totalNetWorth),rentalIncome:fmt(nRentalNet)})}
-        {nAge>0&&nRetAge>0&&nYP>0&&<span> {t('you.rentalEquityFuture',{age:nRetAge+nYP,amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))})}</span>}
-      </div>}
-    </>}
-  </Cd>
-  <Cd><ST sub={t('you.inflationSub')}>{t('you.inflationTitle')}</ST>
-    <Slider label={t('you.inflationRate')} value={customInflation} onChange={setCustomInflation} min={0} max={8} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/>
-    {customInflation!==2.5&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",marginTop:8}}>
-      {t('you.customInflation',{rate:customInflation.toFixed(1)})}
-    </div>}
-  </Cd>
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
-</div>}
+{tab==="assumptions"&&<AssumptionsTab tab={tab} goTab={goTab} tier={tier} nAge={nAge} nRetAge={nRetAge} nYP={nYP} nEx={nEx} coupleMode={coupleMode} setCoupleMode={setCoupleMode} hasRental={hasRental} setHasRental={setHasRental} rentalEquity={rentalEquity} setRentalEquity={setRentalEquity} rentalNetIncome={rentalNetIncome} setRentalNetIncome={setRentalNetIncome} nRentalEq={nRentalEq} nRentalNet={nRentalNet} totalNetWorth={totalNetWorth} INFL={INFL} customInflation={customInflation} setCustomInflation={setCustomInflation} />}
 
 {/* === INCOME === */}
 {tab==="situation"&&<div className="fi">
