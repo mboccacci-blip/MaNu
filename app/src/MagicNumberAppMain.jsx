@@ -192,8 +192,8 @@ export default function MagicNumberApp({onBack}){
   const [costNSProfileIdx, setCostNSProfileIdx] = useState(4);
 
   // Portfolio
-  const [portAlloc, setPortAlloc] = useState([0,0,0,0,30,40,30]);
-  const [portContribAlloc, setPortContribAlloc] = useState([0,0,0,0,20,30,50]);
+  const [portAlloc, setPortAlloc] = useState([1,1,1,1,1,1,1]);
+  const [portContribAlloc, setPortContribAlloc] = useState([1,1,1,1,1,1,1]);
 
   // Strategy & Simulation
   const [savSliders, setSavSliders] = useState({});
@@ -323,7 +323,7 @@ export default function MagicNumberApp({onBack}){
     setNoCarLoan(false); setCarBalance(""); setCarRate(""); setCarPayment(""); setCarYearsLeft("");
     setRetirementAge(""); setYearsPostRet(""); setDesiredIncome(""); setExistingSavings(""); setSocialSecurity("");
     setLegacy(""); setAssetTax(0); setManualMonthlySav("");
-    setCustomInflation(2.5); setCustomReturn(""); setPortAlloc([0,0,0,0,30,40,30]); setPortContribAlloc([0,0,0,0,20,30,50]);
+    setCustomInflation(2.5); setCustomReturn(""); setPortAlloc([1,1,1,1,1,1,1]); setPortContribAlloc([1,1,1,1,1,1,1]);
     setExtraIncome(""); setEiTemporary(false); setEiYears("5");
     setGoals([{id:1,name:"",amount:"",years:"",profileIdx:4}]);
     setTier("free"); setUserEmail("");
@@ -1452,9 +1452,9 @@ export default function MagicNumberApp({onBack}){
       <div style={{position:"relative"}}>
         <div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div>
         <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#94a3b8",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number está entre"}</div>
-        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.75/50000)*50000)}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.85/25000)*25000)}</div>
         <div style={{fontSize:16,fontWeight:700,color:"#94a3b8",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
-        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.30/50000)*50000)}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.15/25000)*25000)}</div>
         <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
           {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")}
         </div>

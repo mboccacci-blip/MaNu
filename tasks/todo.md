@@ -67,13 +67,29 @@
 - [x] Verificación visual en browser — gráfico visible, selectores interactivos funcionan
 - [x] Commit + push + deploy a producción ✅ (`fe99476`)
 
+### Sprint 13-Abr-2026 — Feedback del Socio (Audio)
+- [x] **Feedback #3 — BUG: Gráfico YbY mostraba 4.3% (Mi Cartera)** ✅ CORREGIDO
+  - **Root cause**: `portAlloc=[0,0,0,0,30,40,30]` y `portContribAlloc=[0,0,0,0,20,30,50]` sumaban 100% → `hasPortfolio=true` desde el inicio
+  - **Fix**: Defaults cambiados a `[1,1,1,1,1,1,1]` (suma 7%, `hasPortfolio=false`). El usuario puede ajustar en tab Portfolio.
+  - Archivos: `MagicNumberAppMain.jsx` líneas 195-196, 326
+- [x] **Feedback #4 — Rango del Magic Number para free users reducido** ✅ CORREGIDO
+  - Antes: `0.75 × MN` a `1.30 × MN` redondeado a $50K (spread ~55%)
+  - Ahora: `0.85 × MN` a `1.15 × MN` redondeado a $25K (spread ~30%)
+  - Archivo: `MagicNumberAppMain.jsx` líneas 1455, 1457
+- [x] **Feedback #5 — "Se ve muy bien en el teléfono"** ✅ Positivo (sin acción)
+- [x] **Feedback #6 — Emojis/íconos** ✅ YA ESTABAN COMPLETADOS
+  - Revisión completa de las 2,166 líneas de `MagicNumberAppMain.jsx` + 494 de `LandingPage.jsx`: **cero emojis encontrados**
+  - El conteo anterior (83+22) era stale del sprint de Marzo. Phase D los reemplazó todos.
+- [x] `npm run build` verificado — sin errores (627KB, 4.42s)
+- [ ] Commit + push + deploy a producción
+
 ---
 
 ## Deuda Técnica & Design System
 | #  | Ítem                      | Estado      | Detalle |
 |----|---------------------------|-------------|---------|
-| 1  | Emojis inline en app      | ❌ Pendiente | 83 líneas / 88 emojis en `MagicNumberAppMain.jsx` |
-| 2  | Emojis en landing          | ❌ Pendiente | 22 emojis en `LandingPage.jsx` |
+| 1  | Emojis inline en app      | ✅ Completado | Verificado 13-Abr: 0 emojis en 2,166 líneas |
+| 2  | Emojis en landing          | ✅ Completado | Verificado 13-Abr: 0 emojis en 494 líneas |
 | 3  | Fuente body                | ❌ Pendiente | `index.css` body usa `Outfit` como base. Inter tiene presencia pero Outfit domina el `body {}` principal |
 | 4  | Color CSS global `--cyan`  | ❌ Pendiente | `--cyan` sigue siendo `#0099cc` en tokens. TabButton hardcodea `#0055AA` — inconsistencia |
 | 5  | Font-size base             | ❌ Pendiente | Sigue en `14px` — se planificó subir a `15px` |
