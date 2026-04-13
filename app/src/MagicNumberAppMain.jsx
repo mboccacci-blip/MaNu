@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+﻿import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { INFLATION_DEFAULT, RET_NOM, SCENARIO_SPREAD, PROFILES, DEFAULT_EXP, BENCH_SR, BENCH_NW, TABS } from './constants.js';
 import { fmt, fmtC, pct } from './utils/formatters.js';
 import { mR, fvC, fvL, pvA, gB, profByHorizon, clamp, yearByYear, fvVariable } from './utils/financial.js';
@@ -24,6 +24,9 @@ import AssumptionsTab from './tabs/AssumptionsTab.jsx';
 import LearnTab from './tabs/LearnTab.jsx';
 import DashboardTab from './tabs/DashboardTab.jsx';
 import PortfolioTab from './tabs/PortfolioTab.jsx';
+import ScoreTab from './tabs/ScoreTab.jsx';
+import ReportsTab from './tabs/ReportsTab.jsx';
+import GoalsTab from './tabs/GoalsTab.jsx';
 
 // Tip: imported from ./components/Tip.jsx
 
@@ -54,7 +57,7 @@ export default function MagicNumberApp({onBack}){
   // Demo mode: ?demo=1 in URL grants full paid access
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === '1';
 
-  // ── Zustand Store ──────────────────────────────────────────────────
+  // â”€â”€ Zustand Store â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const store = useAppStore();
   const sf = store.setField;
 
@@ -166,7 +169,7 @@ export default function MagicNumberApp({onBack}){
   const ciSav = store.ciSav; const setCiSav = function(v) { sf('ciSav', v); };
   const ciMo = store.ciMo; const setCiMo = function(v) { sf('ciMo', v); };
 
-  // ── No more manual persistence — Zustand persist middleware handles it ──
+  // â”€â”€ No more manual persistence â€” Zustand persist middleware handles it â”€â”€
   const loaded = true; // Always loaded with Zustand
 
   function clearAllData() {
@@ -199,7 +202,7 @@ export default function MagicNumberApp({onBack}){
   const nSSRaw=Number(socialSecurity)||0;
   const nLegacy=Number(legacy)||0;
   const ytr=Math.max(nRetAge-nAge,0);
-  const nSS=nSSRaw; // SS/retirement income now entered in today's dollars — no deflation needed
+  const nSS=nSSRaw; // SS/retirement income now entered in today's dollars â€” no deflation needed
   const totDebt=debts.reduce(function(s,d){return s+(Number(d.balance)||0)},0);
   const mortBal=(!ownsHome||noMortgage)?0:(Number(mortgageBalance)||0);
   const carBal=noCarLoan?0:(Number(carBalance)||0);
@@ -208,7 +211,7 @@ export default function MagicNumberApp({onBack}){
   const nEIYrs=Number(eiYears)||5;
   const effectiveMSav=mSav+nEI;
   
-  // Debt analysis — moved up to prevent ordering issues
+  // Debt analysis â€” moved up to prevent ordering issues
   var allDebts=useMemo(function(){
     var list=[];
     if(!noMortgage&&mortBal>0&&(Number(mortgageRate)||0)>0)
@@ -250,7 +253,7 @@ export default function MagicNumberApp({onBack}){
 
 
 
-  // Portfolio allocation — works with allProfiles (base 7 + optional custom)
+  // Portfolio allocation â€” works with allProfiles (base 7 + optional custom)
   const portReturn=useMemo(function(){
     const totalAlloc=portAlloc.reduce(function(s,v){return s+v},0);
     if(totalAlloc===0)return{real:0,nom:0};
@@ -279,7 +282,7 @@ export default function MagicNumberApp({onBack}){
     return(w1*portReturn.real+w2*portContribReturn.real)/tot;
   },[hasPortfolio,nEx,mSav,ytr,portReturn.real,portContribReturn.real]);
 
-  // MAGIC NUMBER — explicit profile for retirement withdrawal phase (-1 = My Portfolio)
+  // MAGIC NUMBER â€” explicit profile for retirement withdrawal phase (-1 = My Portfolio)
   var desiredAfterSS=Math.max(nDes-nSS,0);
   var retProfReturn=useMemo(function(){
     if(retProfileIdx===-1&&blendedPortReturn!=null)return blendedPortReturn;
@@ -291,7 +294,7 @@ export default function MagicNumberApp({onBack}){
     var p=allProfiles[Math.max(retProfileIdx,0)];
     return p?p.name:adjProfiles[4].name;
   })();
-  // Year-by-Year chart — separate accumulation and retirement profiles
+  // Year-by-Year chart â€” separate accumulation and retirement profiles
   var chartAccumReturn=useMemo(function(){
     if(chartProfileIdx===-1&&blendedPortReturn!=null)return blendedPortReturn;
     var idx=Math.max(chartProfileIdx,0);
@@ -318,7 +321,7 @@ export default function MagicNumberApp({onBack}){
     return{p:p,gap:Math.max(magic.real-nEx,0),sur:Math.max(nEx-magic.real,0),gc:p>=100?"#22c55e":p>=60?"#eab308":"#ef4444",bc:p>=100?"linear-gradient(90deg,#22c55e,#4ade80)":p>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"};
   },[magic.real,nEx]);
 
-  // Monthly needed per profile — variable projection accounts for debt payoffs
+  // Monthly needed per profile â€” variable projection accounts for debt payoffs
   const monthlyNeeded=useMemo(function(){if(magic.real<=0||ytr<=0)return [];
     const list=(adjProfiles||[]).map(function(pr){
       const projectedAtRetire=fvVariable(nEx,mSav,pr.realReturn,ytr,debtEvents);
@@ -337,7 +340,7 @@ export default function MagicNumberApp({onBack}){
     return list;
   },[magic.real,nEx,mSav,ytr,adjProfiles,debtEvents,hasPortfolio,blendedPortReturn,INFL]);
 
-  // Year-by-year projection — variable cash flow with debt payoff events
+  // Year-by-year projection â€” variable cash flow with debt payoff events
   var ybYData=useMemo(function(){if(ytr<=0||nDes<=0)return[];
     return yearByYear(nEx,mSav,chartAccumReturn,ytr,nYP,desiredAfterSS,INFL,debtEvents,chartRetireReturn);
   },[nEx,mSav,chartAccumReturn,chartRetireReturn,ytr,nYP,desiredAfterSS,INFL,debtEvents]);
@@ -371,7 +374,7 @@ export default function MagicNumberApp({onBack}){
     });
   },[showScenarios,mSav,nEx,projYears,allProfiles,debtEvents,scenProfileIdx,blendedPortReturn]);
 
-  // Cost of not investing — fixed 20yr horizon
+  // Cost of not investing â€” fixed 20yr horizon
   var costNSYears=20;
   var costNSReturn=costNSProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[costNSProfileIdx]||adjProfiles[4]).realReturn;
   var costNS=useMemo(function(){
@@ -438,7 +441,7 @@ export default function MagicNumberApp({onBack}){
     return{fv:fv,multiplier:multiplier,prof:prof,itemsCouldBuy:Math.floor(multiplier)};
   },[costItemPrice,ytr,costProfileIdx,adjProfiles]);
 
-  // Goals — simplified: each goal needs monthly savings, impacts retirement
+  // Goals â€” simplified: each goal needs monthly savings, impacts retirement
   var goalCalcs=useMemo(function(){return goals.map(function(g){
     var amt=Number(g.amount)||0,yrs=Number(g.years)||0;
     if(amt<=0||yrs<=0)return Object.assign({},g,{mo:0,prof:adjProfiles[0],valid:false});
@@ -464,7 +467,7 @@ export default function MagicNumberApp({onBack}){
     return{reduced:bal,full:full,diff:full-bal,pctOfMagic:magic.real>0?((full-bal)/magic.real*100):0};
   },[goalCalcs,totalGoalMo,mSav,goalImpactRate,ytr,nEx,magic.real,debtEvents]);
 
-  // Achieving It — simulator
+  // Achieving It â€” simulator
   var simEffSav=simSav!=null?simSav:nEx;
   var simEffMo=simMo!=null?simMo:Math.max(mSav,0);
   var simEffRet=simRet!=null?simRet/100:0.01;
@@ -503,7 +506,7 @@ export default function MagicNumberApp({onBack}){
     for(var candidateAge=nAge+1;candidateAge<=100;candidateAge++){
       var yrsToRetire=candidateAge-nAge;
       var projected=fvVariable(rSav,rMo,accumR,yrsToRetire,[]);
-      var ssToday=rSS; // SS now in today's dollars — use directly
+      var ssToday=rSS; // SS now in today's dollars â€” use directly
       var afterSS=Math.max(rDes-ssToday,0);
       if(afterSS<=0)return{age:candidateAge,projected:projected,mn:0,surplus:projected,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:0,retR:retR};
       var legPV=nLegacy>0?nLegacy/Math.pow(1+retR,rYrs):0;
@@ -590,7 +593,7 @@ export default function MagicNumberApp({onBack}){
 
     <div className="mn-root">
       {/* Demo mode banner */}
-      {demoBannerVisible&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{lang==="en"?"DEMO MODE — Full access":"MODO DEMO — Acceso completo"}</span><button onClick={function(){setDemoBannerVisible(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
+      {demoBannerVisible&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{lang==="en"?"DEMO MODE â€” Full access":"MODO DEMO â€” Acceso completo"}</span><button onClick={function(){setDemoBannerVisible(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>Ã—</button></div>}
       <header className="mn-header">
         <div className="mn-logo" onClick={onBack} style={{cursor:onBack?"pointer":"default"}}>
           <span className="mn-logo-icon">MN</span>
@@ -598,8 +601,8 @@ export default function MagicNumberApp({onBack}){
           <span className="pro-badge">PRO</span>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>← {lang==="en"?"Home":"Inicio"}</button>}
-          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s",display:"inline-flex",alignItems:"center",gap:4}}><Icon name="trash" size={13} weight="regular" /> {lang==="en"?"Reset":"Limpiar"}</button>}
+          {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>â† {lang==="en"?"Home":"Inicio"}</button>}
+          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"Â¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s",display:"inline-flex",alignItems:"center",gap:4}}><Icon name="trash" size={13} weight="regular" /> {lang==="en"?"Reset":"Limpiar"}</button>}
           <button className="mn-lang-btn" onClick={function(){toggleLang();track(EVENTS.LANGUAGE_CHANGED,{from:lang,to:lang==="en"?"es":"en"},{lang:lang,tier:tier})}} style={{display:"inline-flex",alignItems:"center",gap:4}}><Icon name="globe" size={14} weight="regular" /> {lang==="en"?"EN":"ES"}</button>
         </div>
       </header>
@@ -659,7 +662,7 @@ export default function MagicNumberApp({onBack}){
       <div style={{display:"flex",alignItems:"center",background:"rgba(248,250,253,0.98)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"0 12px",width:120,flexShrink:0}}><span style={{color:"#64748b",fontSize:13,fontWeight:600,marginRight:4}}>$</span>
         <input type="text" inputMode="numeric" value={(exp.amount&&!isNaN(Number(exp.amount))&&Number(exp.amount)>=1000)?Number(exp.amount).toLocaleString("en-US"):exp.amount} onChange={function(e){uE(exp.id,"amount",e.target.value.replace(/,/g,"").replace(/[^0-9]/g,""))}} placeholder="" style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#0f172a",fontSize:15,fontWeight:600,padding:"11px 0",fontFamily:"Outfit,sans-serif",width:"100%"}}/></div>
       <button onClick={function(){uE(exp.id,"discretionary",!exp.discretionary)}} style={{padding:"6px 8px",borderRadius:8,fontSize:10,fontWeight:600,border:"none",cursor:"pointer",flexShrink:0,background:exp.discretionary!==false?"rgba(245,158,11,0.1)":"rgba(96,165,250,0.1)",color:exp.discretionary!==false?"#f59e0b":"#60a5fa",display:"flex",alignItems:"center"}}>{exp.discretionary!==false?<Icon name="scissors" size={12} weight="regular" />:<Icon name="push-pin" size={12} weight="regular" />}</button>
-      {expenses.length>1&&<button onClick={function(){rE(exp.id)}} style={{width:34,height:34,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>×</button>}
+      {expenses.length>1&&<button onClick={function(){rE(exp.id)}} style={{width:34,height:34,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>Ã—</button>}
     </div>)})})()}
     <div style={{display:"flex",gap:12,marginTop:8,fontSize:11,color:"#475569"}}><span style={{display:"inline-flex",alignItems:"center",gap:3}}><Icon name="scissors" size={11} weight="regular" /> {t('income.discretionary')}</span><span style={{display:"inline-flex",alignItems:"center",gap:3}}><Icon name="push-pin" size={11} weight="regular" /> {t('income.essential')}</span></div>
     {(function(){var filled=expenses.filter(function(e){return e.amount!==""}).length;return filled<5?
@@ -683,16 +686,16 @@ export default function MagicNumberApp({onBack}){
         {coupleMode&&<div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#475569"}}><span>{t('common.you')}: {fmt(nInc)}</span><span>{t('common.partner')}: {fmt(nP2I)}</span></div>}
         {nRentalNet>0&&<div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#475569"}}><span><Icon name="house-line" size={11} weight="regular" /> {t('common.netRentalIncome')}</span><span>{fmt(nRentalNet)}</span></div>}
       </div>}
-      <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.totalExpenses')}{nVac>0?" ("+t('common.incVacation')+")":""}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>−{fmt(totExp)}</span></div>
-      {nMortPay>0&&<div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.mortgagePI')}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>−{fmt(nMortPay)}</span></div>}
-      {nCarPay>0&&<div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('debts.carLoan')}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>−{fmt(nCarPay)}</span></div>}
+      <div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.totalExpenses')}{nVac>0?" ("+t('common.incVacation')+")":""}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>âˆ’{fmt(totExp)}</span></div>
+      {nMortPay>0&&<div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('income.mortgagePI')}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>âˆ’{fmt(nMortPay)}</span></div>}
+      {nCarPay>0&&<div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontSize:13,color:"#94a3b8"}}>{t('debts.carLoan')}</span><span style={{fontSize:15,fontWeight:600,color:"#f87171"}}>âˆ’{fmt(nCarPay)}</span></div>}
       <div style={{borderTop:"1px solid rgba(15,23,42,0.08)",paddingTop:8,display:"flex",justifyContent:"space-between"}}><span style={{fontSize:14,fontWeight:600,color:"#0f172a"}}>{t('income.monthlySavingsLabel')}</span><span style={{fontSize:19,fontWeight:800,color:mSav>0?"#22c55e":mSav<0?"#ef4444":"#94a3b8"}}>{fmt(mSav)}</span></div>
     </div>
     {mSav<0&&nEx>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.1)",fontSize:12,color:"#fca5a5",lineHeight:1.6,marginBottom:12}}>
       <Icon name="warning" size={13} weight="regular" /> {t('income.negSavingsWarning',{amount:fmt(Math.abs(mSav)),savings:fmt(nEx),yearly:fmt(Math.abs(mSav)*12)})}
     </div>}
     {debtEvents.length>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",lineHeight:1.6}}>
-      <Icon name="chart-line-up" size={12} weight="regular" /> {t('income.debtEndBoost')}{(debtEvents||[]).map(function(ev){return " "+ev.name+" "+(lang==="en"?"ends in ":"termina en ")+ev.endsAtYear+(lang==="en"?" years":" años")+" (+"+fmt(ev.monthlyAmount)+t('app.perMonth')+")"}).join(",")}
+      <Icon name="chart-line-up" size={12} weight="regular" /> {t('income.debtEndBoost')}{(debtEvents||[]).map(function(ev){return " "+ev.name+" "+(lang==="en"?"ends in ":"termina en ")+ev.endsAtYear+(lang==="en"?" years":" aÃ±os")+" (+"+fmt(ev.monthlyAmount)+t('app.perMonth')+")"}).join(",")}
     </div>}
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -700,7 +703,7 @@ export default function MagicNumberApp({onBack}){
 
 {/* === DEBTS === */}
 {tab==="debts"&&<div className="fi">
-  {/* Mortgage — always shows if ownsHome, independent of noDebts */}
+  {/* Mortgage â€” always shows if ownsHome, independent of noDebts */}
   {ownsHome&&<Cd>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
       <h3 style={{fontFamily:"Outfit,sans-serif",fontSize:17,fontWeight:600,color:"#0f172a"}}>{t('debts.mortgageDetails')}</h3>
@@ -771,7 +774,7 @@ export default function MagicNumberApp({onBack}){
       {(debts||[]).map(function(d){return(<div key={d.id} style={{padding:14,background:"rgba(0,0,0,0.15)",borderRadius:14,marginBottom:10,border:"1px solid rgba(15,23,42,0.06)"}}>
         <div style={{display:"flex",gap:8,marginBottom:8,alignItems:"center"}}>
           <input type="text" value={d.name} onChange={function(e){uD(d.id,"name",e.target.value)}} placeholder={t('debts.debtPlaceholder')} style={{flex:1,background:"rgba(248,250,253,0.98)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,color:"#0f172a",fontSize:13,padding:"10px 12px",fontFamily:"Outfit,sans-serif",outline:"none"}}/>
-          {debts.length>1&&<button onClick={function(){rD(d.id)}} style={{width:32,height:32,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>}
+          {debts.length>1&&<button onClick={function(){rD(d.id)}} style={{width:32,height:32,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>Ã—</button>}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
           <NI label={t('debts.balance')} value={d.balance} onChange={function(v){uD(d.id,"balance",v)}} style={{marginBottom:0}}/>
@@ -875,7 +878,7 @@ export default function MagicNumberApp({onBack}){
               <div style={{fontSize:19,fontWeight:700,color:mD.gc}}>{mD.p>=100?"+"+fmt(mD.sur):fmt(mD.gap)}</div></div>
           </div>
           <div style={{height:10,borderRadius:5,background:"rgba(255,255,255,0.05)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(mD.p,100)+"%",background:mD.bc,transition:"width 1s"}}/></div>
-          <div style={{fontSize:11,marginTop:6,color:mD.gc,fontWeight:600}}>{mD.p>=100?mD.p.toFixed(0)+"% — "+t('retirement.aheadTarget'):mD.p>=60?mD.p.toFixed(1)+"% — "+t('retirement.gettingClose'):mD.p.toFixed(1)+"% — "+t('retirement.letsExplore')}</div>
+          <div style={{fontSize:11,marginTop:6,color:mD.gc,fontWeight:600}}>{mD.p>=100?mD.p.toFixed(0)+"% â€” "+t('retirement.aheadTarget'):mD.p>=60?mD.p.toFixed(1)+"% â€” "+t('retirement.gettingClose'):mD.p.toFixed(1)+"% â€” "+t('retirement.letsExplore')}</div>
         </div>
       </div>
     </Cd>
@@ -982,7 +985,7 @@ export default function MagicNumberApp({onBack}){
   <Cd>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:12,marginBottom:18}}>
       <div><ST tip={t('achieve.investTip',{mo:fmt(Math.abs(mSav)),sav:fmt(nEx),yrs:projYears})+(debtEvents.length>0?t('achieve.investTipDebt'):"")}>{t('achieve.investTitle')}</ST>
-        <p style={{fontSize:13,color:"#64748b",marginTop:-16}}>{mSav>=0?fmt(mSav)+"/mo + "+fmt(nEx)+" "+t('invest.savings'):fmt(nEx)+" "+t('invest.savings')+" "+fmt(mSav)+"/mo"} → {t('invest.portfolioIn')} {projYears} {t('app.years')} <span style={{fontSize:11,color:"#475569"}}>{showNom?"("+t('achieve.nominalFuture')+")":"("+t('achieve.todaysDInfl')+")"}</span></p></div>
+        <p style={{fontSize:13,color:"#64748b",marginTop:-16}}>{mSav>=0?fmt(mSav)+"/mo + "+fmt(nEx)+" "+t('invest.savings'):fmt(nEx)+" "+t('invest.savings')+" "+fmt(mSav)+"/mo"} â†’ {t('invest.portfolioIn')} {projYears} {t('app.years')} <span style={{fontSize:11,color:"#475569"}}>{showNom?"("+t('achieve.nominalFuture')+")":"("+t('achieve.todaysDInfl')+")"}</span></p></div>
       <div style={{display:"flex",background:"rgba(15,23,42,0.06)",borderRadius:10,padding:3,border:"1px solid rgba(15,23,42,0.08)"}}>
         <button onClick={function(){setShowNom(false)}} style={{padding:"6px 14px",borderRadius:8,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",border:"none",cursor:"pointer",background:!showNom?"rgba(34,197,94,0.15)":"transparent",color:!showNom?"#22c55e":"#64748b"}}>{t('achieve.todaysD')}</button>
         <button onClick={function(){setShowNom(true)}} style={{padding:"6px 14px",borderRadius:8,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",border:"none",cursor:"pointer",background:showNom?"rgba(96,165,250,0.15)":"transparent",color:showNom?"#60a5fa":"#64748b"}}>{t('achieve.nominalD')}</button>
@@ -998,9 +1001,9 @@ export default function MagicNumberApp({onBack}){
       <div key={p.id} style={{padding:"10px 12px",borderRadius:10,marginBottom:4}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
           <div style={{display:"flex",alignItems:"center",gap:8}}><span style={{fontSize:17}}><Icon name={p.icon} size={14} weight="light"/></span><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{p.name}</span><Tip text={p.desc}/></div>
-          <div style={{textAlign:"right"}}><div style={{fontSize:15,fontWeight:700,color:p.color}}>{fmtC(v)}</div><div style={{fontSize:10,color:g>0?"#4ade80":g<0?"#f87171":"#64748b"}}>{g>0?"↑ "+fmtC(g)+" "+t('invest.gain'):g<0?"↓ "+fmtC(Math.abs(g))+" "+t('invest.lostToInflation'):t('invest.noGain')}</div></div></div>
+          <div style={{textAlign:"right"}}><div style={{fontSize:15,fontWeight:700,color:p.color}}>{fmtC(v)}</div><div style={{fontSize:10,color:g>0?"#4ade80":g<0?"#f87171":"#64748b"}}>{g>0?"â†‘ "+fmtC(g)+" "+t('invest.gain'):g<0?"â†“ "+fmtC(Math.abs(g))+" "+t('invest.lostToInflation'):t('invest.noGain')}</div></div></div>
         <div style={{height:18,borderRadius:6,overflow:"hidden",background:"rgba(255,255,255,0.03)"}}><div className="ba" style={{height:"100%",borderRadius:6,width:Math.max(bp,2)+"%",background:"linear-gradient(90deg,"+p.color+"88,"+p.color+")",animationDelay:i*0.07+"s"}}/></div>
-        <div style={{display:"flex",justifyContent:"space-between",marginTop:3,fontSize:10}}><span><span style={{color:p.color}}>{pct(p.nomReturn)} {t('common.nom')}</span> · <span style={{color:"#22c55e"}}>{pct(p.realReturn)} {t('common.real')}</span>{p.vol>0?<span style={{color:"#f59e0b"}}> · ~{Math.round(p.vol*100)}% {t('common.vol')}</span>:""}</span><span style={{color:"#64748b"}}>{t('invest.netInvested')} {fmtC(p.tc)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",marginTop:3,fontSize:10}}><span><span style={{color:p.color}}>{pct(p.nomReturn)} {t('common.nom')}</span> Â· <span style={{color:"#22c55e"}}>{pct(p.realReturn)} {t('common.real')}</span>{p.vol>0?<span style={{color:"#f59e0b"}}> Â· ~{Math.round(p.vol*100)}% {t('common.vol')}</span>:""}</span><span style={{color:"#64748b"}}>{t('invest.netInvested')} {fmtC(p.tc)}</span></div>
       </div>)})}
     <div style={{marginTop:10,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>{t('invest.allValuesDisclaimer',{todayDollar:t('common.todayDollar')})}</div>
   </Cd>
@@ -1013,7 +1016,7 @@ export default function MagicNumberApp({onBack}){
   {/* Inflation reference */}
   <div style={{display:"flex",justifyContent:"center",marginBottom:20}}>
     <div style={{padding:"6px 14px",borderRadius:8,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e"}}>
-      {t('invest.inflation')} <strong>{(INFL*100).toFixed(1)}%</strong>{customInflation!==2.5?" "+t('invest.custom'):""} · <span style={{color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("assumptions")}}>{t('invest.changeInAssumptions')}</span>
+      {t('invest.inflation')} <strong>{(INFL*100).toFixed(1)}%</strong>{customInflation!==2.5?" "+t('invest.custom'):""} Â· <span style={{color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("assumptions")}}>{t('invest.changeInAssumptions')}</span>
     </div>
   </div>
 
@@ -1100,7 +1103,7 @@ export default function MagicNumberApp({onBack}){
     {nSSRaw>0&&ytr>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:12}}>{fmt(nSSRaw)}/mo {t('retirement.atRetirement')} = <strong>{fmt(nSS)}/mo {t('retirement.todayDollar')}</strong> <span style={{color:"#475569"}}>({t('retirement.inflAdjusted', {y: ytr})})</span></div>}
     <NI label={t('achieve.currentSavings')} value={existingSavings} onChange={setExistingSavings} tip={t('achieve.currentSavingsTip')}/>
     <NI label={t('achieve.estMonthlySav')} value={manualMonthlySav} onChange={setManualMonthlySav} tip={t('achieve.estMonthlySavTip')}/>
-    {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> — {t('achieve.overridesEstimate')}.</div>}
+    {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> â€” {t('achieve.overridesEstimate')}.</div>}
     <NI label={t('achieve.legacy')} value={legacy} onChange={setLegacy} tip={t('achieve.legacyTip')}/>
     <div style={{marginTop:8,marginBottom:16}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
@@ -1116,18 +1119,18 @@ export default function MagicNumberApp({onBack}){
     {nAge>0&&nRetAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}><div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{ytr>0?t('achieve.yearsToGo',{n:ytr}):t('achieve.atRetirement')}</div>{nYP>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('achieve.planToAge',{age:nRetAge+nYP})}</div>}{mSav>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac"}}>{hasIncomeData?t('achieve.savingActual',{amt:fmt(mSav)}):t('achieve.savingEstimate',{amt:fmt(mSav)})}</div>}</div>}
   </Cd>
   {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
-    {/* FREE TIER: Range (asymmetric 0.75×–1.30× + $50K rounding) + Email CTA */}
+    {/* FREE TIER: Range (asymmetric 0.75Ã—â€“1.30Ã— + $50K rounding) + Email CTA */}
     {tier==="free"&&!isDemo&&<>
     <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}>
       <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
       <div style={{position:"relative"}}>
         <div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div>
-        <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#94a3b8",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number está entre"}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#94a3b8",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number estÃ¡ entre"}</div>
         <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.85/25000)*25000)}</div>
         <div style={{fontSize:16,fontWeight:700,color:"#94a3b8",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
         <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.15/25000)*25000)}</div>
         <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
-          {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")}
+          {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" aÃ±os, te asegurÃ¡s "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" aÃ±os."+(nLegacy>0?" Y aÃºn te sobran "+fmt(nLegacy)+" de herencia.":"")}
         </div>
       </div>
     </Cd>
@@ -1153,16 +1156,16 @@ export default function MagicNumberApp({onBack}){
           :<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"inline-block"}}><Icon name="check-circle" size={12} weight="regular" /> {t('retirement.moneyLasts', {amt: fmtC(lastBal), age: nAge+ytr+nYP})}</div>}
         </div>)})()}
       <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",marginTop:10,lineHeight:1.5}}>
-        <Icon name="lock" size={11} weight="regular" /> {lang==="en"?"Unlock to customize investment profiles and see how different strategies change your outcome":"Desbloqueá para personalizar perfiles de inversión y ver cómo diferentes estrategias cambian tu resultado"}
+        <Icon name="lock" size={11} weight="regular" /> {lang==="en"?"Unlock to customize investment profiles and see how different strategies change your outcome":"DesbloqueÃ¡ para personalizar perfiles de inversiÃ³n y ver cÃ³mo diferentes estrategias cambian tu resultado"}
       </div>
     </Cd>}
     <Cd glow="gold" style={{textAlign:"center",padding:"32px 24px"}}>
       <div style={{fontSize:28,marginBottom:10}}><Icon name="lock-open" size={28} weight="regular" color="#eab308" /></div>
-      <div style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Want your exact Magic Number?":"¿Querés conocer tu Magic Number exacto?"}</div>
-      <p style={{fontSize:14,color:"#64748b",lineHeight:1.6,maxWidth:380,margin:"0 auto 20px"}}>{lang==="en"?"Enter your email and we'll reveal your precise number — plus send you a personalized PDF report.":"Dejá tu email y te revelamos tu número preciso — además te enviamos un informe PDF personalizado."}</p>
+      <div style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Want your exact Magic Number?":"Â¿QuerÃ©s conocer tu Magic Number exacto?"}</div>
+      <p style={{fontSize:14,color:"#64748b",lineHeight:1.6,maxWidth:380,margin:"0 auto 20px"}}>{lang==="en"?"Enter your email and we'll reveal your precise number â€” plus send you a personalized PDF report.":"DejÃ¡ tu email y te revelamos tu nÃºmero preciso â€” ademÃ¡s te enviamos un informe PDF personalizado."}</p>
       <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
         <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"14px 16px",borderRadius:12,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.2)"),background:"#fff",fontSize:14,fontFamily:"Inter,sans-serif",outline:"none",transition:"border 0.2s"}}/>
-        <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return}setTier("email");setEmailError("")}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal":"Revelar"} →</button>
+        <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"IngresÃ¡ un email vÃ¡lido");return}setTier("email");setEmailError("")}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal":"Revelar"} â†’</button>
       </div>
       {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
       <div style={{fontSize:11,color:"#94a3b8",marginTop:10}}><Icon name="lock" size={11} weight="regular" /> {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
@@ -1171,15 +1174,15 @@ export default function MagicNumberApp({onBack}){
     </>}
     {/* EMAIL/PAID TIER: Exact number + full analysis */}
     {tier!=="free"&&<>
-    <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nSS>0?" (además de "+fmt(nSS)+"/mes de jubilación)":"")+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" años."}</div></div></Cd>
+    <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" aÃ±os, te asegurÃ¡s "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" aÃ±os."+(nSS>0?" (ademÃ¡s de "+fmt(nSS)+"/mes de jubilaciÃ³n)":"")+(nLegacy>0?" Y aÃºn te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" aÃ±os."}</div></div></Cd>
     <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
-      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*3,500000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#93c5fd",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
-      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*3,10000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#86efac",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*3,500000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#93c5fd",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} Â· {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*3,10000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#86efac",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo Â· {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
       <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={0} max={12} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div></div>
-      {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>↩ {t('achieve.resetToActual')}</button></div>:null}
+      {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>â†© {t('achieve.resetToActual')}</button></div>:null}
     </Cd>
-    <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
-    {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#fca5a5"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#86efac"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#93c5fd",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
+    <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"EstÃ¡s al "+simPct.toFixed(1)+"% de tu meta. AjustÃ¡ tus nÃºmeros arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
+    {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" â‰ˆ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#fca5a5"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#86efac"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" â€” "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#93c5fd",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
     {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
     <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
     {/* Year-by-Year Projection (full, with profile selectors) */}
@@ -1239,9 +1242,9 @@ export default function MagicNumberApp({onBack}){
     </Cd>}
     {tier==="email"&&<Cd glow="gold" style={{textAlign:"center",padding:"28px 24px"}}>
       <div style={{fontSize:28,marginBottom:10}}><Icon name="star" size={28} weight="fill" color="#eab308" /></div>
-      <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"Desbloqueá tu Perfil Full"}</div>
-      <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis: detailed gap analysis, exact retirement age, year-by-year projections, and a premium PDF report.":"Obtené tu análisis financiero completo: brecha detallada, edad exacta de jubilación, proyecciones año por año, e informe PDF premium."}</p>
-      <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"¡Integración con Stripe próximamente! Precio: $14.99")}}>{lang==="en"?"Unlock Full Profile — $14.99":"Desbloquear Perfil Full — $14.99"}</button>
+      <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"DesbloqueÃ¡ tu Perfil Full"}</div>
+      <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis: detailed gap analysis, exact retirement age, year-by-year projections, and a premium PDF report.":"ObtenÃ© tu anÃ¡lisis financiero completo: brecha detallada, edad exacta de jubilaciÃ³n, proyecciones aÃ±o por aÃ±o, e informe PDF premium."}</p>
+      <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"Â¡IntegraciÃ³n con Stripe prÃ³ximamente! Precio: $14.99")}}>{lang==="en"?"Unlock Full Profile â€” $14.99":"Desbloquear Perfil Full â€” $14.99"}</button>
     </Cd>}
     </>}
   </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}
@@ -1370,7 +1373,7 @@ export default function MagicNumberApp({onBack}){
         </div>
       </div>
       {nEx<=0&&mSav<=0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginBottom:8}}><Icon name="warning" size={12} weight="regular" /> {t('inaction.usingDefaults')}</div>}
-      <div style={{textAlign:"center"}}><span style={{fontSize:11,color:"#60a5fa",cursor:"pointer",fontWeight:600}} onClick={function(){goTab("achieve")}}>{t('inaction.editInMN')} →</span></div>
+      <div style={{textAlign:"center"}}><span style={{fontSize:11,color:"#60a5fa",cursor:"pointer",fontWeight:600}} onClick={function(){goTab("achieve")}}>{t('inaction.editInMN')} â†’</span></div>
     </Cd>
 
     {/* Section 1: BASE VS INVESTING */}
@@ -1450,7 +1453,7 @@ export default function MagicNumberApp({onBack}){
                 <div className="ba" style={{height:"100%",borderRadius:4,width:Math.max(pctOfMax,2)+"%",background:isToday?"linear-gradient(90deg,#22c55e88,#22c55e)":"linear-gradient(90deg,"+delayProf.color+"44,"+delayProf.color+"88)"}}/>
               </div>
               {!isToday&&lost>0&&<div style={{textAlign:"right",marginTop:2}}>
-                <span style={{fontSize:11,fontWeight:700,color:"#f87171"}}>−{fmtC(lost)}</span>
+                <span style={{fontSize:11,fontWeight:700,color:"#f87171"}}>âˆ’{fmtC(lost)}</span>
                 <span style={{fontSize:10,color:"#475569",marginLeft:4}}>({(lost/todayVal*100).toFixed(1)}%)</span>
               </div>}
             </div>
@@ -1459,7 +1462,7 @@ export default function MagicNumberApp({onBack}){
       </div>
 
       <div style={{padding:"16px 20px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)",textAlign:"center"}}>
-        <div style={{fontSize:14,fontWeight:700,color:"#f87171",marginBottom:6}}>{t('inaction.yearsOfWaiting',{n:10})}−{fmtC(todayVal-lastDelay.val)}</div>
+        <div style={{fontSize:14,fontWeight:700,color:"#f87171",marginBottom:6}}>{t('inaction.yearsOfWaiting',{n:10})}âˆ’{fmtC(todayVal-lastDelay.val)}</div>
         <div style={{fontSize:11,color:"#94a3b8",lineHeight:1.6}}>
           {t('inaction.potentialWealth',{pct:todayVal>0?((todayVal-lastDelay.val)/todayVal*100).toFixed(1):"0"})}
         </div>
@@ -1510,7 +1513,7 @@ export default function MagicNumberApp({onBack}){
   </Cd>}
   <Cd style={{padding:"12px 16px"}}>
     <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6}}>
-      <Icon name="warning" size={13} weight="regular" /> <strong>{t('save.scenariosOnly')}</strong> — {t('save.saveScenariosExplain')}
+      <Icon name="warning" size={13} weight="regular" /> <strong>{t('save.scenariosOnly')}</strong> â€” {t('save.saveScenariosExplain')}
     </div>
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1561,7 +1564,7 @@ export default function MagicNumberApp({onBack}){
   </Cd>}
   <Cd style={{padding:"12px 16px"}}>
     <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6}}>
-      <Icon name="warning" size={13} weight="regular" /> <strong>{t('earn.scenariosOnly')}</strong> — {t('earn.earnScenariosExplain')}
+      <Icon name="warning" size={13} weight="regular" /> <strong>{t('earn.scenariosOnly')}</strong> â€” {t('earn.earnScenariosExplain')}
     </div>
   </Cd>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1595,12 +1598,12 @@ export default function MagicNumberApp({onBack}){
       {hasPortfolio&&blendedPortReturn!=null&&(function(){var fv=fvL(Number(costItemPrice)||0,blendedPortReturn,ytr);var mult=fv/(Number(costItemPrice)||1);return(
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",borderRadius:8,marginBottom:4,background:"rgba(232,121,249,0.06)"}}>
           <span style={{fontSize:12,color:"#e879f9",fontWeight:600}}><Icon name="sliders-h" size={12} weight="regular" /> {t('profiles.myPortfolio.name')}</span>
-          <div><span style={{fontSize:13,fontWeight:700,color:"#e879f9"}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}×)</span></div>
+          <div><span style={{fontSize:13,fontWeight:700,color:"#e879f9"}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}Ã—)</span></div>
         </div>)})()}
       {allProfiles.map(function(p){var fv=fvL(Number(costItemPrice)||0,p.realReturn,ytr);var mult=fv/(Number(costItemPrice)||1);return(
         <div key={p.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",borderRadius:8,marginBottom:4,background:p.id===(allProfiles[costProfileIdx]||adjProfiles[4]).id?"rgba(245,158,11,0.06)":"transparent"}}>
           <span style={{fontSize:12,color:"#94a3b8"}}><Icon name={p.icon} size={14} weight="light"/> {p.name}</span>
-          <div><span style={{fontSize:13,fontWeight:700,color:p.color}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}×)</span></div>
+          <div><span style={{fontSize:13,fontWeight:700,color:p.color}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}Ã—)</span></div>
         </div>)})}
     </Cd>
   </>}
@@ -1608,223 +1611,14 @@ export default function MagicNumberApp({onBack}){
 </div>}
 
 {/* === GOALS === */}
-{tab==="goals"&&<div className="fi">
-  <Cd><ST tip={t('goals.tip')} sub={t('goals.sub')}>{t('goals.title')}</ST>
-    {(goals||[]).map(function(g,gi){const calc=goalCalcs[gi];return(
-      <div key={g.id} style={{padding:16,background:"rgba(0,0,0,0.15)",borderRadius:14,marginBottom:12,border:"1px solid rgba(15,23,42,0.06)"}}>
-        <div style={{display:"flex",gap:8,marginBottom:10,alignItems:"center"}}>
-          <span style={{fontSize:12,color:"#475569",fontWeight:700}}>#{gi+1}</span>
-          <input type="text" value={g.name} onChange={function(e){uG(g.id,"name",e.target.value)}} placeholder={t('goals.goalName')} style={{flex:1,background:"rgba(248,250,253,0.98)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,color:"#0f172a",fontSize:14,padding:"10px 14px",fontFamily:"Outfit,sans-serif",outline:"none"}}/>
-          {goals.length>1&&<button onClick={function(){rG(g.id)}} style={{width:32,height:32,borderRadius:8,background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.15)",color:"#ef4444",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-          <NI label={t('goals.target')} value={g.amount} onChange={function(v){uG(g.id,"amount",v)}} style={{marginBottom:0}}/>
-          <NI label={t('goals.yearsLabel')} value={g.years} onChange={function(v){uG(g.id,"years",v)}} prefix="" placeholder="" style={{marginBottom:0}}/>
-        </div>
-        {/* Profile selector */}
-        <div style={{marginTop:10}}>
-          <div style={{fontSize:11,color:"#64748b",marginBottom:6}}>{t('goals.investProfile')}</div>
-          <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-            {allProfiles.map(function(p,i){return <TabBtn key={p.id} active={g.profileIdx===i} iconName={p.icon} label={p.name} onClick={function(){uG(g.id,"profileIdx",i)}} color={p.color}/>})}
-          </div>
-        </div>
-        {/* Result */}
-        {calc&&calc.valid&&<div style={{marginTop:12,padding:"12px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{display:"flex",alignItems:"center",gap:6}}>
-              <span style={{fontSize:14}}>{calc.prof.icon}</span>
-              <span style={{fontSize:11,color:"#94a3b8"}}>{calc.prof.name} ({pct(calc.prof.realReturn)} real)</span>
-            </div>
-            <div style={{textAlign:"right"}}>
-              <div style={{fontSize:16,fontWeight:700,color:calc.mo<=mSav?"#22c55e":"#f87171"}}>{fmt(calc.mo)}/mo</div>
-              <div style={{fontSize:10,color:calc.mo<=mSav?"#4ade80":"#f87171"}}>{calc.mo<=mSav?t('goals.fitsBudget'):t('goals.overBudget',{amt:fmt(calc.mo-mSav)})}</div>
-            </div>
-          </div>
-        </div>}
-      </div>)})}
-    {goals.length<10&&<button className="bs" onClick={aG}>{t('goals.addGoal', {n: goals.length, max: 10})}</button>}
-  </Cd>
-
-  {/* Goal Roadmap */}
-  {goalCalcs.filter(function(g){return g.valid}).length>0&&<Cd>
-    <ST tip={t('goals.roadmapTip')}>{t('goals.roadmap')}</ST>
-    <div style={{position:"relative",paddingLeft:24}}>
-      <div style={{position:"absolute",left:8,top:0,bottom:0,width:2,background:"rgba(15,23,42,0.08)"}}/>
-      {goalCalcs.filter(function(g){return g.valid}).sort(function(a,b){return a.nYrs-b.nYrs}).map(function(g,i){return(
-        <div key={g.id} style={{position:"relative",marginBottom:20,paddingLeft:16}}>
-          <div style={{position:"absolute",left:-20,top:4,width:12,height:12,borderRadius:"50%",background:g.prof.color,border:"3px solid #0f1628"}}/>
-          <div style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{g.name||t('goals.goalNum', {n: i+1})}</div>
-          <div style={{fontSize:12,color:"#94a3b8"}}>{t('goals.inYears',{amt:fmt(g.nAmt),years:g.nYrs})} · {g.mo>0?fmt(g.mo)+"/mo":t('common.covered')}</div>
-          <div style={{fontSize:10,color:g.prof.color}}>{g.prof.icon} {g.prof.name}</div>
-        </div>)})}
-    </div>
-  </Cd>}
-
-  {/* Retirement impact */}
-  {goalRetImpact&&<Cd glow="gold">
-    <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:10}}><Icon name="warning" size={13} weight="regular" /> {t('goals.impactOnRetirement')}</div>
-    <div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6,marginBottom:12}}>
-      {t('goals.directing',{amt:fmt(totalGoalMo)})}
-    </div>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,textAlign:"center"}}>
-      <div style={{padding:12,borderRadius:10,background:"rgba(0,0,0,0.15)"}}>
-        <div style={{fontSize:10,color:"#64748b"}}>{t('goals.withoutGoals')}</div>
-        <div style={{fontSize:16,fontWeight:700,color:"#22c55e"}}>{fmtC(goalRetImpact.full)}</div>
-      </div>
-      <div style={{padding:12,borderRadius:10,background:"rgba(0,0,0,0.15)"}}>
-        <div style={{fontSize:10,color:"#64748b"}}>{t('goals.withGoals')}</div>
-        <div style={{fontSize:16,fontWeight:700,color:"#eab308"}}>{fmtC(goalRetImpact.reduced)}</div>
-      </div>
-    </div>
-    <div style={{textAlign:"center",marginTop:8,fontSize:12,color:"#f87171"}}>{t('goals.retReduction')} <strong>{fmt(goalRetImpact.diff)}</strong> ({t('goals.mnPercent',{pct:goalRetImpact.pctOfMagic.toFixed(1)})})</div>
-    <div style={{marginTop:8,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>
-      <Icon name="ruler" size={12} weight="regular" /> {t('goals.oppCostExplain',{rate:pct(goalImpactRate)})}
-    </div>
-  </Cd>}
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
-</div>}
+{tab==="goals"&&<GoalsTab tab={tab} goTab={goTab} tier={tier} goals={goals} uG={uG} rG={rG} aG={aG} goalCalcs={goalCalcs} allProfiles={allProfiles} mSav={mSav} goalRetImpact={goalRetImpact} totalGoalMo={totalGoalMo} goalImpactRate={goalImpactRate} />}
 
 {/* === SCORE === */}
-{tab==="score"&&<div className="fi">
-  <Cd><ST tip="0-100 based on savings rate, debts, retirement progress, active saving.">{t('score.title')}</ST>
-    <Gauge value={hScore.s}/>
-    <div style={{marginTop:20,display:"grid",gap:6}}>
-      {hScore.bd.map(function(b){return(<div key={b.l} style={{padding:"9px 12px",borderRadius:8,background:"rgba(0,0,0,0.15)"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{display:"flex",alignItems:"center",gap:7}}><span style={{width:7,height:7,borderRadius:"50%",background:b.st==="good"?"#22c55e":b.st==="ok"?"#eab308":"#ef4444"}}/><span style={{fontSize:12,color:"#94a3b8"}}>{b.l}</span></div>
-          <span style={{fontSize:13,fontWeight:700,color:b.st==="good"?"#22c55e":b.st==="ok"?"#eab308":"#ef4444"}}>{b.s}/{b.m}</span></div>
-        {b.det&&<div style={{fontSize:10,color:"#475569",marginTop:3,marginLeft:14}}>{b.det}</div>}
-      </div>)})}
-    </div>
-    <div style={{marginTop:14,padding:"10px 14px",borderRadius:10,fontSize:12,lineHeight:1.5,background:hScore.s>=70?"rgba(34,197,94,0.06)":hScore.s>=40?"rgba(234,179,8,0.06)":"rgba(239,68,68,0.06)",color:hScore.s>=70?"#86efac":hScore.s>=40?"#92400e":"#fca5a5"}}>
-      {hScore.s>=70?t('score.greatShape'):hScore.s>=40?t('score.makingProgressScore'):t('score.roomToImprove')}
-    </div>
-  </Cd>
-
-  {/* Action Plan */}
-  {hScore.recs.length>0&&<Cd glow="green">
-    <ST>{t('score.recommendations')}</ST>
-    <div style={{display:"grid",gap:10}}>
-      {hScore.recs.map(function(r,i){return(
-        <div key={i} style={{display:"flex",gap:12,padding:"12px 14px",borderRadius:12,background:"rgba(0,0,0,0.15)",border:"1px solid rgba(15,23,42,0.06)"}}>
-          <div style={{width:28,height:28,borderRadius:"50%",background:r.priority===1?"rgba(239,68,68,0.15)":r.priority===2?"rgba(234,179,8,0.15)":"rgba(34,197,94,0.15)",color:r.priority===1?"#ef4444":r.priority===2?"#eab308":"#22c55e",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,flexShrink:0}}>{i+1}</div>
-          <div><div style={{fontSize:11,color:r.priority===1?"#ef4444":r.priority===2?"#eab308":"#22c55e",fontWeight:600,marginBottom:2}}>{r.cat}</div>
-            <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.5}}>{r.text}</div></div>
-        </div>)})}
-    </div>
-  </Cd>}
-
-  {/* Benchmarking */}
-  <Cd><ST tip="Based on US Federal Reserve Survey of Consumer Finances.">{t('benchmarking.howCompare')}</ST>
-    {nAge>0?<div style={{display:"grid",gap:16}}>
-      {[{l:t('score.savingsRate'),g:bSR.l,y:savRate.toFixed(0)+"%",m:bSR.med+"%",a:savRate>bSR.med,p:percentiles.sr,p25:bSR.p25,med:bSR.med,p75:bSR.p75,uv:savRate,unit:"%"},
-        {l:t('benchmarking.totalAssets'),g:bNW.l,y:fmtC(totalNetWorth),m:fmtC(bNW.med),a:totalNetWorth>bNW.med,p:percentiles.nw,p25:bNW.p25,med:bNW.med,p75:bNW.p75,uv:totalNetWorth,unit:"$"}].map(function(b){return(
-        <div key={b.l} style={{padding:16,borderRadius:14,background:"rgba(0,0,0,0.15)",border:"1px solid rgba(15,23,42,0.06)"}}>
-          <div style={{fontSize:11,color:"#64748b",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{b.l} · {t('benchmarking.age', {age: t('bench.' + ID_MAP[b.g]) || b.g})}</div>
-          <div style={{display:"flex",gap:16,marginBottom:10}}>
-            <div><span style={{fontSize:10,color:"#64748b"}}>{t('benchmarking.you')}: </span><span style={{fontSize:20,fontWeight:700,color:b.a?"#22c55e":"#eab308"}}>{b.y}</span></div>
-            <div><span style={{fontSize:10,color:"#64748b"}}>{t('benchmarking.median')}: </span><span style={{fontSize:20,fontWeight:700,color:"#94a3b8"}}>{b.m}</span></div>
-          </div>
-          {/* Percentile bar */}
-          <div style={{marginBottom:8}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#475569",marginBottom:4}}>
-              <span>{t('score.pctile25')}</span><span>{t('score.pctile50')}</span><span>{t('score.pctile75')}</span>
-            </div>
-            <div style={{position:"relative",height:8,borderRadius:4,background:"rgba(15,23,42,0.06)"}}>
-              <div style={{position:"absolute",left:"25%",top:0,bottom:0,width:1,background:"rgba(255,255,255,0.08)"}}/>
-              <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:1,background:"rgba(255,255,255,0.08)"}}/>
-              <div style={{position:"absolute",left:"75%",top:0,bottom:0,width:1,background:"rgba(255,255,255,0.08)"}}/>
-              <div style={{position:"absolute",left:Math.min(b.p||0,98)+"%",top:-4,width:16,height:16,borderRadius:"50%",background:b.a?"#22c55e":"#eab308",border:"3px solid #0f1628",transform:"translateX(-50%)",transition:"left 0.5s"}}/>
-            </div>
-          </div>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontSize:14,fontWeight:700,color:b.a?"#22c55e":"#eab308"}}>{b.p?("P"+b.p):"—"}</div>
-            <div style={{fontSize:12,color:b.a?"#86efac":"#92400e"}}>{b.a?t('score.aboveMedian'):t('score.belowMedian')}</div>
-          </div>
-        </div>)})}
-    </div>:<p style={{color:"#64748b",fontSize:13}}>{t('score.enterAge')} <span style={{color:"#22c55e",cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("situation")}}>{t('score.enterAgeLink')}</span>.</p>}
-  </Cd>
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
-</div>}
+{tab==="score"&&<ScoreTab tab={tab} goTab={goTab} tier={tier} hScore={hScore} nAge={nAge} savRate={savRate} totalNetWorth={totalNetWorth} bSR={bSR} bNW={bNW} percentiles={percentiles} />}
 
 {/* === REPORTS === */}
-{tab==="reports"&&<div className="fi">
-  {/* Convenceme */}
-  <Cd glow="purple"><ST tip={t('reports.convinceTip')} sub={t('reports.convinceSub')}>{t('reports.convince')}</ST>
-    {mSav>0&&savOpps.length>0?<>
-      <div style={{padding:20,borderRadius:16,background:"linear-gradient(145deg,#0f1628,rgba(248,250,253,0.98))",border:"1px solid rgba(167,139,250,0.15)",marginBottom:16}}>
-        <div style={{textAlign:"center",marginBottom:16}}>
-          <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:700,color:"#0f172a",marginBottom:4}}>{t('reports.whatIfSaved')}</div>
-          <div style={{fontSize:12,color:"#64748b"}}>{t('reports.miniScenario')}</div>
-        </div>
-        {savOpps.slice(0,3).map(function(o){return(
-          <div key={o.id} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,marginBottom:4,background:"rgba(0,0,0,0.15)"}}>
-            <span style={{fontSize:12,color:"#94a3b8"}}>{t('reports.cutBy',{name:o.name,pct:o.cutPct})}</span>
-            <span style={{fontSize:12,fontWeight:600,color:"#22c55e"}}>+{fmt(o.saved)}/mo</span>
-          </div>)})}
-        <div style={{textAlign:"center",marginTop:16,padding:14,borderRadius:12,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)"}}>
-          <div style={{fontSize:11,color:"#64748b"}}>{t('reports.smallChanges')}</div>
-          <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:800,color:"#22c55e"}}>{fmtC(totalSavOpp.imp20)}</div>
-          <div style={{fontSize:11,color:"#475569",marginTop:4}}>{t('reports.extraByAge',{age:nAge+20})}</div>
-        </div>
-      </div>
-      <button onClick={function(){
-        var text=t('reports.whatIfSaved')+"\n\n";
-        savOpps.slice(0,3).forEach(function(o){text+="• "+t('reports.cutBy',{name:o.name,pct:o.cutPct})+": +"+fmt(o.saved)+"/mo\n"});
-        text+="\n"+t('reports.smallChanges')+": "+fmtC(totalSavOpp.imp20)+" ("+t('reports.todayDollars6040')+")\n\n"+t('reports.generatedBy');
-        navigator.clipboard.writeText(text).then(function(){alert(t('reports.copiedAlert'))})
-      }} style={{width:"100%",background:"linear-gradient(135deg,#a78bfa,#7c3aed)",color:"#fff",border:"none",padding:"14px 24px",borderRadius:14,fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",cursor:"pointer",boxShadow:"0 4px 20px rgba(167,139,250,0.25)"}}>
-        {t('reports.copyToShare')}
-      </button>
-    </>:<div style={{textAlign:"center",padding:20,color:"#64748b"}}><div style={{fontSize:36,marginBottom:12}}><Icon name="chart-bar" size={36} weight="regular" color="#64748b" /></div><p>{t('reports.addDataFirst')}</p></div>}
-  </Cd>
+{tab==="reports"&&<ReportsTab tab={tab} goTab={goTab} tier={tier} hasData={hasData} mSav={mSav} savOpps={savOpps} totalSavOpp={totalSavOpp} nAge={nAge} totalIncome={totalIncome} totExp={totExp} nMortPay={nMortPay} nCarPay={nCarPay} savRate={savRate} nEx={nEx} nRentalEq={nRentalEq} nRentalNet={nRentalNet} totalNetWorth={totalNetWorth} totalDebtAll={totalDebtAll} noDebts={noDebts} hScore={hScore} magic={magic} mD={mD} nInc={nInc} nP2I={nP2I} coupleMode={coupleMode} nVac={nVac} nRetAge={nRetAge} nYP={nYP} customInflation={customInflation} INFL={INFL} />}
 
-  {/* Financial Snapshot / Print */}
-  <Cd glow="blue"><ST tip={t('reports.snapshotTip')} sub={t('reports.snapshotSub')}>{t('reports.snapshot')}</ST>
-    {hasData?<>
-      <div style={{display:"grid",gap:10,marginBottom:16}}>
-        {(nRentalNet>0?[
-          {l:t('reports.workIncome'),v:fmt(nInc+(coupleMode?nP2I:0)),c:"#0f172a"},
-          {l:t('reports.rentalFull'),v:fmt(nRentalNet),c:"#0f172a"},
-          {l:t('reports.totalMonthlyIncome'),v:fmt(totalIncome),c:"#22c55e"}
-        ]:[{l:t('reports.monthlyIncomeLabel'),v:fmt(totalIncome),c:"#0f172a"}])
-        .concat([{l:nVac>0?t('reports.expensesInclVacation'):t('reports.monthlyExpenses'),v:fmt(totExp),c:"#f87171"}])
-        .concat(nMortPay>0?[{l:t('reports.mortgagePI'),v:fmt(nMortPay),c:"#f87171"}]:[])
-        .concat(nCarPay>0?[{l:t('reports.carLoan'),v:fmt(nCarPay),c:"#f87171"}]:[])
-        .concat([
-          {l:t('reports.monthlySavings'),v:fmt(mSav),c:mSav>0?"#22c55e":"#ef4444"},
-          {l:t('reports.savingsRate'),v:savRate.toFixed(1)+"%",c:savRate>=20?"#22c55e":"#eab308"},
-          {l:t('reports.investSavings'),v:fmt(nEx),c:"#60a5fa"}
-        ])
-        .concat(nRentalEq>0?[{l:t('reports.rentalEquityFull'),v:fmt(nRentalEq),c:"#93c5fd"},{l:t('reports.totalAssets'),v:fmt(totalNetWorth),c:"#60a5fa"}]:[])
-        .concat([
-          {l:t('reports.totalDebt'),v:noDebts?"$0":fmt(totalDebtAll),c:noDebts?"#22c55e":"#f87171"},
-          {l:t('reports.healthScore'),v:hScore.s+"/100",c:hScore.s>=70?"#22c55e":hScore.s>=40?"#eab308":"#ef4444"}
-        ]).concat(magic.real>0?[{l:t('reports.magicNumber'),v:fmt(magic.real),c:"#60a5fa"},{l:t('reports.progress'),v:mD.p.toFixed(1)+"%",c:mD.gc}]:[]).map(function(r){return(
-          <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,background:"rgba(0,0,0,0.1)"}}>
-            <span style={{fontSize:12,color:"#94a3b8"}}>{r.l}</span>
-            <span style={{fontSize:13,fontWeight:700,color:r.c}}>{r.v}</span>
-          </div>)})}
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-        {[{l:t('reports.savingsRate'),v:((mSav+totalSavOpp.mo)/totalIncome*100).toFixed(0)+"%",c:"#86efac"},
-          {l:t('reports.healthScore'),v:hScore.s+"/100",c:hScore.s>=70?"#22c55e":hScore.s>=40?"#eab308":"#ef4444"}
-        ].concat(magic.real>0?[{l:t('reports.magicNumber'),v:fmt(magic.real),c:"#60a5fa"},{l:t('reports.progress'),v:mD.p.toFixed(1)+"%",c:mD.gc}]:[]).map(function(r){return(
-          <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,background:"rgba(0,0,0,0.15)"}}>
-            <span style={{fontSize:12,color:"#94a3b8"}}>{r.l}</span>
-            <span style={{fontSize:13,fontWeight:700,color:r.c}}>{r.v}</span>
-          </div>)})}
-      </div>
-      {nRentalEq>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:12,color:"#93c5fd",lineHeight:1.6,marginBottom:16}}>
-        <Icon name="ruler" size={12} weight="regular" /> <strong>{t('reports.rentalEquityNote',{amt:fmt(nRentalEq)})}</strong>
-        {nAge>0&&nRetAge>0&&nYP>0?" "+t('reports.rentalEquityFuture',{age:nRetAge+nYP,rate:customInflation.toFixed(1),amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))}):""}
-      </div>}
-      <button onClick={function(){window.print()}} style={{width:"100%",background:"linear-gradient(135deg,#3b82f6,#2563eb)",color:"#fff",border:"none",padding:"14px 24px",borderRadius:14,fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",cursor:"pointer",boxShadow:"0 4px 20px rgba(59,130,246,0.25)"}}>
-        {t('reports.print')}
-      </button>
-    </>:<div style={{textAlign:"center",padding:20,color:"#64748b"}}><p>{t('reports.completeProfile')}</p></div>}
-  </Cd>
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
-</div>}
 
         <div style={{marginTop:36,padding:"14px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)",fontSize:11,color:"#93c5fd",lineHeight:1.7,textAlign:"center"}}>
           <strong>{t('disclaimer.important')}</strong> {t('disclaimer.text')} {t('disclaimer.inflation')} {(INFL*100).toFixed(1)}%/{t('app.yr')}.
