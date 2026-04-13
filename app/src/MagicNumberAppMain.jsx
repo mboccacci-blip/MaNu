@@ -9,6 +9,7 @@ import TabBtn from './components/TabButton.jsx';
 import { useTranslation } from './i18n/index.jsx';
 import { saveState, loadState, clearState } from './hooks/usePersistedState.js';
 import Icon from './components/Icon.jsx';
+import LeadCaptureModal from './components/LeadCaptureModal.jsx';
 
 // Tip: imported from ./components/Tip.jsx
 
@@ -102,12 +103,12 @@ function MultiLineChart({series,width,height,labels,showYAxis}){
 // Toggle: imported from ./components/Toggle.jsx
 // TabBtn: imported from ./components/TabButton.jsx
 
-function AdvisorCTA({msg}){
+function AdvisorCTA({msg,onContact}){
   var {t:tr} = useTranslation();
   return(<div style={{marginTop:16,padding:"20px 24px",borderRadius:14,background:"linear-gradient(135deg,rgba(34,197,94,0.06),rgba(96,165,250,0.06))",border:"1px solid rgba(34,197,94,0.15)",textAlign:"center"}}>
     <div style={{fontSize:15,fontWeight:700,color:"#0f172a",marginBottom:6}}>{msg||tr('advisor.readyToAct')}</div>
     <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6,marginBottom:14,maxWidth:380,margin:"0 auto 14px"}}>{tr('advisor.ctaBody')}</div>
-    <a href="#" onClick={function(e){e.preventDefault()}} style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 15px rgba(34,197,94,0.3)"}}>{tr('advisor.ctaButton')}</a>
+    <a href="#" onClick={function(e){e.preventDefault();if(onContact)onContact()}} style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 15px rgba(34,197,94,0.3)"}}>{tr('advisor.ctaButton')}</a>
     <div style={{fontSize:10,color:"#475569",marginTop:8}}>{tr('advisor.freeConsult')}</div>
   </div>);
 }
@@ -133,6 +134,7 @@ export default function MagicNumberApp({onBack}){
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === '1';
   const [tier, setTier] = useState(isDemo ? "paid" : "free"); // free | email | paid
   const [demoBannerVisible, setDemoBannerVisible] = useState(isDemo);
+  const [showLeadModal, setShowLeadModal] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const FREE_TABS = ["achieve", "inaction", "learn"];
@@ -1496,7 +1498,7 @@ export default function MagicNumberApp({onBack}){
       {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
       <div style={{fontSize:11,color:"#94a3b8",marginTop:10}}><Icon name="lock" size={11} weight="regular" /> {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
     </Cd>
-    <AdvisorCTA/>
+    <AdvisorCTA onContact={function(){setShowLeadModal(true)}}/>
     </>}
     {/* EMAIL/PAID TIER: Exact number + full analysis */}
     {tier!=="free"&&<>
@@ -1510,7 +1512,7 @@ export default function MagicNumberApp({onBack}){
     <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
     {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#fca5a5"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#86efac"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#93c5fd",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
     {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
-    <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')}/>
+    <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')} onContact={function(){setShowLeadModal(true)}}/>
     {/* Year-by-Year Projection (full, with profile selectors) */}
     {ybYData.length>0&&<Cd>
       <ST tip={t('retirement.ybyTip')}>{t('retirement.ybyProjection')}</ST>
@@ -1644,7 +1646,7 @@ export default function MagicNumberApp({onBack}){
       <div style={{fontSize:13,color:"#fca5a5",lineHeight:1.6}}>{t('achieve.revCannotRetire')}</div>
     </>}
   </Cd>}
-  {revResult&&<AdvisorCTA msg={revResult.age?t('achieve.advisorReality'):t('achieve.advisorHelp')}/>}
+  {revResult&&<AdvisorCTA msg={revResult.age?t('achieve.advisorReality'):t('achieve.advisorHelp')} onContact={function(){setShowLeadModal(true)}}/>}
   </>}
 
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
@@ -1749,7 +1751,7 @@ export default function MagicNumberApp({onBack}){
       </div>}
     </Cd>
 
-    <AdvisorCTA msg={t('inaction.advisorSavings')}/>
+    <AdvisorCTA msg={t('inaction.advisorSavings')} onContact={function(){setShowLeadModal(true)}}/>
 
     {/* Section 2: COST OF DELAYING */}
     <Cd><ST sub={t('inaction.priceOfWaitingSub')}>{t('inaction.priceOfWaiting')}</ST>
@@ -1795,7 +1797,7 @@ export default function MagicNumberApp({onBack}){
       </div>
     </Cd>
 
-    <AdvisorCTA msg={t('inaction.dontLetInaction')}/>
+    <AdvisorCTA msg={t('inaction.dontLetInaction')} onContact={function(){setShowLeadModal(true)}}/>
     </>)})()}
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
 </div>}
@@ -2161,5 +2163,31 @@ export default function MagicNumberApp({onBack}){
         </div>
       </main>
     </div>
+    <LeadCaptureModal
+      show={showLeadModal}
+      onClose={function(){setShowLeadModal(false)}}
+      lang={lang}
+      financials={{
+        age: nAge || null,
+        retirementAge: nRetAge || null,
+        yearsInRetirement: nYP || null,
+        monthlyIncome: totalIncome || null,
+        monthlyExpenses: totExp || null,
+        monthlySavings: mSav,
+        savingsRate: savRate || null,
+        currentSavings: nEx || null,
+        totalDebt: noDebts ? 0 : (totalDebtAll || null),
+        magicNumber: magic.real || null,
+        mnProgressPct: mD.p || null,
+        healthScore: hScore.s || null,
+        desiredIncome: nDes || null,
+        socialSecurity: nSS || null,
+        legacyAmount: nLegacy || null,
+        investmentProfile: retProfLabel || null,
+        tier: tier,
+        sourceTab: tab,
+        lang: lang,
+      }}
+    />
   </>);
 }
