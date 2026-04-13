@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-10 — refleja estado real verificado
+> Actualizado: 2026-04-13 — modularización Fase 3 casi completa
 
 ---
 
@@ -116,6 +116,18 @@
   - `lead_submitted` — tras envío exitoso de lead
 - [x] Deploy a producción ✅ commit `1813138`
 
+### Sprint 13-Abr-2026 — Modularización Fase 3 (Tabs)
+- [x] **Zustand Store** — 55 useState migrados a `useAppStore.js` (240 líneas, persist middleware)
+- [x] **14/16 tabs extraídas** a `src/tabs/` — monolito de 2,194 → 1,095 líneas (-50.1%)
+  - Dashboard, Learn, Assumptions, Portfolio, Goals, Score, Reports
+  - Save, Earn, Cost, Situation, Debts, Retirement, Invest
+- [x] **Encoding**: 0 issues UTF-8 (evitado `Set-Content` de PowerShell)
+- [x] **Runtime verificado** — todas las tabs renderizan correctamente en browser
+- [ ] **AchieveTab** (inline) — 242 líneas, ~30 `useMemo` dependencias. Requiere calc engine extraction primero
+- [ ] **InactionTab** (inline) — 148 líneas, misma dependencia de vars computadas
+- [x] Commits: `a162a9d` → `502bf45` (12 commits atómicos)
+- [ ] **Deploy pendiente** — Netlify monthly limit alcanzado (Apr-2026)
+
 
 
 ## Deuda Técnica & Design System
@@ -127,13 +139,15 @@
 | 4  | Color CSS global `--cyan`  | ✅ Corregido  | Fallback de `hexToRgb()` en TabButton era `#0055AA`, corregido a `#0099cc` (commit `9e369f6`) |
 | 5  | Font-size base             | ✅ Ya estaba  | `index.css` línea 85: `font-size: 15px` — ya estaba correcto |
 | 6  | Card glows                 | ✅ Revisado   | 7 variantes `.mn-card.glow-*` se mantienen — dan identidad visual premium |
-| 7  | Desacoplar monolito        | ❌ Pendiente | **~2,194 líneas** en archivo principal — PRÓXIMO en roadmap (Fase 3) |
+| 7  | Desacoplar monolito        | ✅ 87.5%     | 14/16 tabs extraídas. Monolito de 2,194→1,095 líneas. Faltan Achieve e Inaction (dependen de ~30 useMemo) |
+| 8  | Zustand state management   | ✅ Completado | `useAppStore.js` — 55 fields, persist middleware, 240 líneas |
+| 9  | Calc Engine extraction     | ❌ Pendiente | ~30 useMemo en monolito → extraer a `useFinancialEngine.js` hook |
 
 ---
 
-## Fase 2: Refactor + Auth + Pagos (Bloqueado parcialmente por D2)
-- [ ] Desacoplar monolito en componentes
-- [ ] Implementar Zustand para estado de sesión
+## Fase 4: Refactor Final + Auth + Pagos
+- [ ] Extraer calc engine a `src/hooks/useFinancialEngine.js` (~30 useMemo)
+- [ ] Extraer AchieveTab + InactionTab (tras calc engine)
 - [ ] Implementar Supabase Auth
 - [ ] Implementar Supabase DB para perfiles
 - [ ] Implementar Stripe Checkout
@@ -160,6 +174,6 @@
 ## Git Status
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **Último commit:** `fe99476` — feat: Year-by-Year chart in achieve tab + status report docs + todo update
+- **Último commit:** `502bf45` — Revert: keep Achieve+Inaction inline — 14/16 tabs extracted, 1095 lines
 - **Estado:** Local = Remoto ✅ sincronizado
-- **Producción:** https://magic-number.app ✅ deploy live
+- **Producción:** https://magic-number.app — ⚠️ deploy pendiente (Netlify monthly limit)
