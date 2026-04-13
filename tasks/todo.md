@@ -81,7 +81,25 @@
   - Revisión completa de las 2,166 líneas de `MagicNumberAppMain.jsx` + 494 de `LandingPage.jsx`: **cero emojis encontrados**
   - El conteo anterior (83+22) era stale del sprint de Marzo. Phase D los reemplazó todos.
 - [x] `npm run build` verificado — sin errores (627KB, 4.42s)
-- [ ] Commit + push + deploy a producción
+- [x] Commit `1baf502` + push + deploy a producción ✅
+
+### Sprint 13-Abr-2026 — Sistema de Captura de Leads (Supabase)
+- [x] **Supabase configurado** — Proyecto `manu-pro`, región São Paulo
+  - URL: `https://gnpewzezjlziiuqblpak.supabase.co`
+  - Tabla `leads` con 26 columnas (contacto + financieras + contexto)
+  - RLS habilitado: INSERT anónimo permitido, SELECT solo admin
+- [x] **LeadCaptureModal.jsx** creado — modal premium con:
+  - Preview de datos financieros que verá el asesor (Score, MN, progreso, ahorro, perfil)
+  - Formulario: nombre, email*, teléfono
+  - Estados: idle → sending → success/error
+  - i18n completo (ES/EN)
+- [x] **AdvisorCTA conectado** — 5 instancias ahora abren el modal
+- [x] **Supabase client** (`lib/supabase.js`) — con `submitLead()` que captura snapshot financiero completo
+- [x] **CSP actualizado** — `connect-src` incluye dominio Supabase
+- [x] **Env vars en Netlify** — `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` configuradas
+- [x] **Test E2E exitoso** — 2 leads de prueba confirmados en Supabase dashboard
+- [x] Deploy a producción ✅ commits `210b902` + `6697e66`
+
 
 ---
 
