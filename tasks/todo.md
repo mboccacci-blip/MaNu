@@ -108,11 +108,11 @@
 |----|---------------------------|-------------|---------|
 | 1  | Emojis inline en app      | ✅ Completado | Verificado 13-Abr: 0 emojis en 2,166 líneas |
 | 2  | Emojis en landing          | ✅ Completado | Verificado 13-Abr: 0 emojis en 494 líneas |
-| 3  | Fuente body                | ❌ Pendiente | `index.css` body usa `Outfit` como base. Inter tiene presencia pero Outfit domina el `body {}` principal |
-| 4  | Color CSS global `--cyan`  | ❌ Pendiente | `--cyan` sigue siendo `#0099cc` en tokens. TabButton hardcodea `#0055AA` — inconsistencia |
-| 5  | Font-size base             | ❌ Pendiente | Sigue en `14px` — se planificó subir a `15px` |
-| 6  | Card glows                 | 🟡 Revisar  | 7 variantes `.mn-card.glow-*` con box-shadow cromático en CSS — evaluar si mantener |
-| 7  | Desacoplar monolito        | ❌ Pendiente | **~2,166 líneas** en archivo principal (+81 del gráfico YbY), 9+ componentes inline |
+| 3  | Fuente body                | ✅ Correcto   | `Outfit` como display + `Inter` para labels/inputs — es intencional |
+| 4  | Color CSS global `--cyan`  | ✅ Corregido  | Fallback de `hexToRgb()` en TabButton era `#0055AA`, corregido a `#0099cc` (commit `9e369f6`) |
+| 5  | Font-size base             | ✅ Ya estaba  | `index.css` línea 85: `font-size: 15px` — ya estaba correcto |
+| 6  | Card glows                 | ✅ Revisado   | 7 variantes `.mn-card.glow-*` se mantienen — dan identidad visual premium |
+| 7  | Desacoplar monolito        | ❌ Pendiente | **~2,194 líneas** en archivo principal — PRÓXIMO en roadmap (Fase 3) |
 
 ---
 
