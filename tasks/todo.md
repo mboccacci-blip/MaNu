@@ -100,8 +100,23 @@
 - [x] **Test E2E exitoso** — 2 leads de prueba confirmados en Supabase dashboard
 - [x] Deploy a producción ✅ commits `210b902` + `6697e66`
 
+### Sprint 13-Abr-2026 — Design Tokens + Modularización Paso 1
+- [x] **Color cyan unificado** — Fallback `hexToRgb()` de `#0055AA` a `#0099cc` (commit `9e369f6`)
+- [x] **9 componentes extraídos** del monolito a archivos individuales (commit `08f6862`):
+  - AnimatedNumber, NumberInput, SectionTitle, Gauge, Slider, MiniChart, MultiLineChart, AdvisorCTA, NavButtons
+  - Monolito reducido de 2,194 a 2,111 líneas | 15 componentes en `/components/`
 
----
+### Sprint 13-Abr-2026 — Analytics con Supabase
+- [x] **Tabla `analytics_events`** creada en Supabase con RLS + índices
+- [x] **analytics.js reescrito** — usa Supabase en vez de PostHog, con batching (5s/20 eventos)
+- [x] **4 eventos instrumentados**:
+  - `tab_viewed` — cada cambio de tab con nombre + lang + tier
+  - `language_changed` — con idioma origen/destino
+  - `advisor_cta_clicked` — con tab de origen (5 instancias)
+  - `lead_submitted` — tras envío exitoso de lead
+- [x] Deploy a producción ✅ commit `1813138`
+
+
 
 ## Deuda Técnica & Design System
 | #  | Ítem                      | Estado      | Detalle |
