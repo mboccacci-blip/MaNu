@@ -1,87 +1,102 @@
 /**
- * MaNu PRO — Analytics Module (Stub)
+ * MaNu PRO — Analytics Module (Supabase-backed)
  * 
- * Ready for PostHog integration. Activate by setting VITE_POSTHOG_KEY
- * in your environment variables or Netlify deploy settings.
- * 
- * When no key is present:
- *   - Development: logs events to console
- *   - Production: silent no-op
+ * Tracks user events to the `analytics_events` table in Supabase.
+ * Falls back to console logging in dev mode if Supabase is not configured.
  * 
  * Usage:
- *   import { track, pageView } from './utils/analytics.js';
- *   track('tab_viewed', { tab: 'retirement' });
+ *   import { track, pageView, EVENTS } from './utils/analytics.js';
+ *   track(EVENTS.TAB_VIEWED, { tab: 'retirement' });
  */
 
-const POSTHOG_KEY = typeof import.meta !== 'undefined' && import.meta.env
-  ? import.meta.env.VITE_POSTHOG_KEY || ''
-  : '';
+import { supabase } from '../lib/supabase.js';
 
 const IS_DEV = typeof import.meta !== 'undefined' && import.meta.env
   ? import.meta.env.DEV
   : false;
 
-let posthogInstance = null;
-let initialized = false;
+// Simple session ID — persists per browser tab
+const SESSION_ID = 'manu_' + Math.random().toString(36).slice(2, 10) + '_' + Date.now().toString(36);
 
-/**
- * Initialize PostHog (lazy, only when key exists)
- */
-async function init() {
-  if (initialized) return;
-  initialized = true;
+// ── Internal queue (batch events to reduce DB calls) ────────────────
+let eventQueue = [];
+let flushTimer = null;
+const FLUSH_INTERVAL = 5000; // flush every 5 seconds
+const MAX_QUEUE = 20;        // or when queue hits 20 events
 
-  if (!POSTHOG_KEY) {
-    if (IS_DEV) console.log('[MaNu Analytics] No VITE_POSTHOG_KEY — running in stub mode');
+async function flush() {
+  if (eventQueue.length === 0) return;
+  
+  const batch = eventQueue.splice(0);
+  
+  if (!supabase) {
+    if (IS_DEV) {
+      batch.forEach(function(e) {
+        console.log('[MaNu Analytics]', e.event, e.props || '');
+      });
+    }
     return;
   }
 
   try {
-    const posthog = await import('posthog-js');
-    posthogInstance = posthog.default || posthog;
-    posthogInstance.init(POSTHOG_KEY, {
-      api_host: 'https://us.i.posthog.com',
-      autocapture: false,          // We define our own events
-      capture_pageview: false,     // We call pageView() manually
-      persistence: 'localStorage',
-      loaded: function (ph) {
-        if (IS_DEV) console.log('[MaNu Analytics] PostHog initialized');
-        // Respect Do Not Track
-        if (navigator.doNotTrack === '1') {
-          ph.opt_out_capturing();
-        }
-      },
-    });
+    await supabase.from('analytics_events').insert(batch);
   } catch (e) {
-    if (IS_DEV) console.warn('[MaNu Analytics] PostHog import failed:', e.message);
+    if (IS_DEV) console.warn('[MaNu Analytics] flush error:', e.message);
+    // Don't re-queue — analytics should never block the app
   }
+}
+
+function scheduleFlush() {
+  if (flushTimer) return;
+  flushTimer = setTimeout(function() {
+    flushTimer = null;
+    flush();
+  }, FLUSH_INTERVAL);
+}
+
+// Flush on page unload
+if (typeof window !== 'undefined') {
+  window.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') flush();
+  });
+  window.addEventListener('beforeunload', flush);
 }
 
 // ── Public API ──────────────────────────────────────────────────────
 
 /**
  * Track a named event with optional properties.
- * @param {string} event - Event name (e.g. 'tab_viewed')
+ * Events are batched and sent every 5s to minimize DB calls.
+ * @param {string} event - Event name (use EVENTS constants)
  * @param {Object} [props] - Event properties
+ * @param {Object} [context] - { lang, tier } from app state
  */
-export function track(event, props) {
-  if (posthogInstance) {
-    posthogInstance.capture(event, props);
-  } else if (IS_DEV && POSTHOG_KEY === '') {
-    console.log(`[MaNu Analytics] track("${event}")`, props || '');
+export function track(event, props, context) {
+  var ctx = context || {};
+  eventQueue.push({
+    event: event,
+    props: props || {},
+    session_id: SESSION_ID,
+    lang: ctx.lang || 'es',
+    tier: ctx.tier || 'free',
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+    referrer: typeof document !== 'undefined' ? (document.referrer || null) : null,
+  });
+
+  if (eventQueue.length >= MAX_QUEUE) {
+    flush();
+  } else {
+    scheduleFlush();
   }
 }
 
 /**
  * Record a page view.
  * @param {string} [path] - Optional path override
+ * @param {Object} [context] - { lang, tier }
  */
-export function pageView(path) {
-  if (posthogInstance) {
-    posthogInstance.capture('$pageview', { path: path || window.location.pathname });
-  } else if (IS_DEV) {
-    console.log('[MaNu Analytics] pageView:', path || window.location.pathname);
-  }
+export function pageView(path, context) {
+  track('page_view', { path: path || (typeof window !== 'undefined' ? window.location.pathname : '/') }, context);
 }
 
 /**
@@ -90,27 +105,21 @@ export function pageView(path) {
  * @param {Object} [traits]
  */
 export function identify(userId, traits) {
-  if (posthogInstance) {
-    posthogInstance.identify(userId, traits);
-  } else if (IS_DEV) {
-    console.log('[MaNu Analytics] identify:', userId, traits || '');
-  }
+  track('identify', { user_id: userId, ...traits });
 }
 
 /**
  * Reset identification (e.g. on logout).
  */
 export function reset() {
-  if (posthogInstance) {
-    posthogInstance.reset();
-  }
+  // No-op for now, will be needed when auth is added
 }
 
 // ── Predefined Event Names ──────────────────────────────────────────
-// Use these constants for consistency across the app:
 export const EVENTS = {
+  PAGE_VIEW:              'page_view',
   TAB_VIEWED:             'tab_viewed',
-  MAGIC_NUMBER_REVEALED:  'magic_number_revealed',
+  MAGIC_NUMBER_CALCULATED:'magic_number_calculated',
   LANGUAGE_CHANGED:       'language_changed',
   CTA_CLICKED:            'cta_clicked',
   DEMO_MODE_ENTERED:      'demo_mode_entered',
@@ -118,8 +127,8 @@ export const EVENTS = {
   LANDING_ENTERED_APP:    'landing_entered_app',
   PAYWALL_VIEWED:         'paywall_viewed',
   ADVISOR_CTA_CLICKED:    'advisor_cta_clicked',
+  LEAD_SUBMITTED:         'lead_submitted',
   SCORE_VIEWED:           'score_viewed',
+  EMAIL_SUBMITTED:        'email_submitted',
+  TIER_CHANGED:           'tier_changed',
 };
-
-// Auto-initialize on import
-init();

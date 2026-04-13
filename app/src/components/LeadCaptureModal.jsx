@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from './Icon';
 import { submitLead } from '../lib/supabase';
+import { track, EVENTS } from '../utils/analytics.js';
 
 /**
  * LeadCaptureModal — Premium modal that captures advisor leads
@@ -64,6 +65,7 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     var result = await submitLead({ name: name, email: email, phone: phone }, financials);
     if (result.success) {
       setStatus('success');
+      track(EVENTS.LEAD_SUBMITTED, { tier: financials.tier, source_tab: financials.sourceTab }, { lang: lang, tier: financials.tier });
     } else {
       setStatus('error');
       setErrorMsg(t.errorMsg);
