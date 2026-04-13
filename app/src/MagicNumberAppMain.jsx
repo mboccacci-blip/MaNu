@@ -7,7 +7,7 @@ import Cd from './components/Card.jsx';
 import Toggle from './components/Toggle.jsx';
 import TabBtn from './components/TabButton.jsx';
 import { useTranslation } from './i18n/index.jsx';
-import { saveState, loadState, clearState } from './hooks/usePersistedState.js';
+import useAppStore from './store/useAppStore.js';
 import Icon from './components/Icon.jsx';
 import LeadCaptureModal from './components/LeadCaptureModal.jsx';
 import AnimatedNumber from './components/AnimatedNumber.jsx';
@@ -47,15 +47,28 @@ var NavButtons = NavButtonsComponent;
 
 export default function MagicNumberApp({onBack}){
   const {t, lang, toggleLang} = useTranslation();
-  const [tab, setTab] = useState("achieve");
-  const [setupDone, setSetupDone] = useState(false);
   // Demo mode: ?demo=1 in URL grants full paid access
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === '1';
-  const [tier, setTier] = useState(isDemo ? "paid" : "free"); // free | email | paid
-  const [demoBannerVisible, setDemoBannerVisible] = useState(isDemo);
-  const [showLeadModal, setShowLeadModal] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
+
+  // ── Zustand Store ──────────────────────────────────────────────────
+  const store = useAppStore();
+  const sf = store.setField;
+
+  // Destructure all state for backward compatibility with existing JSX
+  const tab = store.tab;
+  const setTab = function(v) { sf('tab', v); };
+  const setupDone = store.setupDone;
+  const setSetupDone = function(v) { sf('setupDone', v); };
+  const tier = isDemo ? "paid" : store.tier;
+  const setTier = function(v) { sf('tier', v); };
+  const demoBannerVisible = isDemo ? true : store.demoBannerVisible;
+  const setDemoBannerVisible = function(v) { sf('demoBannerVisible', v); };
+  const showLeadModal = store.showLeadModal;
+  const setShowLeadModal = function(v) { sf('showLeadModal', v); };
+  const userEmail = store.userEmail;
+  const setUserEmail = function(v) { sf('userEmail', v); };
+  const emailError = store.emailError;
+  const setEmailError = function(v) { sf('emailError', v); };
   const FREE_TABS = ["achieve", "inaction", "learn"];
 
   useEffect(function(){
@@ -64,190 +77,96 @@ export default function MagicNumberApp({onBack}){
     if (meta) meta.setAttribute('content', t('dashboard.welcomeSub') || "");
   }, [lang]);
 
-  // Income & Basic settings
-  const [age, setAge] = useState("");
-  const [monthlyIncome, setMonthlyIncome] = useState("");
-  const [expenses, setExpenses] = useState(DEFAULT_EXP);
-  const nEId = useRef(6);
-  const [ownsHome, setOwnsHome] = useState(false);
-  const [vacationAnnual, setVacationAnnual] = useState("");
-  const [coupleMode, setCoupleMode] = useState(false);
-  const [partner2Income, setPartner2Income] = useState("");
-  const [hasRental, setHasRental] = useState(false);
-  const [rentalEquity, setRentalEquity] = useState("");
-  const [rentalNetIncome, setRentalNetIncome] = useState("");
+  // Income & Basic
+  const age = store.age; const setAge = function(v) { sf('age', v); };
+  const monthlyIncome = store.monthlyIncome; const setMonthlyIncome = function(v) { sf('monthlyIncome', v); };
+  const expenses = store.expenses; const setExpenses = function(v) { sf('expenses', v); };
+  const nEId = useRef(store._nEId);
+  const ownsHome = store.ownsHome; const setOwnsHome = function(v) { sf('ownsHome', v); };
+  const vacationAnnual = store.vacationAnnual; const setVacationAnnual = function(v) { sf('vacationAnnual', v); };
+  const coupleMode = store.coupleMode; const setCoupleMode = function(v) { sf('coupleMode', v); };
+  const partner2Income = store.partner2Income; const setPartner2Income = function(v) { sf('partner2Income', v); };
+  const hasRental = store.hasRental; const setHasRental = function(v) { sf('hasRental', v); };
+  const rentalEquity = store.rentalEquity; const setRentalEquity = function(v) { sf('rentalEquity', v); };
+  const rentalNetIncome = store.rentalNetIncome; const setRentalNetIncome = function(v) { sf('rentalNetIncome', v); };
 
   // Debts
-  const [debts, setDebts] = useState([{id:1,name:"",balance:"",rate:"",minPayment:""}]);
-  const [noDebts, setNoDebts] = useState(false);
-  const [noMortgage, setNoMortgage] = useState(false);
-  const [mortgageBalance, setMortgageBalance] = useState("");
-  const [mortgageRate, setMortgageRate] = useState("");
-  const [mortgagePayment, setMortgagePayment] = useState("");
-  const [mortgageYearsLeft, setMortgageYearsLeft] = useState("");
-  const [noCarLoan, setNoCarLoan] = useState(false);
-  const [carBalance, setCarBalance] = useState("");
-  const [carRate, setCarRate] = useState("");
-  const [carPayment, setCarPayment] = useState("");
-  const [carYearsLeft, setCarYearsLeft] = useState("");
-  const nDId = useRef(2);
+  const debts = store.debts; const setDebts = function(v) { sf('debts', v); };
+  const noDebts = store.noDebts; const setNoDebts = function(v) { sf('noDebts', v); };
+  const noMortgage = store.noMortgage; const setNoMortgage = function(v) { sf('noMortgage', v); };
+  const mortgageBalance = store.mortgageBalance; const setMortgageBalance = function(v) { sf('mortgageBalance', v); };
+  const mortgageRate = store.mortgageRate; const setMortgageRate = function(v) { sf('mortgageRate', v); };
+  const mortgagePayment = store.mortgagePayment; const setMortgagePayment = function(v) { sf('mortgagePayment', v); };
+  const mortgageYearsLeft = store.mortgageYearsLeft; const setMortgageYearsLeft = function(v) { sf('mortgageYearsLeft', v); };
+  const noCarLoan = store.noCarLoan; const setNoCarLoan = function(v) { sf('noCarLoan', v); };
+  const carBalance = store.carBalance; const setCarBalance = function(v) { sf('carBalance', v); };
+  const carRate = store.carRate; const setCarRate = function(v) { sf('carRate', v); };
+  const carPayment = store.carPayment; const setCarPayment = function(v) { sf('carPayment', v); };
+  const carYearsLeft = store.carYearsLeft; const setCarYearsLeft = function(v) { sf('carYearsLeft', v); };
+  const nDId = useRef(store._nDId);
 
-  // Retirement Settings
-  const [retirementAge, setRetirementAge] = useState("");
-  const [yearsPostRet, setYearsPostRet] = useState("");
-  const [desiredIncome, setDesiredIncome] = useState("");
-  const [existingSavings, setExistingSavings] = useState("");
-  const [socialSecurity, setSocialSecurity] = useState("");
-  const [magicRevealed, setMagicRevealed] = useState(false);
-  const [retProfileIdx, setRetProfileIdx] = useState(4);
-  const [chartProfileIdx, setChartProfileIdx] = useState(4);
-  const [chartRetireIdx, setChartRetireIdx] = useState(3);
+  // Retirement
+  const retirementAge = store.retirementAge; const setRetirementAge = function(v) { sf('retirementAge', v); };
+  const yearsPostRet = store.yearsPostRet; const setYearsPostRet = function(v) { sf('yearsPostRet', v); };
+  const desiredIncome = store.desiredIncome; const setDesiredIncome = function(v) { sf('desiredIncome', v); };
+  const existingSavings = store.existingSavings; const setExistingSavings = function(v) { sf('existingSavings', v); };
+  const socialSecurity = store.socialSecurity; const setSocialSecurity = function(v) { sf('socialSecurity', v); };
+  const magicRevealed = store.magicRevealed; const setMagicRevealed = function(v) { sf('magicRevealed', v); };
+  const retProfileIdx = store.retProfileIdx; const setRetProfileIdx = function(v) { sf('retProfileIdx', v); };
+  const chartProfileIdx = store.chartProfileIdx; const setChartProfileIdx = function(v) { sf('chartProfileIdx', v); };
+  const chartRetireIdx = store.chartRetireIdx; const setChartRetireIdx = function(v) { sf('chartRetireIdx', v); };
 
-  // Investment Settings
-  const [showNom, setShowNom] = useState(false);
-  const [projYears, setProjYears] = useState(10);
-  const [customInflation, setCustomInflation] = useState(2.5);
-  const [showScenarios, setShowScenarios] = useState(true);
-  const [customReturn, setCustomReturn] = useState("");
-  const [scenProfileIdx, setScenProfileIdx] = useState(5);
-  const [costNSProfileIdx, setCostNSProfileIdx] = useState(4);
+  // Investment
+  const showNom = store.showNom; const setShowNom = function(v) { sf('showNom', v); };
+  const projYears = store.projYears; const setProjYears = function(v) { sf('projYears', v); };
+  const customInflation = store.customInflation; const setCustomInflation = function(v) { sf('customInflation', v); };
+  const showScenarios = store.showScenarios; const setShowScenarios = function(v) { sf('showScenarios', v); };
+  const customReturn = store.customReturn; const setCustomReturn = function(v) { sf('customReturn', v); };
+  const scenProfileIdx = store.scenProfileIdx; const setScenProfileIdx = function(v) { sf('scenProfileIdx', v); };
+  const costNSProfileIdx = store.costNSProfileIdx; const setCostNSProfileIdx = function(v) { sf('costNSProfileIdx', v); };
 
   // Portfolio
-  const [portAlloc, setPortAlloc] = useState([1,1,1,1,1,1,1]);
-  const [portContribAlloc, setPortContribAlloc] = useState([1,1,1,1,1,1,1]);
+  const portAlloc = store.portAlloc; const setPortAlloc = function(v) { sf('portAlloc', v); };
+  const portContribAlloc = store.portContribAlloc; const setPortContribAlloc = function(v) { sf('portContribAlloc', v); };
 
   // Strategy & Simulation
-  const [savSliders, setSavSliders] = useState({});
-  const [extraIncome, setExtraIncome] = useState("");
-  const [eiTemporary, setEiTemporary] = useState(false);
-  const [eiYears, setEiYears] = useState("5");
-  const [costItemName, setCostItemName] = useState("");
-  const [costItemPrice, setCostItemPrice] = useState("");
-  const [costProfileIdx, setCostProfileIdx] = useState(4);
-  const [goals, setGoals] = useState([{id:1,name:"",amount:"",years:"",profileIdx:4}]);
-  const nGId = useRef(2);
-  const [showRec, setShowRec] = useState(true);
-  const [simSav, setSimSav] = useState(null);
-  const [simMo, setSimMo] = useState(null);
-  const [simRet, setSimRet] = useState(null);
-  const [manualMonthlySav, setManualMonthlySav] = useState("");
-  const [legacy, setLegacy] = useState("");
-  const [assetTax, setAssetTax] = useState(0);
+  const savSliders = store.savSliders; const setSavSliders = function(v) { sf('savSliders', v); };
+  const extraIncome = store.extraIncome; const setExtraIncome = function(v) { sf('extraIncome', v); };
+  const eiTemporary = store.eiTemporary; const setEiTemporary = function(v) { sf('eiTemporary', v); };
+  const eiYears = store.eiYears; const setEiYears = function(v) { sf('eiYears', v); };
+  const costItemName = store.costItemName; const setCostItemName = function(v) { sf('costItemName', v); };
+  const costItemPrice = store.costItemPrice; const setCostItemPrice = function(v) { sf('costItemPrice', v); };
+  const costProfileIdx = store.costProfileIdx; const setCostProfileIdx = function(v) { sf('costProfileIdx', v); };
+  const goals = store.goals; const setGoals = function(v) { sf('goals', v); };
+  const nGId = useRef(store._nGId);
+  const showRec = store.showRec; const setShowRec = function(v) { sf('showRec', v); };
+  const simSav = store.simSav; const setSimSav = function(v) { sf('simSav', v); };
+  const simMo = store.simMo; const setSimMo = function(v) { sf('simMo', v); };
+  const simRet = store.simRet; const setSimRet = function(v) { sf('simRet', v); };
+  const manualMonthlySav = store.manualMonthlySav; const setManualMonthlySav = function(v) { sf('manualMonthlySav', v); };
+  const legacy = store.legacy; const setLegacy = function(v) { sf('legacy', v); };
+  const assetTax = store.assetTax; const setAssetTax = function(v) { sf('assetTax', v); };
 
-  const [revDes, setRevDes] = useState("");
-  const [revYrs, setRevYrs] = useState("");
+  const revDes = store.revDes; const setRevDes = function(v) { sf('revDes', v); };
+  const revYrs = store.revYrs; const setRevYrs = function(v) { sf('revYrs', v); };
+  const revSS = store.revSS; const setRevSS = function(v) { sf('revSS', v); };
+  const revSav = store.revSav; const setRevSav = function(v) { sf('revSav', v); };
+  const revMo = store.revMo; const setRevMo = function(v) { sf('revMo', v); };
+  const revRet = store.revRet; const setRevRet = function(v) { sf('revRet', v); };
+  const revRetProf = store.revRetProf; const setRevRetProf = function(v) { sf('revRetProf', v); };
 
-  const [revSS, setRevSS] = useState("");
-  const [revSav, setRevSav] = useState("");
-  const [revMo, setRevMo] = useState("");
-  const [revRet, setRevRet] = useState(4.0);
-  const [revRetProf, setRevRetProf] = useState(4); // retirement profile idx, default 60/40
+  // Cost of Inaction
+  const ciH = store.ciH; const setCiH = function(v) { sf('ciH', v); };
+  const ciDelayProf = store.ciDelayProf; const setCiDelayProf = function(v) { sf('ciDelayProf', v); };
+  const ciBase = store.ciBase; const setCiBase = function(v) { sf('ciBase', v); };
+  const ciSav = store.ciSav; const setCiSav = function(v) { sf('ciSav', v); };
+  const ciMo = store.ciMo; const setCiMo = function(v) { sf('ciMo', v); };
 
-  // Cost of Inaction tab
-  const [ciH, setCiH] = useState(20);
-  const [ciDelayProf, setCiDelayProf] = useState(5);
-  const [ciBase, setCiBase] = useState(0); // 0=Vault, 1=Cash, 2=CDs
-  const [ciSav, setCiSav] = useState(null);
-  const [ciMo, setCiMo] = useState(null);
+  // ── No more manual persistence — Zustand persist middleware handles it ──
+  const loaded = true; // Always loaded with Zustand
 
-  // ── LocalStorage Persistence ──────────────────────────────────────
-  // Load saved state on mount
-  const [loaded, setLoaded] = useState(false);
-  useEffect(function() {
-    var s = loadState();
-    if (!s) { setLoaded(true); return; }
-    // Restore all persisted fields
-    if (s.age != null) setAge(s.age);
-    if (s.monthlyIncome != null) setMonthlyIncome(s.monthlyIncome);
-    if (s.expenses != null && s.expenses.length > 0) { setExpenses(s.expenses); nEId.current = Math.max.apply(null, s.expenses.map(function(e){return e.id})) + 1; }
-    if (s.ownsHome != null) setOwnsHome(s.ownsHome);
-    if (s.vacationAnnual != null) setVacationAnnual(s.vacationAnnual);
-    if (s.coupleMode != null) setCoupleMode(s.coupleMode);
-    if (s.partner2Income != null) setPartner2Income(s.partner2Income);
-    if (s.hasRental != null) setHasRental(s.hasRental);
-    if (s.rentalEquity != null) setRentalEquity(s.rentalEquity);
-    if (s.rentalNetIncome != null) setRentalNetIncome(s.rentalNetIncome);
-    // Debts
-    if (s.debts != null && s.debts.length > 0) { setDebts(s.debts); nDId.current = Math.max.apply(null, s.debts.map(function(d){return d.id})) + 1; }
-    if (s.noDebts != null) setNoDebts(s.noDebts);
-    if (s.noMortgage != null) setNoMortgage(s.noMortgage);
-    if (s.mortgageBalance != null) setMortgageBalance(s.mortgageBalance);
-    if (s.mortgageRate != null) setMortgageRate(s.mortgageRate);
-    if (s.mortgagePayment != null) setMortgagePayment(s.mortgagePayment);
-    if (s.mortgageYearsLeft != null) setMortgageYearsLeft(s.mortgageYearsLeft);
-    if (s.noCarLoan != null) setNoCarLoan(s.noCarLoan);
-    if (s.carBalance != null) setCarBalance(s.carBalance);
-    if (s.carRate != null) setCarRate(s.carRate);
-    if (s.carPayment != null) setCarPayment(s.carPayment);
-    if (s.carYearsLeft != null) setCarYearsLeft(s.carYearsLeft);
-    // Retirement
-    if (s.retirementAge != null) setRetirementAge(s.retirementAge);
-    if (s.yearsPostRet != null) setYearsPostRet(s.yearsPostRet);
-    if (s.desiredIncome != null) setDesiredIncome(s.desiredIncome);
-    if (s.existingSavings != null) setExistingSavings(s.existingSavings);
-    if (s.socialSecurity != null) setSocialSecurity(s.socialSecurity);
-    if (s.legacy != null) setLegacy(s.legacy);
-    if (s.assetTax != null) setAssetTax(s.assetTax);
-    if (s.manualMonthlySav != null) setManualMonthlySav(s.manualMonthlySav);
-    // Investment
-    if (s.customInflation != null) setCustomInflation(s.customInflation);
-    if (s.customReturn != null) setCustomReturn(s.customReturn);
-    if (s.portAlloc != null) setPortAlloc(s.portAlloc);
-    if (s.portContribAlloc != null) setPortContribAlloc(s.portContribAlloc);
-    // Extra income
-    if (s.extraIncome != null) setExtraIncome(s.extraIncome);
-    if (s.eiTemporary != null) setEiTemporary(s.eiTemporary);
-    if (s.eiYears != null) setEiYears(s.eiYears);
-    // Goals
-    if (s.goals != null && s.goals.length > 0) { setGoals(s.goals); nGId.current = Math.max.apply(null, s.goals.map(function(g){return g.id})) + 1; }
-    // Tier & email (skip tier restore in demo mode — always paid)
-    if (s.tier != null && !isDemo) setTier(s.tier);
-    if (s.userEmail != null) setUserEmail(s.userEmail);
-    setLoaded(true);
-  }, []);
-
-  // Auto-save on state changes (debounced 800ms)
-  useEffect(function() {
-    if (!loaded) return; // don't save during initial load
-    var timer = setTimeout(function() {
-      saveState({
-        age, monthlyIncome, expenses, ownsHome, vacationAnnual,
-        coupleMode, partner2Income, hasRental, rentalEquity, rentalNetIncome,
-        debts, noDebts, noMortgage, mortgageBalance, mortgageRate, mortgagePayment, mortgageYearsLeft,
-        noCarLoan, carBalance, carRate, carPayment, carYearsLeft,
-        retirementAge, yearsPostRet, desiredIncome, existingSavings, socialSecurity,
-        legacy, assetTax, manualMonthlySav,
-        customInflation, customReturn, portAlloc, portContribAlloc,
-        extraIncome, eiTemporary, eiYears, goals,
-        tier, userEmail
-      });
-    }, 800);
-    return function() { clearTimeout(timer); };
-  }, [loaded, age, monthlyIncome, expenses, ownsHome, vacationAnnual,
-      coupleMode, partner2Income, hasRental, rentalEquity, rentalNetIncome,
-      debts, noDebts, noMortgage, mortgageBalance, mortgageRate, mortgagePayment, mortgageYearsLeft,
-      noCarLoan, carBalance, carRate, carPayment, carYearsLeft,
-      retirementAge, yearsPostRet, desiredIncome, existingSavings, socialSecurity,
-      legacy, assetTax, manualMonthlySav,
-      customInflation, customReturn, portAlloc, portContribAlloc,
-      extraIncome, eiTemporary, eiYears, goals,
-      tier, userEmail]);
-
-  // Clear all data function (for UI reset button)
   function clearAllData() {
-    clearState();
-    setAge(""); setMonthlyIncome(""); setExpenses(DEFAULT_EXP);
-    setOwnsHome(false); setVacationAnnual(""); setCoupleMode(false); setPartner2Income("");
-    setHasRental(false); setRentalEquity(""); setRentalNetIncome("");
-    setDebts([{id:1,name:"",balance:"",rate:"",minPayment:""}]); setNoDebts(false);
-    setNoMortgage(false); setMortgageBalance(""); setMortgageRate(""); setMortgagePayment(""); setMortgageYearsLeft("");
-    setNoCarLoan(false); setCarBalance(""); setCarRate(""); setCarPayment(""); setCarYearsLeft("");
-    setRetirementAge(""); setYearsPostRet(""); setDesiredIncome(""); setExistingSavings(""); setSocialSecurity("");
-    setLegacy(""); setAssetTax(0); setManualMonthlySav("");
-    setCustomInflation(2.5); setCustomReturn(""); setPortAlloc([1,1,1,1,1,1,1]); setPortContribAlloc([1,1,1,1,1,1,1]);
-    setExtraIncome(""); setEiTemporary(false); setEiYears("5");
-    setGoals([{id:1,name:"",amount:"",years:"",profileIdx:4}]);
-    setTier("free"); setUserEmail("");
+    store.clearAll();
     nEId.current = 6; nDId.current = 2; nGId.current = 2;
   }
 
