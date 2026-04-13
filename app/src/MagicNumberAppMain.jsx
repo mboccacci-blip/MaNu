@@ -34,8 +34,6 @@ import SituationTab from './tabs/SituationTab.jsx';
 import DebtsTab from './tabs/DebtsTab.jsx';
 import RetirementTab from './tabs/RetirementTab.jsx';
 import InvestTab from './tabs/InvestTab.jsx';
-import AchieveTab from './tabs/AchieveTab.jsx';
-import InactionTab from './tabs/InactionTab.jsx';
 
 // Tip: imported from ./components/Tip.jsx
 
@@ -649,10 +647,397 @@ export default function MagicNumberApp({onBack}){
 {tab==="portfolio"&&<PortfolioTab tab={tab} goTab={goTab} tier={tier} nEx={nEx} mSav={mSav} allProfiles={allProfiles} portAlloc={portAlloc} updatePortAlloc={updatePortAlloc} portContribAlloc={portContribAlloc} updateContribAlloc={updateContribAlloc} portReturn={portReturn} portContribReturn={portContribReturn} />}
 
 {/* === YOUR MAGIC NUMBER === */}
-{tab==="achieve"&&<AchieveTab tab={tab} goTab={goTab} tier={tier} lang={lang} nAge={nAge} nRetAge={nRetAge} nYP={nYP} nEx={nEx} nDes={nDes} nSS={nSS} nLegacy={nLegacy} ytr={ytr} mSav={mSav} magic={magic} mD={mD} desiredAfterSS={desiredAfterSS} age={age} setAge={setAge} retireAge={retireAge} setRetireAge={setRetireAge} yearsInRetirement={yearsInRetirement} setYearsInRetirement={setYearsInRetirement} existingSavings={existingSavings} setExistingSavings={setExistingSavings} desiredRetIncome={desiredRetIncome} setDesiredRetIncome={setDesiredRetIncome} socialSecurity={socialSecurity} setSocialSecurity={setSocialSecurity} legacyAmount={legacyAmount} setLegacyAmount={setLegacyAmount} retProfileIdx={retProfileIdx} setRetProfileIdx={setRetProfileIdx} adjProfiles={adjProfiles} allProfiles={allProfiles} hasPortfolio={hasPortfolio} retProfLabel={retProfLabel} retProfReturn={retProfReturn} magicRevealed={magicRevealed} blendedPortReturn={blendedPortReturn} q={q} paidHint={paidHint} monthlyNeeded={monthlyNeeded} ybYData={ybYData} chartProfileIdx={chartProfileIdx} setChartProfileIdx={setChartProfileIdx} chartRetireIdx={chartRetireIdx} setChartRetireIdx={setChartRetireIdx} chartAccumReturn={chartAccumReturn} chartRetireReturn={chartRetireReturn} debtEvents={debtEvents} TAX={TAX} assetTax={assetTax} INFL={INFL} showNom={showNom} setShowNom={setShowNom} projYears={projYears} setProjYears={setProjYears} projs={projs} maxProj={maxProj} customReturn={customReturn} setCustomReturn={setCustomReturn} />}
+{tab==="achieve"&&<div className="fi">
+  <Cd style={{textAlign:"center",padding:"24px 20px"}}>
+    <div style={{fontSize:36,marginBottom:10}}><Icon name="crosshair" size={36} weight="regular" color="#60a5fa" /></div>
+    <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('achieve.title')}</h2>
+    <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.7,maxWidth:440,margin:"0 auto"}}>
+      {t('achieve.intro', {q: q})}
+    </p>
+  </Cd>
+  <Cd><ST sub={t('achieve.essentialsSub')}>{t('achieve.essentials')}</ST>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+      <NI label={t('achieve.yourAge')} value={age} onChange={setAge} prefix="" min={16} max={99} tip={t('achieve.yourAgeTip')}/>
+      <NI label={t('achieve.retAge')} value={retirementAge} onChange={setRetirementAge} prefix="" tip={t('achieve.retAgeTip')}/>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+      <NI label={t('achieve.yearsInRet')} value={yearsPostRet} onChange={setYearsPostRet} prefix="" tip={t('achieve.yearsInRetTip')}/>
+      <NI label={t('achieve.desiredIncome')} value={desiredIncome} onChange={setDesiredIncome} tip={t('achieve.desiredIncomeTip')}/>
+    </div>
+    <NI label={t('achieve.otherRetIncome')} value={socialSecurity} onChange={setSocialSecurity} tip={t('achieve.otherRetIncomeTip')}/>
+    {nSSRaw>0&&ytr>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:12}}>{fmt(nSSRaw)}/mo {t('retirement.atRetirement')} = <strong>{fmt(nSS)}/mo {t('retirement.todayDollar')}</strong> <span style={{color:"#475569"}}>({t('retirement.inflAdjusted', {y: ytr})})</span></div>}
+    <NI label={t('achieve.currentSavings')} value={existingSavings} onChange={setExistingSavings} tip={t('achieve.currentSavingsTip')}/>
+    <NI label={t('achieve.estMonthlySav')} value={manualMonthlySav} onChange={setManualMonthlySav} tip={t('achieve.estMonthlySavTip')}/>
+    {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> — {t('achieve.overridesEstimate')}.</div>}
+    <NI label={t('achieve.legacy')} value={legacy} onChange={setLegacy} tip={t('achieve.legacyTip')}/>
+    <div style={{marginTop:8,marginBottom:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+        <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{t('achieve.annualAssetTax')}</span>
+        <span style={{fontSize:15,fontWeight:700,color:assetTax>0?"#f59e0b":"#64748b"}}>{assetTax.toFixed(1)}%</span>
+      </div>
+      <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{t('achieve.assetTaxTip')}</div>
+      <Slider label="" value={assetTax} onChange={setAssetTax} min={0} max={3} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/>
+      {assetTax>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginTop:4}}>
+        <Icon name="warning" size={12} weight="regular" /> {t('achieve.assetTaxExplain',{tax:assetTax.toFixed(1)})}
+      </div>}
+    </div>
+    {nAge>0&&nRetAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}><div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{ytr>0?t('achieve.yearsToGo',{n:ytr}):t('achieve.atRetirement')}</div>{nYP>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('achieve.planToAge',{age:nRetAge+nYP})}</div>}{mSav>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac"}}>{hasIncomeData?t('achieve.savingActual',{amt:fmt(mSav)}):t('achieve.savingEstimate',{amt:fmt(mSav)})}</div>}</div>}
+  </Cd>
+  {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
+    {/* FREE TIER: Range (asymmetric 0.75×–1.30× + $50K rounding) + Email CTA */}
+    {tier==="free"&&!isDemo&&<>
+    <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}>
+      <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
+      <div style={{position:"relative"}}>
+        <div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#94a3b8",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number está entre"}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.85/25000)*25000)}</div>
+        <div style={{fontSize:16,fontWeight:700,color:"#94a3b8",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
+        <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.15/25000)*25000)}</div>
+        <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
+          {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")}
+        </div>
+      </div>
+    </Cd>
+    {/* Year-by-Year Chart (Free tier - fixed profiles, no selectors) */}
+    {ybYData.length>0&&<Cd>
+      <ST>{t('retirement.ybyProjection')}</ST>
+      <div style={{marginBottom:12}}>
+        <MultiLineChart series={[{data:ybYData.map(function(d){
+          var ageNow=nAge||30;var ageAtYear=ageNow+d.year;var totalYrs=ytr+nYP;
+          var step=totalYrs>40?10:5;
+          var isFirst=d.year===0;var isRetire=d.year===ytr;var isLast=d.year===totalYrs;
+          var isTick=d.year%step===0&&d.year>0&&d.year<totalYrs;
+          var tooCloseToRetire=Math.abs(d.year-ytr)<(step/2)&&!isRetire;
+          const show=(isFirst||isRetire||isLast||(isTick&&!tooCloseToRetire));
+          return{l:show?(isFirst?t('app.age')+" "+ageAtYear:isRetire?t('app.at')+" "+ageAtYear:isLast?t('app.age')+" "+ageAtYear:""+ageAtYear):"",v:d.balance}
+        }),color:"#34d399",bold:true,fill:true}]} height={160} showYAxis={true}/>
+      </div>
+      {(function(){
+        var depleteY=null;for(var i=ytr+1;i<ybYData.length;i++){if(ybYData[i].balance<=0){depleteY=i;break}}
+        var lastBal=ybYData[ybYData.length-1].balance;
+        return(<div style={{textAlign:"center",marginTop:6}}>
+          {depleteY?<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#fca5a5",display:"inline-block"}}><Icon name="warning" size={12} weight="regular" /> {t('retirement.moneyRunsOut', {age: nAge+depleteY, n: depleteY-ytr})}</div>
+          :<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"inline-block"}}><Icon name="check-circle" size={12} weight="regular" /> {t('retirement.moneyLasts', {amt: fmtC(lastBal), age: nAge+ytr+nYP})}</div>}
+        </div>)})()}
+      <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",marginTop:10,lineHeight:1.5}}>
+        <Icon name="lock" size={11} weight="regular" /> {lang==="en"?"Unlock to customize investment profiles and see how different strategies change your outcome":"Desbloqueá para personalizar perfiles de inversión y ver cómo diferentes estrategias cambian tu resultado"}
+      </div>
+    </Cd>}
+    <Cd glow="gold" style={{textAlign:"center",padding:"32px 24px"}}>
+      <div style={{fontSize:28,marginBottom:10}}><Icon name="lock-open" size={28} weight="regular" color="#eab308" /></div>
+      <div style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Want your exact Magic Number?":"¿Querés conocer tu Magic Number exacto?"}</div>
+      <p style={{fontSize:14,color:"#64748b",lineHeight:1.6,maxWidth:380,margin:"0 auto 20px"}}>{lang==="en"?"Enter your email and we'll reveal your precise number — plus send you a personalized PDF report.":"Dejá tu email y te revelamos tu número preciso — además te enviamos un informe PDF personalizado."}</p>
+      <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
+        <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"14px 16px",borderRadius:12,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.2)"),background:"#fff",fontSize:14,fontFamily:"Inter,sans-serif",outline:"none",transition:"border 0.2s"}}/>
+        <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return}setTier("email");setEmailError("")}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal":"Revelar"} →</button>
+      </div>
+      {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
+      <div style={{fontSize:11,color:"#94a3b8",marginTop:10}}><Icon name="lock" size={11} weight="regular" /> {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
+    </Cd>
+    <AdvisorCTA onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
+    </>}
+    {/* EMAIL/PAID TIER: Exact number + full analysis */}
+    {tier!=="free"&&<>
+    <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nSS>0?" (además de "+fmt(nSS)+"/mes de jubilación)":"")+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" años."}</div></div></Cd>
+    <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*3,500000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#93c5fd",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*3,10000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#86efac",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
+      <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={0} max={12} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div></div>
+      {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>↩ {t('achieve.resetToActual')}</button></div>:null}
+    </Cd>
+    <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
+    {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#fca5a5"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#86efac"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#94a3b8"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#93c5fd",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
+    {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
+    <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
+    {/* Year-by-Year Projection (full, with profile selectors) */}
+    {ybYData.length>0&&<Cd>
+      <ST tip={t('retirement.ybyTip')}>{t('retirement.ybyProjection')}</ST>
+      <div style={{marginBottom:14}}>
+        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}><Icon name="chart-line-up" size={13} weight="regular" /> {t('retirement.accumulation')}</div>
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:4}}>
+          {hasPortfolio&&<TabBtn active={chartProfileIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setChartProfileIdx(-1)}} color="#e879f9"/>}
+          {allProfiles.map(function(p,i){return <TabBtn key={p.id} active={chartProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartProfileIdx(i)}} color={p.color}/>})}
+        </div>
+        <div style={{fontSize:11,color:chartProfileIdx===-1?"#e879f9":"#93c5fd",marginBottom:12}}>
+          {chartProfileIdx===-1&&hasPortfolio?t('retirement.usingPortfolio', {rate: pct(chartAccumReturn)}):t('retirement.usingProfile', {name: (chartProfileIdx>=0?(chartProfileIdx<adjProfiles.length?adjProfiles[chartProfileIdx]:allProfiles[chartProfileIdx]).name:"60/40"), rate: pct(chartAccumReturn)})}
+        </div>
+        <div style={{fontSize:12,fontWeight:600,color:"#94a3b8",marginBottom:6}}><Icon name="umbrella" size={13} weight="regular" /> {t('retirement.retirementPhase')}</div>
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:4}}>
+          {hasPortfolio&&<TabBtn active={chartRetireIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setChartRetireIdx(-1)}} color="#e879f9"/>}
+          {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={chartRetireIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartRetireIdx(i)}} color={p.color}/>})}
+        </div>
+        <div style={{fontSize:11,color:chartRetireIdx===-1?"#e879f9":"#93c5fd"}}>
+          {chartRetireIdx===-1&&hasPortfolio?t('retirement.usingPortfolio', {rate: pct(chartRetireReturn)}):t('retirement.usingProfile', {name: adjProfiles[Math.max(chartRetireIdx,0)].name, rate: pct(chartRetireReturn)})}
+        </div>
+      </div>
+      <div style={{marginBottom:12}}>
+        <MultiLineChart series={[{data:ybYData.map(function(d){
+          var ageNow=nAge||30;var ageAtYear=ageNow+d.year;var totalYrs=ytr+nYP;
+          var step=totalYrs>40?10:5;
+          var isFirst=d.year===0;var isRetire=d.year===ytr;var isLast=d.year===totalYrs;
+          var isTick=d.year%step===0&&d.year>0&&d.year<totalYrs;
+          var tooCloseToRetire=Math.abs(d.year-ytr)<(step/2)&&!isRetire;
+          const show=(isFirst||isRetire||isLast||(isTick&&!tooCloseToRetire));
+          return{l:show?(isFirst?t('app.age')+" "+ageAtYear:isRetire?t('app.at')+" "+ageAtYear:isLast?t('app.age')+" "+ageAtYear:""+ageAtYear):"",v:d.balance}
+        }),color:chartProfileIdx===-1?"#e879f9":(chartProfileIdx>=0&&chartProfileIdx<allProfiles.length?allProfiles[chartProfileIdx].color:"#22c55e"),bold:true,fill:true}]} height={160} showYAxis={true}/>
+      </div>
+      {(function(){
+        var retBal=ybYData[ytr]?ybYData[ytr].balance:0;
+        var peakV=0,peakY=0;ybYData.forEach(function(d){if(d.balance>peakV){peakV=d.balance;peakY=d.year}});
+        var depleteY=null;for(var i=ytr+1;i<ybYData.length;i++){if(ybYData[i].balance<=0){depleteY=i;break}}
+        var lastBal=ybYData[ybYData.length-1].balance;
+        return(<div style={{display:"grid",gap:6,marginTop:8}}>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center"}}>
+            <div style={{padding:"6px 12px",borderRadius:8,background:"rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('retirement.atRetirement', {age: nAge+ytr})} <strong>{fmtC(retBal)}</strong></div>
+            {peakY!==ytr&&<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(167,139,250,0.08)",fontSize:11,color:"#c4b5fd"}}>{t('retirement.peak')} <strong>{fmtC(peakV)}</strong> at age {nAge+peakY}</div>}
+          </div>
+          <div style={{textAlign:"center"}}>
+            {depleteY?<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#fca5a5",display:"inline-block"}}><Icon name="warning" size={12} weight="regular" /> {t('retirement.moneyRunsOut', {age: nAge+depleteY, n: depleteY-ytr})}</div>
+            :<div style={{padding:"6px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"inline-block"}}><Icon name="check-circle" size={12} weight="regular" /> {t('retirement.moneyLasts', {amt: fmtC(lastBal), age: nAge+ytr+nYP})}</div>}
+          </div>
+        </div>)})()}
+      {debtEvents.length>0&&<div style={{display:"grid",gap:6,marginTop:12}}>
+        {debtEvents.filter(function(ev){return ev.endsAtYear<ytr}).map(function(ev,i){return(
+          <div key={i} style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#86efac",display:"flex",justifyContent:"space-between"}}>
+            <span><Icon name="chart-line-up" size={12} weight="regular" /> {t('retirement.paidOffAt', {name: ev.name, age: nAge+ev.endsAtYear})}</span>
+            <span style={{fontWeight:600}}>{t('retirement.savingsBoost', {amt: fmt(ev.monthlyAmount)})}</span>
+          </div>)})}
+      </div>}
+    </Cd>}
+    {tier==="email"&&<Cd glow="gold" style={{textAlign:"center",padding:"28px 24px"}}>
+      <div style={{fontSize:28,marginBottom:10}}><Icon name="star" size={28} weight="fill" color="#eab308" /></div>
+      <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"Desbloqueá tu Perfil Full"}</div>
+      <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis: detailed gap analysis, exact retirement age, year-by-year projections, and a premium PDF report.":"Obtené tu análisis financiero completo: brecha detallada, edad exacta de jubilación, proyecciones año por año, e informe PDF premium."}</p>
+      <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"¡Integración con Stripe próximamente! Precio: $14.99")}}>{lang==="en"?"Unlock Full Profile — $14.99":"Desbloquear Perfil Full — $14.99"}</button>
+    </Cd>}
+    </>}
+  </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}
+
+
+  {/* === REVERSE CALCULATOR === */}
+  {nAge>0&&<>
+  <Cd style={{marginTop:24,borderTop:"2px solid rgba(96,165,250,0.15)",paddingTop:28}}>
+    <div style={{textAlign:"center",marginBottom:20}}>
+      <div style={{fontSize:28,marginBottom:8}}><Icon name="calendar" size={28} weight="regular" color="#60a5fa" /></div>
+      <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",marginBottom:6}}>{t('achieve.whenCanIRetire')}</h2>
+      <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.6,maxWidth:400,margin:"0 auto"}}>
+        {t('achieve.reverseIntro')}
+      </p>
+    </div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+      <NI label={t('achieve.desiredIncome')} value={revDes} onChange={setRevDes} placeholder={nDes>0?nDes.toLocaleString("en-US"):""} tip={t('achieve.desiredIncomeTip')}/>
+      <NI label={t('achieve.yearsInRetirement')} value={revYrs} onChange={setRevYrs} prefix="" placeholder={nYP>0?String(nYP):""} tip={t('achieve.yearsInRetTip')}/>
+    </div>
+    <NI label={t('achieve.otherRetIncome')} value={revSS} onChange={setRevSS} placeholder={nSSRaw>0?nSSRaw.toLocaleString("en-US"):""} tip={t('achieve.otherRetIncomeTip')}/>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+      <NI label={t('achieve.revCurrentSavings')} value={revSav} onChange={setRevSav} placeholder={nEx>0?nEx.toLocaleString("en-US"):""} tip={t('achieve.revCurrentSavingsTip')}/>
+      <NI label={t('achieve.revMonthlySavings')} value={revMo} onChange={setRevMo} placeholder={mSav>0?Math.round(mSav).toLocaleString("en-US"):""} tip={t('achieve.revMonthlySavingsTip')}/>
+    </div>
+    {(revDes===""||revYrs===""||revSav===""||revMo==="")&&(nDes>0||nEx>0)&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:12}}>
+      <Icon name="ruler" size={12} weight="regular" /> {t('achieve.revEmptyFieldsNote')}
+    </div>}
+    <div style={{marginBottom:14}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+        <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{t('achieve.revAccumReturn')}</span>
+        <span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{revRet.toFixed(1)}%</span>
+      </div>
+      <Slider label="" value={revRet} onChange={setRevRet} min={0} max={12} step={0.1} format={function(v){return v.toFixed(1)+"%"}} color="#f59e0b"/>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>
+        {adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(revRet-p.realReturn*100)<0.05} label={p.icon+" "+p.name+" "+pct(p.realReturn)} onClick={function(){setRevRet(p.realReturn*100)}} color={p.color}/>})}
+      </div>
+    </div>
+    <div style={{marginBottom:14}}>
+      <div style={{fontSize:11,color:"#94a3b8",marginBottom:6}}>{t('achieve.revInvestStrategy')}</div>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+        {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={revRetProf===i} iconName={p.icon} label={p.name} onClick={function(){setRevRetProf(i)}} color={p.color}/>})}
+      </div>
+      <div style={{fontSize:10,color:"#93c5fd",marginTop:4}}>{t('achieve.revAtRealDuring',{name:adjProfiles[revRetProf].name,rate:pct(adjProfiles[revRetProf].realReturn)})}</div>
+    </div>
+    {(nLegacy>0||TAX>0)&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
+      {nLegacy>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{t('achieve.revLegacyFrom',{amt:fmt(nLegacy)})}</div>}
+      {TAX>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.08)",fontSize:11,color:"#92400e"}}>{t('achieve.revTaxFrom',{rate:assetTax.toFixed(1)})}</div>}
+    </div>}
+  </Cd>
+
+  {revResult&&<Cd glow={revResult.age?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}>
+    {revResult.age?<>
+      <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:"#22c55e",marginBottom:6}}>{t('achieve.youCanRetireAt')}</div>
+      <div style={{fontFamily:"Outfit,sans-serif",fontSize:56,fontWeight:900,color:"#22c55e",lineHeight:1,marginBottom:4}}>{t('app.age')} {revResult.age}</div>
+      <div style={{fontSize:13,color:"#94a3b8",marginTop:8,lineHeight:1.6}}>
+        {t('achieve.revInYears',{years:revResult.yrsToRetire,projected:fmtC(revResult.projected),mn:fmtC(revResult.mn)})}{nLegacy>0?" "+t('achieve.revIncludesLegacy',{amt:fmt(nLegacy)}):""}{revResult.surplus>0?" "+t('achieve.revSurplus',{amt:fmtC(revResult.surplus)}):""}.{"\n"}
+      </div>
+      {revResult.ssToday>0&&<div style={{fontSize:11,color:"#93c5fd",marginTop:8}}>
+        {t('achieve.revSSIncome',{future:fmt(Number(revSS)),today:fmt(revResult.ssToday),age:revResult.age})}
+      </div>}
+      {TAX>0&&<div style={{fontSize:11,color:"#92400e",marginTop:4}}>{t('achieve.revTaxNet',{rate:assetTax.toFixed(1)})}</div>}
+      <div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(0,0,0,0.2)"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+          <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.retireAt')}</div><div style={{fontSize:18,fontWeight:700,color:"#22c55e"}}>{revResult.age}</div></div>
+          <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.savingsThen')}</div><div style={{fontSize:18,fontWeight:700,color:"#60a5fa"}}>{fmtC(revResult.projected)}</div></div>
+          <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.yourMN')}</div><div style={{fontSize:18,fontWeight:700,color:"#0f172a"}}>{fmtC(revResult.mn)}</div></div>
+        </div>
+      </div>
+    </>:<>
+      <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:"#ef4444",marginBottom:6}}>{t('achieve.cannotRetireBy100')}</div>
+      <div style={{fontSize:13,color:"#fca5a5",lineHeight:1.6}}>{t('achieve.revCannotRetire')}</div>
+    </>}
+  </Cd>}
+  {revResult&&<AdvisorCTA msg={revResult.age?t('achieve.advisorReality'):t('achieve.advisorHelp')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>}
+  </>}
+
+  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
+</div>}
 
 {/* === COST OF INACTION === */}
-{tab==="inaction"&&<InactionTab tab={tab} goTab={goTab} tier={tier} lang={lang} nAge={nAge} nRetAge={nRetAge} nYP={nYP} nEx={nEx} nDes={nDes} nSS={nSS} ytr={ytr} mSav={mSav} magic={magic} mD={mD} desiredAfterSS={desiredAfterSS} adjProfiles={adjProfiles} allProfiles={allProfiles} hasPortfolio={hasPortfolio} blendedPortReturn={blendedPortReturn} retProfLabel={retProfLabel} retProfReturn={retProfReturn} debtEvents={debtEvents} INFL={INFL} setShowLeadModal={setShowLeadModal} />}
+{tab==="inaction"&&<div className="fi">
+  <Cd style={{textAlign:"center",padding:"24px 20px"}}>
+    <div style={{fontSize:36,marginBottom:10}}><Icon name="hourglass" size={36} weight="regular" color="#f59e0b" /></div>
+    <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#0f172a",marginBottom:8}}>{t('inaction.title')}</h2>
+    <p style={{color:"#94a3b8",fontSize:13,lineHeight:1.7,maxWidth:440,margin:"0 auto"}}>
+      {t('inaction.intro')}
+    </p>
+  </Cd>
+
+  {(function(){
+    var iSav=nEx>0?nEx:100000;
+    var iMo=mSav>0?mSav:1000;
+
+    // Section 1: Base vs Investing (selectable base)
+    var baseProf=adjProfiles[ciBase]||adjProfiles[0];
+    var compareProfs=adjProfiles.filter(function(_,i){return i>ciBase});
+    var baseVal=fvVariable(iSav,iMo,baseProf.realReturn,ciH,[]);
+    var profVals=compareProfs.map(function(p){
+      var v=fvVariable(iSav,iMo,p.realReturn,ciH,[]);
+      return{name:p.name,icon:p.icon,color:p.color,val:v,lost:v-baseVal,real:p.realReturn};
+    });
+    var maxVal=Math.max.apply(null,profVals.map(function(p){return p.val}).concat([baseVal,1]));
+
+    // Section 2: Cost of Delaying (up to 10 years)
+    var delayProf=adjProfiles[ciDelayProf]||adjProfiles[5];
+    var delays=[0,1,2,3,4,5,6,7,8,9,10];
+    var delayVals=delays.map(function(d){
+      var yrs=Math.max(ciH-d,0);
+      var v=fvVariable(iSav,iMo,delayProf.realReturn,yrs,[]);
+      return{delay:d,yrs:yrs,val:v};
+    });
+    var todayVal=delayVals[0].val;
+    var lastDelay=delayVals[delayVals.length-1];
+
+    return(<>
+    {/* Interactive inputs */}
+    <Cd><ST sub={t('inaction.yourNumbersSub')}>{t('inaction.yourNumbers')}</ST>
+      <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:8}}>
+        <div style={{flex:1,minWidth:120,padding:"12px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)"}}>
+          <div style={{fontSize:10,color:"#64748b",textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{t('inaction.currentSavings')}</div>
+          <div style={{fontSize:18,fontWeight:700,color:"#60a5fa"}}>{fmt(iSav)}</div>
+        </div>
+        <div style={{flex:1,minWidth:120,padding:"12px 16px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)"}}>
+          <div style={{fontSize:10,color:"#64748b",textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{t('inaction.monthlySavings')}</div>
+          <div style={{fontSize:18,fontWeight:700,color:"#22c55e"}}>{fmt(iMo)}/mo</div>
+        </div>
+      </div>
+      {nEx<=0&&mSav<=0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:11,color:"#92400e",marginBottom:8}}><Icon name="warning" size={12} weight="regular" /> {t('inaction.usingDefaults')}</div>}
+      <div style={{textAlign:"center"}}><span style={{fontSize:11,color:"#60a5fa",cursor:"pointer",fontWeight:600}} onClick={function(){goTab("achieve")}}>{t('inaction.editInMN')} →</span></div>
+    </Cd>
+
+    {/* Section 1: BASE VS INVESTING */}
+    <Cd><ST sub={t('inaction.whatYouLose',{savings:fmt(iSav),monthly:fmt(iMo),name:baseProf.name})}>{baseProf.icon} {t('inaction.vsInvesting',{name:baseProf.name})}</ST>
+      <div style={{fontSize:11,color:"#94a3b8",marginBottom:12}}>{t('inaction.compareAgainst')}</div>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:16}}>
+        {adjProfiles.filter(function(_,i){return i<=2}).map(function(p,i){return <TabBtn key={p.id} active={ciBase===i} iconName={p.icon} label={p.name} onClick={function(){setCiBase(i)}} color={p.color}/>})}
+      </div>
+      <div style={{display:"flex",gap:6,marginBottom:20,justifyContent:"center"}}>
+        {[10,20,30,40].map(function(y){return <TabBtn key={y} active={ciH===y} label={y+t('invest.yrTab')} onClick={function(){setCiH(y)}}/>})}
+      </div>
+
+      {/* Base bar */}
+      <div style={{marginBottom:12,padding:"10px 14px",borderRadius:10,background:"rgba(0,0,0,0.15)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontSize:12,fontWeight:600,color:"#64748b"}}>{baseProf.icon} {baseProf.name} ({pct(baseProf.realReturn)} real)</span>
+          <span style={{fontSize:15,fontWeight:700,color:"#64748b"}}>{fmtC(baseVal)}</span>
+        </div>
+        <div style={{height:24,borderRadius:6,overflow:"hidden",background:"rgba(255,255,255,0.03)"}}>
+          <div style={{height:"100%",borderRadius:6,width:Math.max((baseVal/maxVal)*100,2)+"%",background:"linear-gradient(90deg,#475569,#64748b)"}}/>
+        </div>
+      </div>
+
+      {profVals.length===0?<div style={{textAlign:"center",padding:"20px",color:"#64748b",fontSize:13}}>{t('inaction.noHigherProfiles')}</div>
+      :profVals.map(function(p){return(
+        <div key={p.name} style={{marginBottom:12,padding:"10px 14px",borderRadius:10,background:"rgba(0,0,0,0.1)"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+            <span style={{fontSize:12,fontWeight:600,color:"#0f172a"}}><Icon name={p.icon} size={14} weight="light"/> {p.name} <span style={{color:"#475569",fontWeight:400}}>({pct(p.real)} real)</span></span>
+            <span style={{fontSize:15,fontWeight:700,color:p.color}}>{fmtC(p.val)}</span>
+          </div>
+          <div style={{height:24,borderRadius:6,overflow:"hidden",background:"rgba(255,255,255,0.03)",position:"relative"}}>
+            <div style={{height:"100%",borderRadius:6,width:Math.max((baseVal/maxVal)*100,2)+"%",background:"linear-gradient(90deg,#475569,#64748b)",position:"absolute"}}/>
+            <div className="ba" style={{height:"100%",borderRadius:6,width:Math.max((p.val/maxVal)*100,2)+"%",background:"linear-gradient(90deg,"+p.color+"88,"+p.color+")",position:"relative"}}/>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
+            <span style={{fontSize:10,color:"#475569"}}>{t('inaction.gray',{name:baseProf.name})}</span>
+            <span style={{fontSize:11,fontWeight:700,color:"#f87171"}}>{t('inaction.lost',{amt:fmtC(p.lost)})}</span>
+          </div>
+        </div>
+      )})}
+
+      {profVals.length>0&&<div style={{padding:"16px 20px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)",textAlign:"center",marginTop:8}}>
+        <div style={{fontSize:12,color:"#fca5a5",marginBottom:4}}>{t('inaction.stayingIn',{name:baseProf.icon+" "+baseProf.name,years:ciH})}</div>
+        <div style={{fontSize:11,color:"#94a3b8",lineHeight:1.6}}>
+          {t('inaction.vsAggressive',{name:profVals[profVals.length-1].icon+" "+profVals[profVals.length-1].name,amt:fmtC(profVals[profVals.length-1].lost)})}
+        </div>
+      </div>}
+    </Cd>
+
+    <AdvisorCTA msg={t('inaction.advisorSavings')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
+
+    {/* Section 2: COST OF DELAYING */}
+    <Cd><ST sub={t('inaction.priceOfWaitingSub')}>{t('inaction.priceOfWaiting')}</ST>
+      <div style={{fontSize:12,color:"#94a3b8",marginBottom:16}}>{t('inaction.whatIfInvestIn',{name:delayProf.icon+" "+delayProf.name})}</div>
+      <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:16}}>
+        {adjProfiles.filter(function(_,i){return i>=1}).map(function(p,i){var idx=i+1;return <TabBtn key={p.id} active={ciDelayProf===idx} iconName={p.icon} label={p.name} onClick={function(){setCiDelayProf(idx)}} color={p.color}/>})}
+      </div>
+      <div style={{display:"flex",gap:6,marginBottom:20,justifyContent:"center"}}>
+        {[10,20,30,40].map(function(y){return <TabBtn key={y} active={ciH===y} label={y+t('app.yrSuffix')} onClick={function(){setCiH(y)}}/>})}
+      </div>
+
+      <div style={{marginBottom:20}}>
+        {delayVals.map(function(d){
+          var pctOfMax=todayVal>0?(d.val/todayVal)*100:0;
+          var lost=todayVal-d.val;
+          var isToday=d.delay===0;
+          return(
+            <div key={d.delay} style={{marginBottom:8,padding:"8px 14px",borderRadius:10,background:isToday?"rgba(34,197,94,0.04)":"rgba(0,0,0,0.1)",border:isToday?"1px solid rgba(34,197,94,0.1)":"1px solid rgba(255,255,255,0.03)"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                <div>
+                  <span style={{fontSize:12,fontWeight:600,color:isToday?"#22c55e":"#0f172a"}}>{isToday?t('inaction.startToday'):t('inaction.waitYr',{n:d.delay})}</span>
+                  <span style={{fontSize:10,color:"#475569",marginLeft:6}}>({t('inaction.yrInvesting',{n:d.yrs})})</span>
+                </div>
+                <span style={{fontSize:14,fontWeight:700,color:isToday?"#22c55e":lost>0?"#f87171":"#0f172a"}}>{fmtC(d.val)}</span>
+              </div>
+              <div style={{height:16,borderRadius:4,overflow:"hidden",background:"rgba(255,255,255,0.03)"}}>
+                <div className="ba" style={{height:"100%",borderRadius:4,width:Math.max(pctOfMax,2)+"%",background:isToday?"linear-gradient(90deg,#22c55e88,#22c55e)":"linear-gradient(90deg,"+delayProf.color+"44,"+delayProf.color+"88)"}}/>
+              </div>
+              {!isToday&&lost>0&&<div style={{textAlign:"right",marginTop:2}}>
+                <span style={{fontSize:11,fontWeight:700,color:"#f87171"}}>−{fmtC(lost)}</span>
+                <span style={{fontSize:10,color:"#475569",marginLeft:4}}>({(lost/todayVal*100).toFixed(1)}%)</span>
+              </div>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{padding:"16px 20px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)",textAlign:"center"}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#f87171",marginBottom:6}}>{t('inaction.yearsOfWaiting',{n:10})}−{fmtC(todayVal-lastDelay.val)}</div>
+        <div style={{fontSize:11,color:"#94a3b8",lineHeight:1.6}}>
+          {t('inaction.potentialWealth',{pct:todayVal>0?((todayVal-lastDelay.val)/todayVal*100).toFixed(1):"0"})}
+        </div>
+      </div>
+    </Cd>
+
+    <AdvisorCTA msg={t('inaction.dontLetInaction')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
+    </>)})()}
+  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
+</div>}
 
 {/* === SAVE MORE === */}
 {tab==="save"&&<SaveTab tab={tab} goTab={goTab} tier={tier} savOpps={savOpps} setSavSliders={setSavSliders} totalSavOpp={totalSavOpp} mSav={mSav} />}
