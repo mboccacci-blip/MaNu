@@ -10,121 +10,39 @@ import { useTranslation } from './i18n/index.jsx';
 import { saveState, loadState, clearState } from './hooks/usePersistedState.js';
 import Icon from './components/Icon.jsx';
 import LeadCaptureModal from './components/LeadCaptureModal.jsx';
+import AnimatedNumber from './components/AnimatedNumber.jsx';
+import NumberInput from './components/NumberInput.jsx';
+import SectionTitle from './components/SectionTitle.jsx';
+import GaugeComponent from './components/Gauge.jsx';
+import SliderComponent from './components/Slider.jsx';
+import MiniChartComponent from './components/MiniChart.jsx';
+import MultiLineChartComponent from './components/MultiLineChart.jsx';
+import AdvisorCTAComponent from './components/AdvisorCTA.jsx';
+import NavButtonsComponent from './components/NavButtons.jsx';
 
 // Tip: imported from ./components/Tip.jsx
 
-function ANum({value,dur}){dur=dur||1800;var _s=useState(0),d=_s[0],setD=_s[1];var f=useRef(null);var p=useRef(0);useEffect(function(){var s=p.current;var st=performance.now();var a=function(now){var pr=Math.min((now-st)/dur,1);var e=1-Math.pow(1-pr,3);setD(Math.floor(s+(value-s)*e));if(pr<1)f.current=requestAnimationFrame(a);else p.current=value};f.current=requestAnimationFrame(a);return function(){cancelAnimationFrame(f.current)}},[value,dur]);return "$"+d.toLocaleString("en-US")}
+var ANum = AnimatedNumber;
 
-function NI({label,value,onChange,prefix,placeholder,tip,min,max,style:os,suffix}){
-  if(prefix===undefined)prefix="$";if(!placeholder)placeholder="";if(min===undefined)min=0;
-  var raw=String(value).replace(/,/g,"");
-  var display=(raw&&!isNaN(Number(raw))&&Number(raw)>=1000)?Number(raw).toLocaleString("en-US"):raw;
-  function handleChange(e){var v=e.target.value.replace(/,/g,"").replace(/[^0-9.\-]/g,"");onChange(v)}
-  return(<div style={Object.assign({marginBottom:18},os)}>{label&&<label style={{display:"flex",alignItems:"center",marginBottom:7,fontSize:11,fontWeight:600,color:"#64748b",fontFamily:"Inter,sans-serif",letterSpacing:"0.6px",textTransform:"uppercase"}}>{label}{tip&&<Tip text={tip}/>}</label>}<div style={{display:"flex",alignItems:"center",background:"rgba(248,250,253,0.98)",borderRadius:12,border:"1px solid rgba(15,23,42,0.12)",padding:"0 16px",transition:"border-color 0.2s",boxShadow:"0 1px 4px rgba(15,23,42,0.07)"}}>{prefix&&<span style={{color:"#94a3b8",fontSize:15,fontWeight:700,marginRight:4,fontFamily:"Inter,sans-serif"}}>{prefix}</span>}<input type="text" inputMode="numeric" value={display} onChange={handleChange} placeholder={placeholder} style={{flex:1,background:"transparent",border:"none",outline:"none",color:"#0f172a",fontSize:17,fontWeight:600,padding:"14px 0",fontFamily:"Inter,sans-serif",width:"100%",letterSpacing:"-0.5px"}}/>{suffix&&<span style={{color:"#94a3b8",fontSize:13,fontWeight:500,marginLeft:4,fontFamily:"Inter,sans-serif"}}>{suffix}</span>}</div></div>)
-}
+var NI = NumberInput;
 
 // Cd (Card): imported from ./components/Card.jsx
 
-function ST({children,sub,tip}){return(<div style={{marginBottom:sub?28:20}}><h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",display:"flex",alignItems:"center",letterSpacing:"-0.5px",lineHeight:1.2}}>{children}{tip&&<Tip text={tip}/>}</h2>{sub&&<p style={{fontSize:12,color:"#64748b",marginTop:6,lineHeight:1.6,fontFamily:"Inter,sans-serif"}}>{sub}</p>}</div>)}
+var ST = SectionTitle;
 
-function Gauge({value}){var {t}=useTranslation();var p=Math.min(value,100);var c=p>=70?"#0099cc":p>=40?"#d97706":"#dc2626";return(<div style={{textAlign:"center"}}><div style={{position:"relative",width:200,height:114,margin:"0 auto"}}><svg viewBox="0 0 160 90" style={{width:"100%",height:"100%"}}><path d="M 15 85 A 65 65 0 0 1 145 85" fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth="14" strokeLinecap="round"/><path d="M 15 85 A 65 65 0 0 1 145 85" fill="none" stroke={c} strokeWidth="14" strokeLinecap="round" strokeDasharray={p*2.04+" 999"} style={{transition:"all 1.4s cubic-bezier(0.4,0,0.2,1)",filter:"drop-shadow(0 0 8px "+c+")"}}/></svg><div style={{position:"absolute",bottom:0,left:"50%",transform:"translateX(-50%)"}}><div style={{fontFamily:"Outfit,sans-serif",fontSize:44,fontWeight:900,color:c,lineHeight:1,letterSpacing:"-2px",textShadow:"0 0 20px "+c+"80"}}>{Math.round(value)}</div></div></div><div style={{fontSize:10,color:"#94a3b8",marginTop:12,letterSpacing:"1px",textTransform:"uppercase",fontFamily:"Inter,sans-serif"}}>{t('app.outOf100')}</div></div>)}
+var Gauge = GaugeComponent;
 
-function Slider({label,value,onChange,min,max,step,format,color,tip}){
-  min=min||0;max=max||100;step=step||1;color=color||"#0099cc";
-  var pctV=((value-min)/(max-min))*100;
-  return(<div style={{marginBottom:18}}>
-    {label&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-      <label style={{fontSize:11,fontWeight:600,color:"#64748b",fontFamily:"Inter,sans-serif",display:"flex",alignItems:"center",letterSpacing:"0.3px",textTransform:"uppercase"}}>{label}{tip&&<Tip text={tip}/>}</label>
-      <span style={{fontSize:15,fontWeight:700,color:color,fontFamily:"Inter,sans-serif",letterSpacing:"-0.5px"}}>{format?format(value):value}</span>
-    </div>}
-    <div style={{position:"relative",height:32,display:"flex",alignItems:"center"}}>
-      <div style={{position:"absolute",width:"100%",height:6,borderRadius:3,background:"rgba(15,23,42,0.08)"}}/>
-      <div style={{position:"absolute",width:pctV+"%",height:6,borderRadius:3,background:"linear-gradient(90deg,"+color+"99,"+color+")",transition:"width 0.1s",boxShadow:"0 0 8px "+color+"40"}}/>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={function(e){onChange(Number(e.target.value))}}
-        style={{position:"absolute",width:"100%",height:6,opacity:0,cursor:"pointer",margin:0,zIndex:2}}/>
-      <div style={{position:"absolute",left:"calc("+pctV+"% - 10px)",width:20,height:20,borderRadius:"50%",background:"#ffffff",border:"2px solid "+color,boxShadow:"0 0 8px "+color+"60, 0 2px 6px rgba(15,23,42,0.15)",pointerEvents:"none",transition:"left 0.1s"}}/>
-    </div>
-  </div>)
-}
+var Slider = SliderComponent;
 
-function MiniChart({data,width,height,color,fillColor,labels,yPrefix,showDots}){
-  var {t}=useTranslation();
-  width=width||"100%";height=height||120;color=color||"#22c55e";yPrefix=yPrefix||"$";
-  if(!data||data.length<2)return null;
-  var maxV=Math.max.apply(null,data.map(function(d){return d.v}));
-  var minV=Math.min.apply(null,data.map(function(d){return d.v}));
-  var range=maxV-minV||1;
-  var pad=12;var svgW=600;var svgH=height;var plotW=svgW-pad*2;var plotH=svgH-pad*2-20;
-  var pts=data.map(function(d,i){return{x:pad+i/(data.length-1)*plotW,y:pad+10+(1-(d.v-minV)/range)*plotH,v:d.v,l:d.l}});
-  var line=pts.map(function(p,i){return(i===0?"M":"L")+p.x+","+p.y}).join(" ");
-  var area=line+" L"+pts[pts.length-1].x+","+(svgH-pad)+" L"+pts[0].x+","+(svgH-pad)+" Z";
-  return(<svg viewBox={"0 0 "+svgW+" "+svgH} style={{width:width,height:height}}>
-    <defs><linearGradient id={"g_"+color.replace("#","")} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity="0.2"/><stop offset="100%" stopColor={color} stopOpacity="0"/></linearGradient></defs>
-    {fillColor!==false&&<path d={area} fill={"url(#g_"+color.replace("#","")+")"} />}
-    <path d={line} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    {showDots!==false&&pts.filter(function(_,i){return i===0||i===pts.length-1||data.length<=12}).map(function(p,i){return <circle key={i} cx={p.x} cy={p.y} r="4" fill={color} stroke="#ffffff" strokeWidth="2"/>})}
-    {labels!==false&&pts.filter(function(_,i){return i===0||i===pts.length-1||(data.length<=12&&data.length>2&&i%Math.ceil(data.length/6)===0)}).map(function(p,i){return <text key={"t"+i} x={p.x} y={svgH-2} textAnchor="middle" fill="#64748b" fontSize="10" fontFamily="Outfit,sans-serif">{(p.l||"").replace('Yr', t('app.yr')).replace('Año', t('app.yr'))}</text>})}
-  </svg>)
-}
+var MiniChart = MiniChartComponent;
 
-function MultiLineChart({series,width,height,labels,showYAxis}){
-  var {t}=useTranslation();
-  height=height||140;
-  if(!series||series.length===0||!series[0].data||series[0].data.length<2)return null;
-  const allV=[];(series||[]).forEach(function(s){(s.data||[]).forEach(function(d){allV.push(d.v)})});
-  const maxV=Math.max.apply(null,allV);let minV=Math.min.apply(null,allV.filter(function(v){return v>=0}));
-  minV=Math.min(minV,0);const range=maxV-minV||1;
-  var lPad=showYAxis?52:12;var pad=12;var svgW=600;var svgH=height;var plotW=svgW-lPad-pad;var plotH=svgH-pad-10-20;
-  var len=series[0].data.length;
-  // Y-axis ticks
-  var yTicks=[];
-  if(showYAxis){
-    var nTicks=4;for(var ti=0;ti<=nTicks;ti++){var tv=minV+range*(ti/nTicks);yTicks.push({v:tv,y:pad+10+(1-ti/nTicks)*plotH})}
-  }
-  return(<svg viewBox={"0 0 "+svgW+" "+svgH} style={{width:"100%",height:height}}>
-    {showYAxis&&yTicks.map(function(t,i){return(<g key={"yt"+i}>
-      <line x1={lPad} y1={t.y} x2={svgW-pad} y2={t.y} stroke="rgba(15,23,42,0.07)" strokeWidth="1"/>
-      <text x={lPad-6} y={t.y+4} textAnchor="end" fill="#94a3b8" fontSize="9" fontFamily="Outfit,sans-serif">{fmtC(t.v)}</text>
-    </g>)})}
-    {series.map(function(s,si){
-      var pts=s.data.map(function(d,i){return{x:lPad+i/(len-1)*plotW,y:pad+10+(1-(d.v-minV)/range)*plotH}});
-      var line=pts.map(function(p,i){return(i===0?"M":"L")+p.x+","+p.y}).join(" ");
-      if(s.fill){var area=line+" L"+pts[pts.length-1].x+","+(svgH-pad)+" L"+pts[0].x+","+(svgH-pad)+" Z";
-        return <g key={si}><path d={area} fill={s.color} fillOpacity="0.08"/><path d={line} fill="none" stroke={s.color} strokeWidth={s.bold?"3":"1.5"} strokeLinecap="round" strokeDasharray={s.dash||"none"}/></g>}
-      return <path key={si} d={line} fill="none" stroke={s.color} strokeWidth={s.bold?"3":"1.5"} strokeLinecap="round" strokeDasharray={s.dash||"none"}/>
-    })}
-    {labels!==false&&series[0].data.map(function(d,i){
-      if(!d.l)return null;
-      var x=lPad+i/(len-1)*plotW;
-      return <text key={"l"+i} x={x} y={svgH-2} textAnchor={i===0?"start":i===len-1?"end":"middle"} fill="#64748b" fontSize="10" fontFamily="Outfit,sans-serif">{(d.l||"").replace('Yr', t('app.yr')).replace('Año', t('app.yr'))}</text>}).filter(Boolean)}
-  </svg>)
-}
+var MultiLineChart = MultiLineChartComponent;
 
 // Toggle: imported from ./components/Toggle.jsx
 // TabBtn: imported from ./components/TabButton.jsx
 
-function AdvisorCTA({msg,onContact}){
-  var {t:tr} = useTranslation();
-  return(<div style={{marginTop:16,padding:"20px 24px",borderRadius:14,background:"linear-gradient(135deg,rgba(34,197,94,0.06),rgba(96,165,250,0.06))",border:"1px solid rgba(34,197,94,0.15)",textAlign:"center"}}>
-    <div style={{fontSize:15,fontWeight:700,color:"#0f172a",marginBottom:6}}>{msg||tr('advisor.readyToAct')}</div>
-    <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6,marginBottom:14,maxWidth:380,margin:"0 auto 14px"}}>{tr('advisor.ctaBody')}</div>
-    <a href="#" onClick={function(e){e.preventDefault();if(onContact)onContact()}} style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 15px rgba(34,197,94,0.3)"}}>{tr('advisor.ctaButton')}</a>
-    <div style={{fontSize:10,color:"#475569",marginTop:8}}>{tr('advisor.freeConsult')}</div>
-  </div>);
-}
-function NavButtons({tab,goTab,tier}){
-  var {t:tr} = useTranslation();
-  var fullOrder=["learn","achieve","inaction","assumptions","situation","debts","invest","portfolio","retirement","save","earn","cost","goals","score","reports"];
-  var FREE_NAV=["learn","achieve","inaction"];
-  var order=tier==="paid"?fullOrder:FREE_NAV;
-  var idx=order.indexOf(tab);if(idx<0)return null;
-  var prev=idx>0?order[idx-1]:null;var next=idx<order.length-1?order[idx+1]:null;
-  var lb=function(id){return tr('tabs.'+id)||id;};
-  return(<div style={{display:"flex",justifyContent:prev&&next?"space-between":next?"flex-end":"flex-start",marginTop:24,gap:12}}>
-    {prev&&<button onClick={function(){goTab(prev)}} style={{background:"rgba(255,255,255,0.03)",color:"#4a5568",border:"1px solid rgba(255,255,255,0.07)",padding:"12px 28px",borderRadius:12,fontSize:13,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",letterSpacing:"-0.2px",transition:"all 0.2s"}}>← {lb(prev)}</button>}
-    {next&&<button className="bp" onClick={function(){goTab(next)}} style={{fontFamily:"Inter,sans-serif",letterSpacing:"-0.2px"}}>{lb(next)} →</button>}
-  </div>)
-}
+var AdvisorCTA = AdvisorCTAComponent;
+var NavButtons = NavButtonsComponent;
 
 export default function MagicNumberApp({onBack}){
   const {t, lang, toggleLang} = useTranslation();
