@@ -32,8 +32,8 @@ export default function TabButton({ active, label, onClick, color, iconName }) {
 }
 
 function hexToRgb(hex) {
-  if (!hex || hex.length < 7) return "0,85,170";
+  if (!hex || hex.length < 7) return "0,153,204";
   try {
     return parseInt(hex.slice(1,3),16)+","+parseInt(hex.slice(3,5),16)+","+parseInt(hex.slice(5,7),16);
-  } catch(e) { return "0,85,170"; }
+  } catch(e) { return "0,153,204"; }
 }
