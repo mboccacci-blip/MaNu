@@ -175,6 +175,29 @@ add_table(
     ]
 )
 
+h3("Audit UX/UI — Copy y Messaging")
+para(
+    "Se realizó un segundo audit enfocado en UX/UI y messaging de la landing page. "
+    "Se identificaron 7 puntos, de los cuales 3 fueron quick wins resueltos en la misma sesión:"
+)
+add_table(
+    ["#", "Punto", "Veredicto", "Acción tomada"],
+    [
+        ["1", "Nav links muertos", "YA RESUELTO", "Renombrado 'Precios'→'Estadísticas', eliminado 'FAQ', renombrado 'Entrar'→'Ver App'"],
+        ["2", "Botón 'Entrar' sin auth", "YA RESUELTO", "Ver punto 1"],
+        ["3", "'100% GRATIS' y 'Gratis para siempre' mienten pre-paywall", "RESUELTO", "Cambiado a 'EMPEZÁ GRATIS', 'Empezá gratis', 'Sin registro · Sin tarjeta · Resultado en minutos'"],
+        ["4", "'Vista previa de tu futuro dashboard'", "RESUELTO", "Cambiado a 'Así se ve tu dashboard personalizado' (presente, no futuro)"],
+        ["5", "16 tabs cognitivamente abrumadoras", "DIFERIDO", "Roadmap Fase 3: flujo guiado / wizard de onboarding"],
+        ["6", "Momento del paywall no diseñado", "DIFERIDO", "Requiere implementación de Stripe (Fase 4)"],
+        ["7", "Voseo argentino en producto LATAM", "INTENCIONAL", "Decisión de marca mantenida — señala identidad argentina"],
+    ]
+)
+para("Cambio estratégico de CTA:")
+bullet("ANTES: 'Calcular mi número — es gratis' → AHORA: 'Calculá en 3 minutos cuánto necesitás'")
+bullet("ANTES: 'Empezar gratis ahora' → AHORA: 'Calculá tu Magic Number'")
+body("Fundamento: El CTA ahora comunica el resultado específico y el tiempo requerido, en lugar de enfatizar la gratuidad. "
+     "Esto reduce la incertidumbre del usuario ('¿cuánto tardo?', '¿qué obtengo?') y es compatible con el futuro paywall.")
+
 doc.add_paragraph('')
 
 # ─── Inventario actual ───
