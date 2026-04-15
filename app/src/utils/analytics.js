@@ -131,4 +131,5 @@ export const EVENTS = {
   SCORE_VIEWED:           'score_viewed',
   EMAIL_SUBMITTED:        'email_submitted',
   TIER_CHANGED:           'tier_changed',
+  SIMULATOR_INTERACTION:  'simulator_interaction',
 };

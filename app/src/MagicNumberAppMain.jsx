@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { PROFILES, TABS } from './constants.js';
 import { useTranslation } from './i18n/index.jsx';
 import useAppStore from './store/useAppStore.js';
@@ -48,6 +48,18 @@ export default function MagicNumberApp({onBack}){
   const emailError = store.emailError;
   const setEmailError = function(v) { sf('emailError', v); };
   const FREE_TABS = ["achieve", "inaction", "learn"];
+  const [paidToast, setPaidToast] = useState(false);
+  const prevTierRef = useRef(tier);
+
+  // Detect upgrade to paid → show welcome toast once
+  useEffect(function(){
+    if(prevTierRef.current !== "paid" && tier === "paid" && !isDemo){
+      setPaidToast(true);
+      goTab("dashboard");
+      setTimeout(function(){ setPaidToast(false); }, 6000);
+    }
+    prevTierRef.current = tier;
+  }, [tier]);
 
   useEffect(function(){
     document.title = "MaNu PRO";
@@ -200,6 +212,8 @@ export default function MagicNumberApp({onBack}){
     <div className="mn-root">
       {/* Demo mode banner */}
       {demoBannerVisible&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{lang==="en"?"DEMO MODE — Full access":"MODO DEMO — Acceso completo"}</span><button onClick={function(){setDemoBannerVisible(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
+      {/* Paid upgrade toast */}
+      {paidToast&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(34,197,94,0.3)",display:"flex",alignItems:"center",gap:10,animation:"fadeIn 0.3s ease-out"}}><Icon name="confetti" size={18} weight="regular" /> {lang==="en"?"You unlocked all 16 modules! Start from the Dashboard →":"¡Desbloqueaste los 16 módulos! Empezá desde el Dashboard →"}<button onClick={function(){setPaidToast(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,marginLeft:8}}>×</button></div>}
       <header className="mn-header">
         <div className="mn-logo" onClick={onBack} style={{cursor:onBack?"pointer":"default"}}>
           <span className="mn-logo-icon">MN</span>

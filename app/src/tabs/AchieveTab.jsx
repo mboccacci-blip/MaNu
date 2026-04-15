@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import Card from '../components/Card.jsx';
 import SectionTitle from '../components/SectionTitle.jsx';
 import NumberInput from '../components/NumberInput.jsx';
@@ -29,9 +29,10 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
   const setLegacy = function(v) { sf('legacy', v); };
   const setAssetTax = function(v) { sf('assetTax', v); };
   
-  const setSimSav = function(v) { sf('simSav', v); };
-  const setSimMo = function(v) { sf('simMo', v); };
-  const setSimRet = function(v) { sf('simRet', v); };
+  const simCount = useRef(0);
+  const setSimSav = function(v) { sf('simSav', v); simCount.current++; track(EVENTS.SIMULATOR_INTERACTION,{lever:'initial_savings',count:simCount.current},{lang:lang,tier:tier}); };
+  const setSimMo = function(v) { sf('simMo', v); simCount.current++; track(EVENTS.SIMULATOR_INTERACTION,{lever:'monthly_savings',count:simCount.current},{lang:lang,tier:tier}); };
+  const setSimRet = function(v) { sf('simRet', v); simCount.current++; track(EVENTS.SIMULATOR_INTERACTION,{lever:'return_rate',count:simCount.current},{lang:lang,tier:tier}); };
   const setUserEmail = function(v) { sf('userEmail', v); };
   const setEmailError = function(v) { sf('emailError', v); };
   const setTier = function(v) { sf('tier', v); };
@@ -150,7 +151,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
           {/* Path A: email for free */}
           <div style={{marginTop:16,padding:"18px 20px",borderRadius:14,background:"rgba(96,165,250,0.05)",border:"1px solid rgba(96,165,250,0.15)"}}>
             <div style={{fontSize:12,fontWeight:700,color:"#3b82f6",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{lang==="en"?"✨ Free — just your email":"✨ Gratis — solo tu email"}</div>
-            <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"We'll reveal your exact number and send you a personalized PDF report.":"Te revelamos tu número exacto y te enviamos un informe PDF personalizado."}</p>
+            <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Get your exact Magic Number + interactive scenario simulator to test different savings and return strategies.":"Conocé tu Magic Number exacto + simulador interactivo de escenarios para probar distintas estrategias de ahorro y retorno."}</p>
             <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
               <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"12px 14px",borderRadius:10,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.25)"),background:"#fff",fontSize:13,fontFamily:"Inter,sans-serif",outline:"none"}}/>
               <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return;}setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});}} className="bp" style={{padding:"12px 20px",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal →":"Revelar →"}</button>
