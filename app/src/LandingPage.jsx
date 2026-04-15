@@ -95,10 +95,10 @@ function fmt(val, format, lang) {
 const T = {
   es: {
     navFeatures:  'Funciones',
-    navPricing:   'Precios',
-    navFaq:       'FAQ',
+    navPricing:   'Estadísticas',
+    navFaq:       '',
     freeBadge:    '100% GRATIS',
-    login:        'Entrar',
+    login:        'Ver App',
     register:     'Empezar ahora',
     freePill:     '100% gratis · Sin registro · Sin tarjeta',
     h1a:          'Calculá tu',
@@ -149,10 +149,10 @@ const T = {
   },
   en: {
     navFeatures:  'Features',
-    navPricing:   'Pricing',
-    navFaq:       'FAQ',
+    navPricing:   'Stats',
+    navFaq:       '',
     freeBadge:    '100% FREE',
-    login:        'Log in',
+    login:        'Open App',
     register:     'Get started',
     freePill:     '100% free · No signup · No credit card',
     h1a:          'Calculate your',
@@ -331,7 +331,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
         <div className="lp-nav-links">
           <a href="#features" className="lp-nav-link" onClick={e => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>{t.navFeatures}</a>
           <a href="#stats" className="lp-nav-link" onClick={e => { e.preventDefault(); document.getElementById('stats')?.scrollIntoView({ behavior: 'smooth' }); }}>{t.navPricing}</a>
-          <a href="#cta" className="lp-nav-link" onClick={e => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }); }}>{t.navFaq}</a>
+          {t.navFaq && <a href="#cta" className="lp-nav-link" onClick={e => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' }); }}>{t.navFaq}</a>}
         </div>
 
         <div className="lp-nav-actions">
