@@ -338,7 +338,6 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
           <button className="lp-lang-btn" onClick={() => setLang(l => l === 'es' ? 'en' : 'es')}>
             {lang === 'es' ? 'EN' : 'ES'}
           </button>
-          <button className="lp-btn-ghost" onClick={onEnter}>{t.login}</button>
           <button className="lp-btn-cyan" onClick={onEnter}>{t.register}</button>
         </div>
       </nav>
