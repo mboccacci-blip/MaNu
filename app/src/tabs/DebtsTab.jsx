@@ -16,7 +16,7 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
       <h3 style={{fontFamily:"Outfit,sans-serif",fontSize:17,fontWeight:600,color:"#0f172a"}}>{t('debts.mortgageDetails')}</h3>
     </div>
-    {nMortPay>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.1)",fontSize:12,color:"#93c5fd",marginBottom:12}}>
+    {nMortPay>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.1)",fontSize:12,color:"#3b82f6",marginBottom:12}}>
       {t('debts.monthlyPI')}: <strong>{fmt(nMortPay)}</strong> <span style={{color:"#475569"}}>{t('debts.fromIncomeTab')}</span>
     </div>}
     {nMortPay===0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(234,179,8,0.06)",border:"1px solid rgba(234,179,8,0.1)",fontSize:12,color:"#92400e",marginBottom:12}}>
@@ -25,7 +25,7 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
     <Toggle value={noMortgage} onChange={setNoMortgage} label={noMortgage?t('debts.paidOff'):t('debts.stillHave')}/>
     {!noMortgage&&<>
       <NI label={t('debts.yearsLeft')} value={mortgageYearsLeft} onChange={setMortgageYearsLeft} prefix="" placeholder="" style={{marginBottom:8}} tip={t('debts.yearsLeftTip')}/>
-      <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.5,marginBottom:12}}>
+      <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",lineHeight:1.5,marginBottom:12}}>
         <Icon name="ruler" size={12} weight="regular" /> {t('debts.projectionsExplain',{payment:fmt(nMortPay),yearsInfo:nMortYrs>0?" ("+nMortYrs+")":"",ageInfo:nMortYrs>0?" "+(lang==="en"?"at age ":"a los ")+(nAge+nMortYrs):""})}
       </div>
       <div style={{fontSize:13,fontWeight:500,color:"#64748b",marginBottom:8}}>{t('debts.optionalDetails')}</div>
@@ -33,13 +33,13 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
         <NI label={t('debts.remainingBalance')} value={mortgageBalance} onChange={setMortgageBalance} style={{marginBottom:0}}/>
         <NI label={t('debts.fixedRate')} value={mortgageRate} onChange={setMortgageRate} prefix="" placeholder="" style={{marginBottom:0}}/>
       </div>
-      {(Number(mortgageRate)||0)>0&&(Number(mortgageRate)||0)<4&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#86efac",lineHeight:1.6,marginTop:8}}>
+      {(Number(mortgageRate)||0)>0&&(Number(mortgageRate)||0)<4&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#16a34a",lineHeight:1.6,marginTop:8}}>
         <Icon name="check-circle" size={13} weight="regular" /> {t('debts.goodRate',{rate:mortgageRate})}
       </div>}
       {(Number(mortgageRate)||0)>=4&&(Number(mortgageRate)||0)<6&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(234,179,8,0.06)",border:"1px solid rgba(234,179,8,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6,marginTop:8}}>
         <Icon name="chart-bar" size={13} weight="regular" /> {t('debts.moderateRate',{rate:mortgageRate})}
       </div>}
-      {(Number(mortgageRate)||0)>=6&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.1)",fontSize:12,color:"#fca5a5",lineHeight:1.6,marginTop:8}}>
+      {(Number(mortgageRate)||0)>=6&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.1)",fontSize:12,color:"#ef4444",lineHeight:1.6,marginTop:8}}>
         <Icon name="fire" size={13} weight="regular" /> <strong>{t('debts.highRate',{rate:mortgageRate})}</strong>
         {nEx>0&&mortBal>0?" "+t('debts.highRateAdvice',{savings:fmt(nEx),rate:mortgageRate}):""}
         {(Number(mortgageRate)||0)>=8?" "+t('debts.veryHighRate',{rate:mortgageRate}):""}
@@ -98,14 +98,14 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
     {(debtAn||[]).map(function(d,i){return(<div key={d.id} style={{padding:14,borderRadius:12,marginBottom:10,background:d.sev==="critical"?"rgba(239,68,68,0.06)":d.sev==="high"?"rgba(245,158,11,0.06)":"rgba(255,255,255,0.02)",border:d.sev==="critical"?"1px solid rgba(239,68,68,0.1)":d.sev==="high"?"1px solid rgba(245,158,11,0.1)":"1px solid rgba(15,23,42,0.06)"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
         <span style={{fontSize:14,fontWeight:600,color:"#0f172a"}}>{d.name||"Unnamed"}</span>
-        <div><span style={{fontWeight:700,fontSize:14,color:d.sev==="low"?"#94a3b8":"#f87171"}}>{fmt(d.bal)}</span><span style={{fontSize:12,marginLeft:6,color:d.sev==="low"?"#64748b":"#ef4444"}}>@ {d.rate}%</span></div></div>
-      <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.5}}>
+        <div><span style={{fontWeight:700,fontSize:14,color:d.sev==="low"?"#64748b":"#f87171"}}>{fmt(d.bal)}</span><span style={{fontSize:12,marginLeft:6,color:d.sev==="low"?"#64748b":"#ef4444"}}>@ {d.rate}%</span></div></div>
+      <div style={{fontSize:12,color:"#64748b",lineHeight:1.5}}>
         {d.sev==="critical"?<span><Icon name="siren" size={13} weight="regular" /> {t('debts.debtCritical',{rate:d.rate})}</span>
         :d.sev==="high"?<span><Icon name="warning" size={13} weight="regular" /> {t('debts.debtHigh',{rate:d.rate,strategies:PROFILES.filter(function(p){return p.nomReturn>=d.rate/100}).map(function(p){return p.name}).join(", ")})}</span>
         :d.sev==="moderate"?<span><Icon name="chart-bar" size={13} weight="regular" /> {t('debts.debtModerate',{rate:d.rate})}</span>
         :<span><Icon name="check-circle" size={13} weight="regular" /> {t('debts.debtLow',{rate:d.rate})}</span>}
       </div></div>)})}
-    {probDebts.length===0&&debtAn.length>0&&<div style={{fontSize:13,color:"#86efac",marginTop:4}}>{t('debts.allDebtsBelowReturns')}</div>}
+    {probDebts.length===0&&debtAn.length>0&&<div style={{fontSize:13,color:"#16a34a",marginTop:4}}>{t('debts.allDebtsBelowReturns')}</div>}
   </Cd>}
 
   {/* Emergency Fund */}
@@ -119,7 +119,7 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
         <div style={{height:"100%",borderRadius:4,width:Math.min(emergencyMonths/24*100,100)+"%",background:emergencyMonths>=12?"#22c55e":emergencyMonths>=6?"#eab308":"#ef4444",transition:"width 0.5s"}}/>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:"#475569",marginBottom:8}}><span>0</span><span>6 {t('common.monthAbbr')}</span><span>12 {t('common.monthAbbr')}</span><span>24 {t('common.monthAbbr')}</span></div>
-      <div style={{fontSize:12,color:"#94a3b8",lineHeight:1.6}}>
+      <div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>
         {emergencyMonths>=24?t('debts.efExcellent')
         :emergencyMonths>=12?t('debts.efSolid')
         :emergencyMonths>=6?t('debts.efDecent')

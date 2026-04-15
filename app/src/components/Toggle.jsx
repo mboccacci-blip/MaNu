@@ -19,7 +19,7 @@ export default function Toggle({ value, onChange, label, sub }) {
       }}>
         <div style={{
           width: 18, height: 18, borderRadius: "50%",
-          background: value ? "#0099cc" : "#94a3b8",
+          background: value ? "#0099cc" : "#64748b",
           position: "absolute", top: 3, left: value ? 23 : 3,
           transition: "all 0.22s cubic-bezier(0.4,0,0.2,1)",
           boxShadow: value ? "0 0 8px rgba(0,153,204,0.5), 0 1px 4px rgba(15,23,42,0.15)" : "0 1px 4px rgba(15,23,42,0.15)",
@@ -31,7 +31,7 @@ export default function Toggle({ value, onChange, label, sub }) {
           color: value ? "#0099cc" : "#475569",
           fontFamily: "Inter,sans-serif", letterSpacing: "-0.1px",
         }}>{label}</div>
-        {sub && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2, fontFamily: "Inter,sans-serif" }}>{sub}</div>}
+        {sub && <div style={{ fontSize: 11, color: "#64748b", marginTop: 2, fontFamily: "Inter,sans-serif" }}>{sub}</div>}
       </div>
     </div>
   );

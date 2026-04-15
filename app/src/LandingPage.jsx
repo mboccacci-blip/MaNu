@@ -141,7 +141,7 @@ const T = {
     ctaP:         'Descubrí exactamente cuánto necesitás para tu retiro.',
     ctaFreeNote:  'Sin registro · Sin datos · Sin tarjeta',
     ctaMain:      'Empezar gratis ahora',
-    ctaSecond:    'Ver demo',
+    ctaSecond:    'Ver demo completo →',
     footerCopy:   'MaNu PRO · Calculá. Planificá. Retírate libre.',
     footerPriv:   'Privacidad',
     footerTerms:  'Términos',
@@ -195,7 +195,7 @@ const T = {
     ctaP:         'Find exactly how much you need for retirement.',
     ctaFreeNote:  'No signup · No data · No credit card',
     ctaMain:      'Start for free now',
-    ctaSecond:    'View demo',
+    ctaSecond:    'View full demo →',
     footerCopy:   'MaNu PRO · Calculate. Plan. Retire free.',
     footerPriv:   'Privacy',
     footerTerms:  'Terms',
@@ -466,7 +466,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
             <p className="lp-cta-free-note">{t.ctaFreeNote}</p>
           </div>
           <div className="lp-cta-actions">
-            <button className="lp-btn-ghost" onClick={onEnter}>{t.ctaSecond}</button>
+            <button className="lp-btn-ghost" onClick={function(){window.location.href = window.location.pathname + '?demo=1';}}>{t.ctaSecond}</button>
             <button className="lp-btn-cyan" onClick={onEnter} style={{ padding: '14px 28px', fontSize: 15 }}>
               {t.ctaMain}
             </button>

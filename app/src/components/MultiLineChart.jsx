@@ -20,7 +20,7 @@ export default function MultiLineChart({ series, width, height, labels, showYAxi
       {showYAxis && yTicks.map(function (t, i) {
         return (<g key={"yt" + i}>
           <line x1={lPad} y1={t.y} x2={svgW - pad} y2={t.y} stroke="rgba(15,23,42,0.07)" strokeWidth="1" />
-          <text x={lPad - 6} y={t.y + 4} textAnchor="end" fill="#94a3b8" fontSize="9" fontFamily="Outfit,sans-serif">{fmtC(t.v)}</text>
+          <text x={lPad - 6} y={t.y + 4} textAnchor="end" fill="#64748b" fontSize="9" fontFamily="Outfit,sans-serif">{fmtC(t.v)}</text>
         </g>)
       })}
       {series.map(function (s, si) {

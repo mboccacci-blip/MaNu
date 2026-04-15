@@ -1,0 +1,288 @@
+
+--- C:\Users\mbocc\Dev\Magic Number\documentación\Scan results - HTTP Observatory _ MDN 15-4.pdf ---
+HTTP Observatory Report
+Report Feedback
+ Scan summary: master.manu-pro.pages.dev
+Score: 55 / 100
+Scan Time: 2 minutes ago
+Tests Passed: 8 /  10
+Scan results
+Scoring
+C
+Test Score Reason
+Content Security Policy (CSP)−25Content Security Policy (CSP) header not
+implemented
+Cookies - No cookies detected
+Cross Origin Resource Sharing
+(CORS)0 Content is not visible via cross-origin resour
+sharing (CORS) files or headers.
+Redirection 0 All hosts redirected to are in the HTTP Strict
+Transport Security (HSTS) preload list.
+Referrer Policy 0*Referrer-Policy  header set to no-referrer
+same-origin , strict-origin  or strict-
+origin-when-cross-origin .
+Strict Transport Security
+(HSTS)0*Preloaded via the HTTP Strict Transport
+Security (HSTS) preloading process.
+Subresource Integrity - Subresource Integrity (SRI) not implemente
+but all scripts are loaded from a similar origi
+X-Content-Type-Options 0 X-Content-Type-Options  header set to
+nosniff .
+X-Frame-Options −20X-Frame-Options  (XFO) header not
+implemented.
+Cross Origin Resource Policy- Cross Origin Resource Policy (CORP) is not
+implemented (defaults to cross-origin ).
+* Normally awards bonus points, however, in this case they are not included in the
+overall score ( find out why ).CSP analysisNo CSP headers detected
+Cookies
+No cookies detected
+Raw server headers
+Header Valu
+Nel {"report_to":"cf-nel","success_fraction":0.0,"ma
+Date Wed, 15 Apr 2026 15:36:38 GMT
+Cf-Ray 9ecc06e6faa1769f-SEA
+Server cloudflare
+Alt-Svc h3=":443"; ma=86400
+Report-To {"group":"cf-nel","max_age":604800,"endpoint
+[{"url":"https://a.nel.cloudflare.com/report/v4?
+s=02hGJHxYzmrjRBBVQC0L%2Bbx0o8rnJ8LK
+vTCu%2FvQGzL5reZ%2FSqpR9%2BmJgtMU8w
+Fus1ijKGpXy8uTBmu9cNg"}]}
+Connection close
+Content-Type text/html; charset=utf-8
+X-Robots-Tag noindex
+Cache-Control public, max-age=0, must-revalidate
+Referrer-Policy strict-origin-when-cross-origin
+Transfer-Encoding chunked
+X-Content-Type-Options nosniff
+Access-Control-Allow-Origin *
+Scan history
+Changes in score over timeYour blueprint for a better internet.Date
+15 abr 2026, 12:36:38 55
+Benchmark comparison
+Performance trends from the past year
+A+ A A−B+ B B−C+C C−D+D D− F
+0k
+100k
+200k
+300k
+400k
+500k
+600k
+700k
+800k
+900k
+Current grade
+Refer to this graph to assess the website's current status. By following the
+recommendations provided and rescanning, you can expect an improvement in the
+website's grade.
+--- C:\Users\mbocc\Dev\Magic Number\documentación\PageSpeed Insights 2 15-4.pdf ---
+Informe  del 15 abr 2026, 12:36:28
+Descubre lo que experimentan tus usuarios
+realesNo hay datos
+Diagnostica problemas de rendimientohttps://master.manu-pro.pages.dev/ Analizar
+Los valores son estimaciones y pueden variar. La puntuación del
+rendimiento se calcula  directamente a partir de estas métricas. Ver
+calculadora.
+0–49 50–89 90–100Rendimient o
+100
+Accesibilidad
+95
+Prácticas
+recomendadas
+100
+SEO
+66
+100
+RendimientoMóvilOrdenador
+PageSpeed Insights Copiar enlace DocumentosMostrar auditorías relacionadas con: AllFCPLCPCLSMÉTRICAS Ampliar vista
+First Contentful P aint
+0,6 sRenderizado del mayor elemento con contenido
+0,6 s
+Total Blocking Time
+0 msCambios de diseño acumulados
+0
+Speed Index
+0,6 s
+Captured at 15 abr 2026, 12:36 GMT-
+3
+Escritorio emulado with Lighthouse
+13.0.1
+Sesión de una sola página
+Carga inicial de la página
+ Limitación personalizada
+ Using HeadlessChromium
+146.0.7680.153 with lr
+ESTADÍSTICAS
+Solicitudes que bloquean el renderizado  —Ahorro estimado de 280 ms
+Latencia de solicitud del documento  
+Árbol de dependencia de red
+Causantes de los cambios de diseño
+Desglose de L CP—Error
+PageSpeed Insights Copiar enlace DocumentosEstas comprobaciones permiten identificar oportunidades para mejorar la
+accesibilidad de tu aplicación web . La detección automática solo puede
+detectar un subconjunto de problemas y no garantiza la accesibilidad de tu
+aplicación web, por lo que también te recomendamos que hagas pruebas
+manuales .Terceros
+Estas estadísticas también están disponibles en el panel R endimiento de Chrome DevT ools. Graba una traza  para ver información más
+detallada.
+DIAGNÓSTICOS
+Reduce el contenido JavaScript que no se use  —Ahorro estimado de 114 KiB
+Consulta más información sobre el rendimiento de tu aplicación. Estos datos no afectan directamente  a la puntuación del rendimiento.
+AUDITORÍAS APROBADAS (20) Mostrar
+Accesibilidad
+95
+CONTRASTE
+Los colores de fondo y de primer plano no tienen una relación de contraste adecuada.
+A continuación se indican consejos para facilitar la lectura del contenido.
+ELEMENTOS ADICIONALES QUE SE DEBEN COMPROBAR MANUALMENTE (10) Mostrar
+Estos elementos se ocupan de áreas que las herramientas de prueba automáticas no pueden analizar. Consulta más información sobre
+cómo revisar la accesibilidad  en nuestra guía.
+AUDITORÍAS APROBADAS (18) Mostrar
+PageSpeed Insights Copiar enlace DocumentosNO APLICABLE (41) Mostrar
+Prácticas r ecomendadas
+100
+CONFIANZA Y SEGURIDAD
+Asegura que la CSP sea efectiva frente a ataques XSS
+Usa una política de HST S sólida
+Asegúrate de que el aislamiento de orígenes sea adecuado con C OOP
+Mitiga el secuestro de clics con XFO o CSP
+Mitigar el XSS basado en DOM con T rusted T ypes
+GENERAL
+No hay mapas de origen para JavaScript propio de gran tamaño
+AUDITORÍAS APROBADAS (12) Mostrar
+NO APLICABLE (2) Mostrar
+PageSpeed Insights Copiar enlace DocumentosMás información en PageSpeed Insights
+Novedades
+Documentación
+Más información sobre el rendimiento web
+Haz preguntas en Stack Overflow
+Lista de distribuciónContenido relacionado
+Actualizaciones
+Aspectos básicos de la Web
+Casos de éxito
+PódcastsContacto
+Twitter
+YouTube
+Chrome Firebase Todos los productosEstas comprobaciones aseguran que tu página siga las recomendaciones
+básicas sobre optimización en buscadores. Hay muchos otros factores
+adicionales que Lighthouse no valora aquí y que pueden afectar a tu
+posicionamiento en las búsquedas, como el rendimiento en las Métricas
+web principales . Consulta más información sobre las Directrices básicas de
+la Búsqueda de Google .SEO
+66
+RASTREAR E INDEXAR
+Se ha bloqueado la indexación de la página
+Para aparecer en los resultados de búsqueda, los rastreadores necesitan acceder a tu aplicación.
+ELEMENTOS ADICIONALES QUE SE DEBEN COMPROBAR MANUALMENTE (1) Mostrar
+Ejecuta estos validadores adicionales en tu sitio web para comprobar más prácticas recomendadas de SEO.
+AUDITORÍAS APROBADAS (8) Mostrar
+NO APLICABLE (1) Mostrar
+PageSpeed Insights Copiar enlace DocumentosPolítica de Términos y Privacidad
+Para obtener más información, consulta las Políticas del Sitio Google Developers.
+PageSpeed Insights Copiar enlace Documentos
+--- C:\Users\mbocc\Dev\Magic Number\documentación\PageSpeed Insights 1 15-4.pdf ---
+Informe  del 15 abr 2026, 12:36:28
+Descubre lo que experimentan tus usuarios
+realesNo hay datos
+Diagnostica problemas de rendimientohttps://master.manu-pro.pages.dev/ Analizar
+Los valores son estimaciones y pueden variar. La puntuación del
+rendimiento se calcula  directamente a partir de estas métricas. Ver
+calculadora.
+0–49 50–89 90–100Rendimient o
+86
+Accesibilidad
+95
+Prácticas
+recomendadas
+100
+SEO
+66
+86
+RendimientoMóvilOrdenador
+PageSpeed Insights Copiar enlace DocumentosMostrar auditorías relacionadas con: AllFCPLCPTBTMÉTRICAS Ampliar vista
+First Contentful P aint
+3,1 sRenderizado del mayor elemento con contenido
+3,1 s
+Total Blocking Time
+0 msCambios de diseño acumulados
+0
+Speed Index
+4,7 s
+Captured at 15 abr 2026, 12:36 GMT-
+3
+Moto G P ower emulado with
+Lighthouse 13.0.1
+Sesión de una sola página
+Carga inicial de la página
+ Limitación de 4G lenta
+ Using HeadlessChromium
+146.0.7680.153 with lr
+ESTADÍSTICAS
+Solicitudes que bloquean el renderizado  —Ahorro estimado de 1170 ms
+Árbol de dependencia de red
+Optimizar tamaño del DOM
+Desglose de L CP
+PageSpeed Insights Copiar enlace DocumentosEstas comprobaciones permiten identificar oportunidades para mejorar la
+accesibilidad de tu aplicación web . La detección automática solo puede
+detectar un subconjunto de problemas y no garantiza la accesibilidad de tu
+aplicación web, por lo que también te recomendamos que hagas pruebas
+manuales .Terceros
+Estas estadísticas también están disponibles en el panel R endimiento de Chrome DevT ools. Graba una traza  para ver información más
+detallada.
+DIAGNÓSTICOS
+Reduce el contenido JavaScript que no se use  —Ahorro estimado de 114 KiB
+Evita tareas largas del hilo principal  —1 tarea larga encontrada
+Consulta más información sobre el rendimiento de tu aplicación. Estos datos no afectan directamente  a la puntuación del rendimiento.
+AUDITORÍAS APROBADAS (20) Mostrar
+Accesibilidad
+95
+CONTRASTE
+Los colores de fondo y de primer plano no tienen una relación de contraste adecuada.
+A continuación se indican consejos para facilitar la lectura del contenido.
+ELEMENTOS ADICIONALES QUE SE DEBEN COMPROBAR MANUALMENTE (10) Mostrar
+Estos elementos se ocupan de áreas que las herramientas de prueba automáticas no pueden analizar. Consulta más información sobre
+cómo revisar la accesibilidad  en nuestra guía.
+PageSpeed Insights Copiar enlace DocumentosAUDITORÍAS APROBADAS (18) Mostrar
+NO APLICABLE (41) Mostrar
+Prácticas r ecomendadas
+100
+CONFIANZA Y SEGURIDAD
+Asegura que la CSP sea efectiva frente a ataques XSS
+Usa una política de HST S sólida
+Asegúrate de que el aislamiento de orígenes sea adecuado con C OOP
+Mitiga el secuestro de clics con XFO o CSP
+Mitigar el XSS basado en DOM con T rusted T ypes
+GENERAL
+No hay mapas de origen para JavaScript propio de gran tamaño
+AUDITORÍAS APROBADAS (12) Mostrar
+NO APLICABLE (2) Mostrar
+PageSpeed Insights Copiar enlace DocumentosMás información en PageSpeed Insights
+Novedades
+Documentación
+Más información sobre el rendimiento web
+Haz preguntas en Stack Overflow
+Lista de distribuciónContenido relacionado
+Actualizaciones
+Aspectos básicos de la Web
+Casos de éxito
+PódcastsContacto
+Twitter
+YouTubeEstas comprobaciones aseguran que tu página siga las recomendaciones
+básicas sobre optimización en buscadores. Hay muchos otros factores
+adicionales que Lighthouse no valora aquí y que pueden afectar a tu
+posicionamiento en las búsquedas, como el rendimiento en las Métricas
+web principales . Consulta más información sobre las Directrices básicas de
+la Búsqueda de Google .SEO
+66
+RASTREAR E INDEXAR
+Se ha bloqueado la indexación de la página
+Para aparecer en los resultados de búsqueda, los rastreadores necesitan acceder a tu aplicación.
+ELEMENTOS ADICIONALES QUE SE DEBEN COMPROBAR MANUALMENTE (1) Mostrar
+Ejecuta estos validadores adicionales en tu sitio web para comprobar más prácticas recomendadas de SEO.
+AUDITORÍAS APROBADAS (8) Mostrar
+NO APLICABLE (1) Mostrar
+PageSpeed Insights Copiar enlace DocumentosChrome Firebase Todos los productos
+Política de Términos y Privacidad
+Para obtener más información, consulta las Políticas del Sitio Google Developers.
+PageSpeed Insights Copiar enlace Documentos

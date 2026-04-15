@@ -36,7 +36,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <div style={{display:"flex",alignItems:"center",gap:6}}>
                   <span style={{fontSize:14}}>{calc.prof.icon}</span>
-                  <span style={{fontSize:11,color:"#94a3b8"}}>{calc.prof.name} ({pct(calc.prof.realReturn)} real)</span>
+                  <span style={{fontSize:11,color:"#64748b"}}>{calc.prof.name} ({pct(calc.prof.realReturn)} real)</span>
                 </div>
                 <div style={{textAlign:"right"}}>
                   <div style={{fontSize:16,fontWeight:700,color:calc.mo<=mSav?"#22c55e":"#f87171"}}>{fmt(calc.mo)}/mo</div>
@@ -57,7 +57,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
             <div key={g.id} style={{position:"relative",marginBottom:20,paddingLeft:16}}>
               <div style={{position:"absolute",left:-20,top:4,width:12,height:12,borderRadius:"50%",background:g.prof.color,border:"3px solid #0f1628"}}/>
               <div style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{g.name||t('goals.goalNum', {n: i+1})}</div>
-              <div style={{fontSize:12,color:"#94a3b8"}}>{t('goals.inYears',{amt:fmt(g.nAmt),years:g.nYrs})} · {g.mo>0?fmt(g.mo)+"/mo":t('common.covered')}</div>
+              <div style={{fontSize:12,color:"#64748b"}}>{t('goals.inYears',{amt:fmt(g.nAmt),years:g.nYrs})} · {g.mo>0?fmt(g.mo)+"/mo":t('common.covered')}</div>
               <div style={{fontSize:10,color:g.prof.color}}>{g.prof.icon} {g.prof.name}</div>
             </div>)})}
         </div>
@@ -66,7 +66,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
       {/* Retirement impact */}
       {goalRetImpact&&<Cd glow="gold">
         <div style={{fontSize:12,fontWeight:600,color:"#a18207",marginBottom:10}}><Icon name="warning" size={13} weight="regular" /> {t('goals.impactOnRetirement')}</div>
-        <div style={{fontSize:13,color:"#94a3b8",lineHeight:1.6,marginBottom:12}}>
+        <div style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:12}}>
           {t('goals.directing',{amt:fmt(totalGoalMo)})}
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,textAlign:"center"}}>
@@ -80,7 +80,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
           </div>
         </div>
         <div style={{textAlign:"center",marginTop:8,fontSize:12,color:"#f87171"}}>{t('goals.retReduction')} <strong>{fmt(goalRetImpact.diff)}</strong> ({t('goals.mnPercent',{pct:goalRetImpact.pctOfMagic.toFixed(1)})})</div>
-        <div style={{marginTop:8,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>
+        <div style={{marginTop:8,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",textAlign:"center",lineHeight:1.5}}>
           <Icon name="ruler" size={12} weight="regular" /> {t('goals.oppCostExplain',{rate:pct(goalImpactRate)})}
         </div>
       </Cd>}

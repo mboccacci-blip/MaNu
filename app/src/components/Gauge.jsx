@@ -15,7 +15,7 @@ export default function Gauge({ value }) {
           <div style={{ fontFamily: "Outfit,sans-serif", fontSize: 44, fontWeight: 900, color: c, lineHeight: 1, letterSpacing: "-2px", textShadow: "0 0 20px " + c + "80" }}>{Math.round(value)}</div>
         </div>
       </div>
-      <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 12, letterSpacing: "1px", textTransform: "uppercase", fontFamily: "Inter,sans-serif" }}>{t('app.outOf100')}</div>
+      <div style={{ fontSize: 10, color: "#64748b", marginTop: 12, letterSpacing: "1px", textTransform: "uppercase", fontFamily: "Inter,sans-serif" }}>{t('app.outOf100')}</div>
     </div>
   );
 }

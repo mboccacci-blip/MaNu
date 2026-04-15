@@ -23,7 +23,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
         <button onClick={function(){setShowNom(true)}} style={{padding:"6px 14px",borderRadius:8,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",border:"none",cursor:"pointer",background:showNom?"rgba(96,165,250,0.15)":"transparent",color:showNom?"#60a5fa":"#64748b"}}>{t('achieve.nominalD')}</button>
       </div>
     </div>
-    <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",marginBottom:16}}>
+    <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:16}}>
       <Icon name="ruler" size={12} weight="regular" /> {t('achieve.illustrativeProj')} (<span style={{cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("portfolio")}}>{t('achieve.yourPortfolio')}</span>).
     </div>
     <div style={{display:"flex",gap:8,marginBottom:16}}>
@@ -37,7 +37,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
         <div style={{height:18,borderRadius:6,overflow:"hidden",background:"rgba(255,255,255,0.03)"}}><div className="ba" style={{height:"100%",borderRadius:6,width:Math.max(bp,2)+"%",background:"linear-gradient(90deg,"+p.color+"88,"+p.color+")",animationDelay:i*0.07+"s"}}/></div>
         <div style={{display:"flex",justifyContent:"space-between",marginTop:3,fontSize:10}}><span><span style={{color:p.color}}>{pct(p.nomReturn)} {t('common.nom')}</span> · <span style={{color:"#22c55e"}}>{pct(p.realReturn)} {t('common.real')}</span>{p.vol>0?<span style={{color:"#f59e0b"}}> · ~{Math.round(p.vol*100)}% {t('common.vol')}</span>:""}</span><span style={{color:"#64748b"}}>{t('invest.netInvested')} {fmtC(p.tc)}</span></div>
       </div>)})}
-    <div style={{marginTop:10,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>{t('invest.allValuesDisclaimer',{todayDollar:t('common.todayDollar')})}</div>
+    <div style={{marginTop:10,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",textAlign:"center",lineHeight:1.5}}>{t('invest.allValuesDisclaimer',{todayDollar:t('common.todayDollar')})}</div>
   </Cd>
 
   {/* Custom return */}
@@ -70,7 +70,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
             <div style={{fontSize:14,fontWeight:700,color:s.color}}>{fmtC(last.v)}</div>
           </div>)})}
       </div>
-      <div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.1)",fontSize:12,color:"#93c5fd",lineHeight:1.6,textAlign:"center"}}>
+      <div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.1)",fontSize:12,color:"#3b82f6",lineHeight:1.6,textAlign:"center"}}>
         <Icon name="ruler" size={12} weight="regular" /> {t('invest.scenariosDisclaimer',{todayDollar:t('common.todayDollar'),profile:scenProfileIdx===-1&&hasPortfolio?t('invest.myPortfolio'):((allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).name),rate:pct(scenProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[Math.min(scenProfileIdx,allProfiles.length-1)]||allProfiles[5]).realReturn),debtBoost:debtEvents.length>0?t('invest.includesDebtBoost'):""})}
       </div>
     </div>}
@@ -97,7 +97,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
           </div>)})}
       </div>
     </div>
-    <div style={{marginTop:12,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",textAlign:"center",lineHeight:1.5}}>
+    <div style={{marginTop:12,padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",textAlign:"center",lineHeight:1.5}}>
       {t('inaction.allTodayDollars',{profile:costNSProfileIdx===-1&&hasPortfolio?t('profiles.myPortfolio.name'):(allProfiles[costNSProfileIdx]||adjProfiles[4]).name,rate:pct(costNSReturn)})+" "+t('inaction.waiting5yr',{amt:fmtC(costNS.length>5?costNS[5].lost:0)})}
     </div>
   </Cd>}
@@ -105,7 +105,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
   {magic.real>0&&<Cd glow="blue" style={{textAlign:"center",padding:"28px 24px"}}>
     <div style={{fontSize:10,color:"#3b82f6",textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>{t('retirement.yourMN')}</div>
     <div style={{fontFamily:"Outfit,sans-serif",fontSize:26,fontWeight:800,color:"#60a5fa",marginBottom:12}}>{fmt(magic.real)}</div>
-    <p style={{fontSize:13,color:"#94a3b8",lineHeight:1.6,maxWidth:440,margin:"0 auto 16px"}}>{t('common.inYrWith6040',{years:projYears})+" "}<strong style={{color:"#22c55e"}}>{fmtC(projs[4].rFV)}</strong>{'. '}{projs[4].rFV<magic.real?((projs[4].rFV/magic.real)*100).toFixed(0)+"% "+t('common.ofTarget'):t('common.youdSurpass')}</p>
+    <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,maxWidth:440,margin:"0 auto 16px"}}>{t('common.inYrWith6040',{years:projYears})+" "}<strong style={{color:"#22c55e"}}>{fmtC(projs[4].rFV)}</strong>{'. '}{projs[4].rFV<magic.real?((projs[4].rFV/magic.real)*100).toFixed(0)+"% "+t('common.ofTarget'):t('common.youdSurpass')}</p>
   </Cd>}
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>

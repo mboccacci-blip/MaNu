@@ -38,7 +38,7 @@ export default function SaveTab({ tab, goTab, tier, savOpps, setSavSliders, tota
             </div>)})}
         </div>
         <div style={{marginTop:16,padding:"14px 16px",borderRadius:12,background:"rgba(0,0,0,0.15)"}}>
-          <div style={{fontSize:12,color:"#94a3b8",marginBottom:10}}>{t('save.beforeAfter')}</div>
+          <div style={{fontSize:12,color:"#64748b",marginBottom:10}}>{t('save.beforeAfter')}</div>
           <div style={{display:"flex",gap:12,alignItems:"flex-end",height:50}}>
             <div style={{flex:1,textAlign:"center"}}><div style={{height:Math.min(mSav/(mSav+totalSavOpp.mo)*50,50),background:"linear-gradient(180deg,#64748b,#475569)",borderRadius:"4px 4px 0 0"}}/><div style={{fontSize:10,color:"#64748b",marginTop:4}}>{fmt(mSav)}<br/>{t('save.before')}</div></div>
             <div style={{flex:1,textAlign:"center"}}><div style={{height:50,background:"linear-gradient(180deg,#22c55e,#16a34a)",borderRadius:"4px 4px 0 0"}}/><div style={{fontSize:10,color:"#22c55e",marginTop:4}}>{fmt(mSav+totalSavOpp.mo)}<br/>{t('save.after')}</div></div>

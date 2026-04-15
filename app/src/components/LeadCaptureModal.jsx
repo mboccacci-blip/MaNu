@@ -81,16 +81,17 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     animation: 'fadeIn 0.2s ease-out',
   };
   var modal = {
-    background: 'linear-gradient(145deg, #0f1628, rgba(248,250,253,0.98))',
+    background: '#ffffff',
     borderRadius: 20, padding: '32px 28px', maxWidth: 440, width: '100%',
-    border: '1px solid rgba(96,165,250,0.15)',
-    boxShadow: '0 25px 50px rgba(0,0,0,0.4)',
+    border: '1px solid #e2e8f0',
+    boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
     maxHeight: '90vh', overflowY: 'auto',
     animation: 'slideUp 0.3s ease-out',
+    position: 'relative',
   };
   var inputStyle = {
-    width: '100%', background: 'rgba(248,250,253,0.98)',
-    border: '1px solid rgba(96,165,250,0.15)', borderRadius: 12,
+    width: '100%', background: '#ffffff',
+    border: '1px solid #cbd5e1', borderRadius: 12,
     color: '#0f172a', fontSize: 15, padding: '13px 16px',
     fontFamily: 'Outfit,sans-serif', outline: 'none',
     transition: 'border 0.2s',
@@ -123,17 +124,17 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
         <div style={{textAlign:'center',marginBottom:24}}>
           <div style={{fontSize:36,marginBottom:12}}><Icon name="handshake" size={36} weight="regular" color="#60a5fa" /></div>
           <div style={{fontFamily:'Outfit,sans-serif',fontSize:20,fontWeight:700,color:'#0f172a',marginBottom:6}}>{t.title}</div>
-          <p style={{fontSize:13,color:'#94a3b8',lineHeight:1.6,maxWidth:360,margin:'0 auto'}}>{t.subtitle}</p>
+          <p style={{fontSize:13,color:'#64748b',lineHeight:1.6,maxWidth:360,margin:'0 auto'}}>{t.subtitle}</p>
         </div>
 
         {/* Financial highlights preview */}
         {highlights.length > 0 && (
           <div style={{marginBottom:20}}>
-            <div style={{fontSize:11,fontWeight:600,color:'#64748b',textTransform:'uppercase',letterSpacing:1,marginBottom:8}}>{t.whatWeShare}</div>
+            <div style={{fontSize:11,fontWeight:600,color:'#475569',textTransform:'uppercase',letterSpacing:1,marginBottom:8}}>{t.whatWeShare}</div>
             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
               {highlights.map(function(h){return(
-                <div key={h.label} style={{padding:'5px 10px',borderRadius:8,background:'rgba(0,0,0,0.15)',border:'1px solid rgba(15,23,42,0.06)',fontSize:11}}>
-                  <span style={{color:'#64748b'}}>{h.label}: </span>
+                <div key={h.label} style={{padding:'5px 10px',borderRadius:8,background:'#f1f5f9',border:'1px solid #e2e8f0',fontSize:11}}>
+                  <span style={{color:'#475569'}}>{h.label}: </span>
                   <strong style={{color:h.color}}>{h.value}</strong>
                 </div>
               )})}
@@ -145,17 +146,17 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
         <form onSubmit={handleSubmit}>
           <div style={{display:'grid',gap:12,marginBottom:16}}>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'#94a3b8',marginBottom:4,display:'block'}}>{t.nameLabel}</label>
+              <label style={{fontSize:12,fontWeight:600,color:'#334155',marginBottom:4,display:'block'}}>{t.nameLabel}</label>
               <input type="text" value={name} onChange={function(e){setName(e.target.value)}} style={inputStyle} />
             </div>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'#94a3b8',marginBottom:4,display:'block'}}>{t.emailLabel} *</label>
+              <label style={{fontSize:12,fontWeight:600,color:'#334155',marginBottom:4,display:'block'}}>{t.emailLabel} *</label>
               <input type="email" value={email} onChange={function(e){setEmail(e.target.value);setErrorMsg('')}} style={{...inputStyle, borderColor: errorMsg ? '#ef4444' : 'rgba(96,165,250,0.15)'}} required />
               {errorMsg && <div style={{color:'#ef4444',fontSize:11,marginTop:4}}>{errorMsg}</div>}
             </div>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'#94a3b8',marginBottom:4,display:'block'}}>{t.phoneLabel}</label>
-              <input type="tel" value={phone} onChange={function(e){setPhone(e.target.value)}} style={inputStyle} />
+              <label style={{fontSize:12,fontWeight:600,color:'#334155',marginBottom:4,display:'block'}}>{t.phoneLabel}</label>
+              <input type="tel" inputMode="numeric" value={phone} onChange={function(e){setPhone(e.target.value.replace(/[^0-9+\-() ]/g,''))}} onBlur={function(){var d=phone.replace(/[^0-9]/g,'');if(d.length>0&&d.length<7){setErrorMsg(lang==='en'?'Phone number seems too short':'El teléfono parece muy corto')}}} placeholder={lang==='en'?'+1 (555) 123-4567':'+54 11 1234-5678'} style={inputStyle} />
             </div>
           </div>
 

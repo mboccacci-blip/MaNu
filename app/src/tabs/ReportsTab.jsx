@@ -20,7 +20,7 @@ export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, t
             </div>
             {savOpps.slice(0,3).map(function(o){return(
               <div key={o.id} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,marginBottom:4,background:"rgba(0,0,0,0.15)"}}>
-                <span style={{fontSize:12,color:"#94a3b8"}}>{t('reports.cutBy',{name:o.name,pct:o.cutPct})}</span>
+                <span style={{fontSize:12,color:"#64748b"}}>{t('reports.cutBy',{name:o.name,pct:o.cutPct})}</span>
                 <span style={{fontSize:12,fontWeight:600,color:"#22c55e"}}>+{fmt(o.saved)}/mo</span>
               </div>)})}
             <div style={{textAlign:"center",marginTop:16,padding:14,borderRadius:12,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)"}}>
@@ -57,26 +57,26 @@ export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, t
               {l:t('reports.savingsRate'),v:savRate.toFixed(1)+"%",c:savRate>=20?"#22c55e":"#eab308"},
               {l:t('reports.investSavings'),v:fmt(nEx),c:"#60a5fa"}
             ])
-            .concat(nRentalEq>0?[{l:t('reports.rentalEquityFull'),v:fmt(nRentalEq),c:"#93c5fd"},{l:t('reports.totalAssets'),v:fmt(totalNetWorth),c:"#60a5fa"}]:[])
+            .concat(nRentalEq>0?[{l:t('reports.rentalEquityFull'),v:fmt(nRentalEq),c:"#3b82f6"},{l:t('reports.totalAssets'),v:fmt(totalNetWorth),c:"#60a5fa"}]:[])
             .concat([
               {l:t('reports.totalDebt'),v:noDebts?"$0":fmt(totalDebtAll),c:noDebts?"#22c55e":"#f87171"},
               {l:t('reports.healthScore'),v:hScore.s+"/100",c:hScore.s>=70?"#22c55e":hScore.s>=40?"#eab308":"#ef4444"}
             ]).concat(magic.real>0?[{l:t('reports.magicNumber'),v:fmt(magic.real),c:"#60a5fa"},{l:t('reports.progress'),v:mD.p.toFixed(1)+"%",c:mD.gc}]:[]).map(function(r){return(
               <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,background:"rgba(0,0,0,0.1)"}}>
-                <span style={{fontSize:12,color:"#94a3b8"}}>{r.l}</span>
+                <span style={{fontSize:12,color:"#64748b"}}>{r.l}</span>
                 <span style={{fontSize:13,fontWeight:700,color:r.c}}>{r.v}</span>
               </div>)})}
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-            {[{l:t('reports.savingsRate'),v:((mSav+totalSavOpp.mo)/totalIncome*100).toFixed(0)+"%",c:"#86efac"},
+            {[{l:t('reports.savingsRate'),v:((mSav+totalSavOpp.mo)/totalIncome*100).toFixed(0)+"%",c:"#16a34a"},
               {l:t('reports.healthScore'),v:hScore.s+"/100",c:hScore.s>=70?"#22c55e":hScore.s>=40?"#eab308":"#ef4444"}
             ].concat(magic.real>0?[{l:t('reports.magicNumber'),v:fmt(magic.real),c:"#60a5fa"},{l:t('reports.progress'),v:mD.p.toFixed(1)+"%",c:mD.gc}]:[]).map(function(r){return(
               <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,background:"rgba(0,0,0,0.15)"}}>
-                <span style={{fontSize:12,color:"#94a3b8"}}>{r.l}</span>
+                <span style={{fontSize:12,color:"#64748b"}}>{r.l}</span>
                 <span style={{fontSize:13,fontWeight:700,color:r.c}}>{r.v}</span>
               </div>)})}
           </div>
-          {nRentalEq>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:12,color:"#93c5fd",lineHeight:1.6,marginBottom:16}}>
+          {nRentalEq>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:12,color:"#3b82f6",lineHeight:1.6,marginBottom:16}}>
             <Icon name="ruler" size={12} weight="regular" /> <strong>{t('reports.rentalEquityNote',{amt:fmt(nRentalEq)})}</strong>
             {nAge>0&&nRetAge>0&&nYP>0?" "+t('reports.rentalEquityFuture',{age:nRetAge+nYP,rate:customInflation.toFixed(1),amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))}):""}
           </div>}

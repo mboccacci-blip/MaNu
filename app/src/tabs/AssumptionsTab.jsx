@@ -16,7 +16,7 @@ export default function AssumptionsTab({ tab, goTab, tier, nAge, nRetAge, nYP, n
       <Cd><ST sub={t('you.subtitle')}>{t('you.title')}</ST>
         {nAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
           {[{l:t('you.age'),v:nAge},{l:t('you.retireAt'),v:nRetAge},{l:t('you.yearsInRetirement'),v:nYP},{l:t('you.savings'),v:fmt(nEx)}].map(function(b){return(
-            <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd"}}>{b.l}: <strong>{b.v}</strong></div>)})}
+            <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{b.l}: <strong>{b.v}</strong></div>)})}
           <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(15,23,42,0.08)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>{t('you.editInMN')}</div>
         </div>}
         <Toggle value={coupleMode} onChange={setCoupleMode} label={t('you.coupleMode')} sub={t('you.coupleSub')}/>
@@ -24,7 +24,7 @@ export default function AssumptionsTab({ tab, goTab, tier, nAge, nRetAge, nYP, n
         {hasRental&&<>
           <NI label={t('you.rentalEquity')} value={rentalEquity} onChange={setRentalEquity} tip={t('you.rentalEquityTip')}/>
           <NI label={t('you.rentalIncome')} value={rentalNetIncome} onChange={setRentalNetIncome} tip={t('you.rentalIncomeTip')}/>
-          {nRentalEq>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#93c5fd",lineHeight:1.5,marginBottom:12}}>
+          {nRentalEq>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",lineHeight:1.5,marginBottom:12}}>
             <Icon name="ruler" size={13} weight="regular" /> {t('you.rentalEquityExplain',{equity:fmt(nRentalEq),totalAssets:fmt(totalNetWorth),rentalIncome:fmt(nRentalNet)})}
             {nAge>0&&nRetAge>0&&nYP>0&&<span> {t('you.rentalEquityFuture',{age:nRetAge+nYP,amt:fmt(Math.round(nRentalEq*Math.pow(1+INFL,nRetAge+nYP-nAge)))})}</span>}
           </div>}

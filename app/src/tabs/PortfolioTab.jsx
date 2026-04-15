@@ -19,10 +19,10 @@ export default function PortfolioTab({ tab, goTab, tier, nEx, mSav, allProfiles,
             <div style={{fontSize:9,marginTop:-8,marginBottom:8,paddingLeft:4}}><span style={{color:p.color}}>{pct(p.nomReturn)} {t('common.nom')}</span> <span style={{color:"#22c55e"}}>{pct(p.realReturn)} {t('common.real')}</span>{p.vol>0?<span style={{color:"#f59e0b"}}> ~{Math.round(p.vol*100)}% {t('common.vol')}</span>:""}</div>
           </div>)})}
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",borderRadius:10,background:"rgba(0,0,0,0.2)",marginTop:8}}>
-            <span style={{fontSize:12,color:"#94a3b8"}}>{t('portfolio.totalAllocated')}</span>
+            <span style={{fontSize:12,color:"#64748b"}}>{t('portfolio.totalAllocated')}</span>
             <span style={{fontSize:14,fontWeight:700,color:portAlloc.reduce(function(s,v){return s+v},0)===100?"#22c55e":"#ef4444"}}>{portAlloc.reduce(function(s,v){return s+v},0)}%</span>
           </div>
-          {portAlloc.reduce(function(s,v){return s+v},0)===100&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",marginTop:8,fontSize:12,color:"#86efac"}}>
+          {portAlloc.reduce(function(s,v){return s+v},0)===100&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",marginTop:8,fontSize:12,color:"#16a34a"}}>
             {t('app.weightedReturn')} <strong>{pct(portReturn.nom)}</strong> {t('app.nominal')} / <strong>{pct(portReturn.real)}</strong> {t('common.real')}
           </div>}
         </div>
@@ -36,10 +36,10 @@ export default function PortfolioTab({ tab, goTab, tier, nEx, mSav, allProfiles,
             <div style={{fontSize:9,marginTop:-8,marginBottom:8,paddingLeft:4}}><span style={{color:p.color}}>{pct(p.nomReturn)} {t('common.nom')}</span> <span style={{color:"#22c55e"}}>{pct(p.realReturn)} {t('common.real')}</span>{p.vol>0?<span style={{color:"#f59e0b"}}> ~{Math.round(p.vol*100)}% {t('common.vol')}</span>:""}</div>
           </div>)})}
           <div style={{display:"flex",justifyContent:"space-between",padding:"10px 14px",borderRadius:10,background:"rgba(0,0,0,0.2)",marginTop:8}}>
-            <span style={{fontSize:12,color:"#94a3b8"}}>{t('portfolio.totalAllocated')}</span>
+            <span style={{fontSize:12,color:"#64748b"}}>{t('portfolio.totalAllocated')}</span>
             <span style={{fontSize:14,fontWeight:700,color:portContribAlloc.reduce(function(s,v){return s+v},0)===100?"#22c55e":"#ef4444"}}>{portContribAlloc.reduce(function(s,v){return s+v},0)}%</span>
           </div>
-          {portContribAlloc.reduce(function(s,v){return s+v},0)===100&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",marginTop:8,fontSize:12,color:"#86efac"}}>
+          {portContribAlloc.reduce(function(s,v){return s+v},0)===100&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",marginTop:8,fontSize:12,color:"#16a34a"}}>
             {t('app.weightedReturn')} <strong>{pct(portContribReturn.nom)}</strong> {t('common.nom')} / <strong>{pct(portContribReturn.real)}</strong> {t('common.real')}
           </div>}
         </div>
