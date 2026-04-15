@@ -58,22 +58,44 @@ def body(text):
     return p
 
 def add_table(headers, rows):
-    """Add a table with header row + data rows."""
+    """Add a table with header row + data rows, with visible borders."""
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+
     table = doc.add_table(rows=1 + len(rows), cols=len(headers))
     table.style = 'Table'
+
+    # Add borders to every cell
+    def set_cell_border(cell):
+        tc = cell._tc
+        tcPr = tc.get_or_add_tcPr()
+        tcBorders = OxmlElement('w:tcBorders')
+        for edge in ('top', 'left', 'bottom', 'right'):
+            element = OxmlElement(f'w:{edge}')
+            element.set(qn('w:val'), 'single')
+            element.set(qn('w:sz'), '4')
+            element.set(qn('w:space'), '0')
+            element.set(qn('w:color'), '000000')
+            tcBorders.append(element)
+        tcPr.append(tcBorders)
+
     # Header
     for i, h in enumerate(headers):
         cell = table.rows[0].cells[i]
         cell.text = h
+        set_cell_border(cell)
         for p in cell.paragraphs:
             for r in p.runs:
                 r.bold = True
     # Data
     for ri, row in enumerate(rows):
         for ci, val in enumerate(row):
-            table.rows[ri + 1].cells[ci].text = val
+            cell = table.rows[ri + 1].cells[ci]
+            cell.text = val
+            set_cell_border(cell)
     doc.add_paragraph('')  # spacer
     return table
+
 
 
 # ════════════════════════════════════════════════
