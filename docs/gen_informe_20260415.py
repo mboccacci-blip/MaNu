@@ -292,6 +292,20 @@ bullet("Analytics premium en dashboard")
 
 doc.add_paragraph('')
 
+# ─── Resumen de commits del día ───
+h2("Commits del 15 de Abril (6 en total)")
+add_table(
+    ["#", "Hash", "Descripción"],
+    [
+        ["1", "5475d3e", "fix: crash por localStorage corrupto + modal blanco + validacion tel + sanitizacion store"],
+        ["2", "335d3cd", "fix: landing nav - rename stale links + remove fake FAQ + add status report 15-abr"],
+        ["3", "028ab07", "copy: landing freemium-honest + CTA orientado a resultado + dashboard presente"],
+        ["4", "41dbaab", "docs: informe 15-abr actualizado con audit UX/UI + copy fixes"],
+        ["5", "51e2283", "ui: remove duplicate Ver App button from nav"],
+        ["6", "e3368c0", "feat: simulator tracking + email CTA copy + paid upgrade toast"],
+    ]
+)
+
 # ─── Decisiones pendientes ───
 h2("Decisiones Pendientes del Equipo")
 bullet("¿Dominio definitivo? master.manu-pro.pages.dev → ¿magic-number.app? ¿manu.pro?")
@@ -301,13 +315,38 @@ bullet("¿Estructura legal? (LLC / SAS / Persona física) — necesario antes de
 bullet("¿Precio definitivo? Actualmente placeholder $14.99")
 
 doc.add_paragraph('')
+
+# ─── Resumen completo del audit UX ───
+h2("Estado UX/UI — Resumen Final")
+add_table(
+    ["Punto", "Estado"],
+    [
+        ["Emojis → íconos Phosphor", "✅ Completado"],
+        ["Nav links honestos", "✅ Corregido"],
+        ["CTA messaging freemium-honest", "✅ Corregido"],
+        ["Free tier invisible (no locked)", "✅ Excelente"],
+        ["CTA hierarchy (email > pago)", "✅ Correcto"],
+        ["Simulador 3 palancas visual", "✅ A buen nivel"],
+        ["Timing del gold card post-engagement", "✅ Correcto"],
+        ["Email CTA copy específico", "✅ Implementado"],
+        ["SIMULATOR_INTERACTION analytics", "✅ Implementado"],
+        ["Toast de bienvenida paid upgrade", "✅ Implementado"],
+        ["Botón duplicado 'Ver App' eliminado", "✅ Resuelto"],
+        ["Onboarding wizard (16 tabs)", "⏳ Fase 3"],
+        ["Diseño del paywall Stripe", "⏳ Requiere Stripe"],
+    ]
+)
+
 para(
-    "MaNu PRO completó su primera fase de maduración técnica. El código es modular, "
-    "el deploy es estable, y los crashes críticos están resueltos. Lo que sigue es "
-    "la experiencia del usuario: hacer que cualquier persona pueda llegar a su Magic Number "
-    "sin perderse."
+    "MaNu PRO completó su primera fase de maduración técnica y una extensa validación UX "
+    "con dos auditorías independientes. El código es modular (14/16 tabs extraídas), el deploy "
+    "es estable en Cloudflare Pages, los crashes críticos están resueltos con 3 capas de "
+    "protección, y el modelo de 3 tiers (Free/Email/Paid) está validado como correcto en "
+    "diseño y ejecución. Se implementaron 10+ quick wins de UX en una sola sesión. "
+    "Lo que sigue: Stripe + Paywall como única prioridad que mueve el negocio."
 )
 
 # Save
 doc.save(OUTPUT)
 print(f"✅ Informe guardado en: {OUTPUT}")
+
