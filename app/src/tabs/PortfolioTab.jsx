@@ -2,6 +2,7 @@ import Cd from '../components/Card.jsx';
 import ST from '../components/SectionTitle.jsx';
 import Slider from '../components/Slider.jsx';
 import NavButtons from '../components/NavButtons.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt, pct } from '../utils/formatters.js';
 
@@ -44,6 +45,7 @@ export default function PortfolioTab({ tab, goTab, tier, nEx, mSav, allProfiles,
           </div>}
         </div>
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

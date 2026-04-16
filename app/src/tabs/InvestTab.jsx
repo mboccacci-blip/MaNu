@@ -8,6 +8,7 @@ import Tip from '../components/Tip.jsx';
 import TabBtn from '../components/TabButton.jsx';
 import MultiLineChart from '../components/MultiLineChart.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 
 export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears, setProjYears, projs, maxProj, showNom, setShowNom, customReturn, setCustomReturn, customInflation, INFL, showScenarios, setShowScenarios, scenProfileIdx, setScenProfileIdx, scenarios, allProfiles, adjProfiles, hasPortfolio, blendedPortReturn, costNS, costNSProfileIdx, setCostNSProfileIdx, costNSReturn, magic, debtEvents }) {
@@ -107,6 +108,7 @@ export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears
     <div style={{fontFamily:"Outfit,sans-serif",fontSize:26,fontWeight:800,color:"#60a5fa",marginBottom:12}}>{fmt(magic.real)}</div>
     <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,maxWidth:440,margin:"0 auto 16px"}}>{t('common.inYrWith6040',{years:projYears})+" "}<strong style={{color:"#22c55e"}}>{fmtC(projs[4].rFV)}</strong>{'. '}{projs[4].rFV<magic.real?((projs[4].rFV/magic.real)*100).toFixed(0)+"% "+t('common.ofTarget'):t('common.youdSurpass')}</p>
   </Cd>}
+  <AdvisorCTA tab={tab}/>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

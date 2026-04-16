@@ -4,6 +4,7 @@ import Slider from '../components/Slider.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 
 export default function SaveTab({ tab, goTab, tier, savOpps, setSavSliders, totalSavOpp, mSav }) {
@@ -50,6 +51,7 @@ export default function SaveTab({ tab, goTab, tier, savOpps, setSavSliders, tota
           <Icon name="warning" size={13} weight="regular" /> <strong>{t('save.scenariosOnly')}</strong> — {t('save.saveScenariosExplain')}
         </div>
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

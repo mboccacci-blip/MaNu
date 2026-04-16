@@ -3,6 +3,7 @@ import ST from '../components/SectionTitle.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { PROFILES } from '../constants.js';
 
 export default function LearnTab({ tab, goTab, tier }) {
@@ -95,6 +96,7 @@ export default function LearnTab({ tab, goTab, tier }) {
         </p>
         <button className="bp" onClick={function(){goTab("achieve")}}>{t('learn.letsGo')}</button>
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

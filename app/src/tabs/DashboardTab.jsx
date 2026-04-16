@@ -1,6 +1,7 @@
 import Cd from '../components/Card.jsx';
 import Icon from '../components/Icon.jsx';
 import NavButtons from '../components/NavButtons.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
 
@@ -33,6 +34,7 @@ export default function DashboardTab({ tab, goTab, tier, hasData, mSav, hScore, 
       {emergencyMonths<6&&totalMonthlyObligations>0&&<Cd glow="red" onClick={function(){goTab("debts")}}><div style={{fontSize:10,color:"#ef4444",textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{t('dashboard.emergencyFund')}</div><p style={{fontSize:13,color:"#ef4444",lineHeight:1.5}}>{t('dashboard.emergencyMsg',{months:emergencyMonths.toFixed(1)})}</p></Cd>}
       {savOpps.length>0&&<Cd glow="green" onClick={function(){goTab("save")}}><div style={{fontSize:10,color:"#16a34a",textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{t('dashboard.savingOpp')}</div><p style={{fontSize:13,color:"#64748b",lineHeight:1.5}}>{t('dashboard.savingOppMsg',{name:savOpps[0].name,saved:fmt(savOpps[0].saved),impact:fmt(savOpps[0].imp10)})}</p></Cd>}
       {hScore.recs.length>0&&<Cd glow="gold" onClick={function(){goTab("score")}}><div style={{fontSize:10,color:"#a18207",textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{t('dashboard.topAction')}</div><p style={{fontSize:13,color:"#92400e",lineHeight:1.5}}>{hScore.recs[0].text}</p></Cd>}
+      <AdvisorCTA tab={tab}/>
     </>}</div>
   );
 }

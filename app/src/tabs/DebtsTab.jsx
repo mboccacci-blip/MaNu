@@ -5,6 +5,7 @@ import Toggle from '../components/Toggle.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, pct } from '../utils/formatters.js';
 
 export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, noMortgage, setNoMortgage, mortgageYearsLeft, setMortgageYearsLeft, mortgageBalance, setMortgageBalance, mortgageRate, setMortgageRate, nMortYrs, nAge, nEx, mortBal, noDebts, setNoDebts, noCarLoan, setNoCarLoan, carBalance, setCarBalance, carYearsLeft, setCarYearsLeft, carRate, setCarRate, carPayment, setCarPayment, debts, aD, uD, rD, debtAn, probDebts, totalMonthlyObligations, emergencyMonths, PROFILES }) {
@@ -129,6 +130,7 @@ export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, n
       <div style={{fontSize:10,color:"#475569",marginTop:6}}>{t('debts.efBasedOn',{amt:fmt(totalMonthlyObligations)})}</div>
     </>:<div style={{fontSize:12,color:"#92400e"}}><Icon name="warning" size={13} weight="regular" /> {t('debts.enterSavingsEF')}</div>}
   </Cd>}
+  <AdvisorCTA tab={tab}/>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

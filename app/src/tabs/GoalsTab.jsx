@@ -5,6 +5,7 @@ import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import TabBtn from '../components/TabButton.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 
 export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalcs, allProfiles, mSav, goalRetImpact, totalGoalMo, goalImpactRate }) {
@@ -84,6 +85,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
           <Icon name="ruler" size={12} weight="regular" /> {t('goals.oppCostExplain',{rate:pct(goalImpactRate)})}
         </div>
       </Cd>}
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

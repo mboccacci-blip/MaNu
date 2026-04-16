@@ -3,6 +3,7 @@ import ST from '../components/SectionTitle.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 
 export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, totalSavOpp, nAge, totalIncome, totExp, nMortPay, nCarPay, savRate, nEx, nRentalEq, nRentalNet, totalNetWorth, totalDebtAll, noDebts, hScore, magic, mD, nInc, nP2I, coupleMode, nVac, nRetAge, nYP, customInflation, INFL }) {
@@ -85,6 +86,7 @@ export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, t
           </button>
         </>:<div style={{textAlign:"center",padding:20,color:"#64748b"}}><p>{t('reports.completeProfile')}</p></div>}
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

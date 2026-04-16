@@ -3,6 +3,7 @@ import ST from '../components/SectionTitle.jsx';
 import Gauge from '../components/Gauge.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 
 const ID_MAP = {"Under 35":"under35","35–44":"35to44","45–54":"45to54","55–64":"55to64","65–74":"65to74","75+":"75plus"};
@@ -69,6 +70,7 @@ export default function ScoreTab({ tab, goTab, tier, hScore, nAge, savRate, tota
             </div>)})}
         </div>:<p style={{color:"#64748b",fontSize:13}}>{t('score.enterAge')} <span style={{color:"#22c55e",cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("situation")}}>{t('score.enterAgeLink')}</span>.</p>}
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

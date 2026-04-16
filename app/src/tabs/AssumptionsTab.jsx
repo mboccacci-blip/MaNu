@@ -6,6 +6,7 @@ import Toggle from '../components/Toggle.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt } from '../utils/formatters.js';
 
 export default function AssumptionsTab({ tab, goTab, tier, nAge, nRetAge, nYP, nEx, coupleMode, setCoupleMode, hasRental, setHasRental, rentalEquity, setRentalEquity, rentalNetIncome, setRentalNetIncome, nRentalEq, nRentalNet, totalNetWorth, INFL, customInflation, setCustomInflation }) {
@@ -36,6 +37,7 @@ export default function AssumptionsTab({ tab, goTab, tier, nAge, nRetAge, nYP, n
           {t('you.customInflation',{rate:customInflation.toFixed(1)})}
         </div>}
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

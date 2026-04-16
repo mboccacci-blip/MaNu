@@ -2,6 +2,7 @@ import Cd from '../components/Card.jsx';
 import ST from '../components/SectionTitle.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import TabBtn from '../components/TabButton.jsx';
 import MultiLineChart from '../components/MultiLineChart.jsx';
 import ANum from '../components/AnimatedNumber.jsx';
@@ -163,7 +164,8 @@ export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, n
       </div>}
     </Cd>}
   </>}
-  <NavButtons tab={tab} goTab={goTab} tier={tier}/>
+      <AdvisorCTA tab={tab}/>
+      <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );
 }

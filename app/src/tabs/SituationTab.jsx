@@ -4,6 +4,7 @@ import NI from '../components/NumberInput.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import Tip from '../components/Tip.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
 
@@ -83,6 +84,7 @@ export default function SituationTab({ tab, goTab, tier, lang, coupleMode, hasRe
       <Icon name="chart-line-up" size={12} weight="regular" /> {t('income.debtEndBoost')}{(debtEvents||[]).map(function(ev){return " "+ev.name+" "+(lang==="en"?"ends in ":"termina en ")+ev.endsAtYear+(lang==="en"?" years":" años")+" (+"+fmt(ev.monthlyAmount)+t('app.perMonth')+")"}).join(",")}
     </div>}
   </Cd>
+  <AdvisorCTA tab={tab}/>
   <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

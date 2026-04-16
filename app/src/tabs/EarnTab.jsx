@@ -6,6 +6,7 @@ import MiniChart from '../components/MiniChart.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 
 export default function EarnTab({ tab, goTab, tier, extraIncome, setExtraIncome, eiTemporary, setEiTemporary, eiYears, setEiYears, nEI, nEIYrs, earnProj, totalSavOpp, combinedImpact }) {
@@ -59,6 +60,7 @@ export default function EarnTab({ tab, goTab, tier, extraIncome, setExtraIncome,
           <Icon name="warning" size={13} weight="regular" /> <strong>{t('earn.scenariosOnly')}</strong> — {t('earn.earnScenariosExplain')}
         </div>
       </Cd>
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );

@@ -5,6 +5,7 @@ import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import TabBtn from '../components/TabButton.jsx';
 import { useTranslation } from '../i18n/index.jsx';
+import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import { fvL } from '../utils/financial.js';
 
@@ -48,6 +49,7 @@ export default function CostTab({ tab, goTab, tier, lang, costItemName, setCostI
             </div>)})}
         </Cd>
       </>}
+      <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );
