@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { PROFILES, SCENARIO_SPREAD, BENCH_SR, BENCH_NW } from '../constants.js';
 import { mR, fvC, fvL, pvA, gB, clamp, yearByYear, fvVariable } from '../utils/financial.js';
 
+function profById(id, list) { return list.find(function(p){ return p.id === id; }) || list[list.length-1]; }
+
 export default function useFinancialEngine(store, t, lang) {
   const {
     customInflation, age, monthlyIncome, coupleMode, partner2Income, hasRental, rentalEquity, rentalNetIncome,
@@ -67,7 +69,7 @@ export default function useFinancialEngine(store, t, lang) {
 
   // ADJUSTED PROFILES
   var TAX=assetTax/100;
-  var PROF_KEY_MAP={vault:"vault",cash:"cash",cds:"cds",treasuries:"treasuries","6040":"6040","8020":"8020",equities:"equities",custom:"custom"};
+  var PROF_KEY_MAP={vault:"vault",cds:"cds",treasuries:"treasuries","6040":"6040","8020":"8020",equities:"equities",custom:"custom"};
   var adjProfiles=useMemo(function(){return PROFILES.map(function(p){
     var k=PROF_KEY_MAP[p.id]||p.id;
     return Object.assign({},p,{
@@ -77,7 +79,7 @@ export default function useFinancialEngine(store, t, lang) {
       desc:t('profiles.'+k+'.desc')||p.desc
     });
   })},[INFL,TAX,lang,t]);
-  function adjProfByHorizon(y){if(y<1)return adjProfiles[0];if(y<2)return adjProfiles[1];if(y<3)return adjProfiles[3];if(y<5)return adjProfiles[4];if(y<10)return adjProfiles[5];return adjProfiles[6]}
+  function adjProfByHorizon(y){if(y<1)return profById('vault',adjProfiles);if(y<2)return profById('cds',adjProfiles);if(y<5)return profById('treasuries',adjProfiles);if(y<10)return profById('6040',adjProfiles);return profById('8020',adjProfiles)}
 
   var custR=Number(customReturn)||0;
   var allProfiles=useMemo(function(){
@@ -117,12 +119,12 @@ export default function useFinancialEngine(store, t, lang) {
   var retProfReturn=useMemo(function(){
     if(retProfileIdx===-1&&blendedPortReturn!=null)return blendedPortReturn;
     var p=allProfiles[Math.max(retProfileIdx,0)];
-    return p?p.realReturn:adjProfiles[4].realReturn;
+    return p?p.realReturn:profById('6040',adjProfiles).realReturn;
   },[allProfiles,adjProfiles,retProfileIdx,blendedPortReturn]);
   var retProfLabel=(function(){
     if(retProfileIdx===-1&&hasPortfolio)return t('profiles.myPortfolio.name');
     var p=allProfiles[Math.max(retProfileIdx,0)];
-    return p?p.name:adjProfiles[4].name;
+    return p?p.name:profById('6040',adjProfiles).name;
   })();
   var chartAccumReturn=useMemo(function(){
     if(chartProfileIdx===-1&&blendedPortReturn!=null)return blendedPortReturn;
@@ -140,7 +142,7 @@ export default function useFinancialEngine(store, t, lang) {
     var legacyPV=nLegacy>0?nLegacy/Math.pow(1+retProfReturn,nYP):0;
     var withSS=pvA(desiredAfterSS,retProfReturn,nYP)+legacyPV;
     var withoutSS=pvA(nDes,retProfReturn,nYP)+legacyPV;
-    var conservativeRate=adjProfiles[1].realReturn;
+    var conservativeRate=profById('cds',adjProfiles).realReturn;
     var legacyPVc=nLegacy>0?nLegacy/Math.pow(1+conservativeRate,nYP):0;
     var conservative=pvA(desiredAfterSS,conservativeRate,nYP)+legacyPVc;
     return{real:withSS,withoutSS:withoutSS,conservative:conservative,conservativeRate:conservativeRate,legacyPV:legacyPV}
@@ -201,7 +203,7 @@ export default function useFinancialEngine(store, t, lang) {
   },[showScenarios,mSav,nEx,projYears,allProfiles,debtEvents,scenProfileIdx,blendedPortReturn,t]);
 
   var costNSYears=20;
-  var costNSReturn=costNSProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[costNSProfileIdx]||adjProfiles[4]).realReturn;
+  var costNSReturn=costNSProfileIdx===-1&&blendedPortReturn!=null?blendedPortReturn:(allProfiles[costNSProfileIdx]||profById('6040',adjProfiles)).realReturn;
   var costNS=useMemo(function(){
     if(mSav<=0&&nEx<=0)return null;
     var data=[];
@@ -261,7 +263,7 @@ export default function useFinancialEngine(store, t, lang) {
 
   var goalCalcs=useMemo(function(){return goals.map(function(g){
     var amt=Number(g.amount)||0,yrs=Number(g.years)||0;
-    if(amt<=0||yrs<=0)return Object.assign({},g,{mo:0,prof:adjProfiles[0],valid:false});
+    if(amt<=0||yrs<=0)return Object.assign({},g,{mo:0,prof:profById('vault',adjProfiles),valid:false});
     var prof=g.profileIdx>=0?(allProfiles[g.profileIdx]||adjProfByHorizon(yrs)):adjProfByHorizon(yrs);
     var r=prof.realReturn,m=mR(r),n=yrs*12;
     var mo=r===0||m===0?amt/n:amt/((Math.pow(1+m,n)-1)/m);
@@ -269,7 +271,7 @@ export default function useFinancialEngine(store, t, lang) {
   })},[goals,adjProfiles,allProfiles]);
 
   var totalGoalMo=goalCalcs.reduce(function(s,g){return s+(g.valid?g.mo:0)},0);
-  var goalImpactRate=adjProfiles[4].realReturn;
+  var goalImpactRate=profById('6040',adjProfiles).realReturn;
   const goalRetImpact=useMemo(function(){if(totalGoalMo<=0||magic.real<=0||ytr<=0)return null;
     const full=fvVariable(nEx,mSav,goalImpactRate,ytr,debtEvents);
     let bal=nEx;
@@ -312,21 +314,28 @@ export default function useFinancialEngine(store, t, lang) {
     var rSS=revSS!==""?Number(revSS)||0:nSSRaw;
     var rSav=revSav!==""?Number(revSav)||0:nEx;
     var rMo=revMo!==""?Number(revMo)||0:Math.max(mSav,0);
-    if(rDes<=0||rYrs<=0||nAge<=0)return null;
+    if(rDes<=0||rYrs<=0||nAge<=0||nRetAge<=nAge)return null;
     var accumR=revRet/100;
     var retR=adjProfiles[Math.min(revRetProf,adjProfiles.length-1)].realReturn;
-    for(var candidateAge=nAge+1;candidateAge<=100;candidateAge++){
-      var yrsToRetire=candidateAge-nAge;
-      var projected=fvVariable(rSav,rMo,accumR,yrsToRetire,[]);
-      var ssToday=rSS;
-      var afterSS=Math.max(rDes-ssToday,0);
-      if(afterSS<=0)return{age:candidateAge,projected:projected,mn:0,surplus:projected,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:0,retR:retR};
-      var legPV=nLegacy>0?nLegacy/Math.pow(1+retR,rYrs):0;
-      var mn=pvA(afterSS,retR,rYrs)+legPV;
-      if(projected>=mn)return{age:candidateAge,projected:projected,mn:mn,surplus:projected-mn,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:afterSS,retR:retR};
+    var yrsToRetire=nRetAge-nAge;
+    var projected=fvVariable(rSav,rMo,accumR,yrsToRetire,[]);
+    var ssToday=rSS;
+    var afterSS=Math.max(rDes-ssToday,0);
+    if(afterSS<=0)return{yearsOfCoverage:rYrs,untilAge:nRetAge+rYrs,projected:projected,surplus:projected,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:0,retR:retR,targetYrs:rYrs,sufficient:true};
+    // Simulate drawdown: how many years does projected last?
+    var bal=projected;var yearsOfCoverage=0;var annualWithdraw=afterSS*12;
+    while(bal>0&&yearsOfCoverage<60){
+      bal=bal*(1+retR)-annualWithdraw;
+      if(bal>0)yearsOfCoverage++;else{yearsOfCoverage++;break;}
     }
-    return{age:null,message:t('achieve.revError')};
-  },[revDes,revYrs,revSS,revSav,revMo,revRet,revRetProf,nAge,adjProfiles,INFL,nDes,nYP,nSSRaw,nEx,mSav,nLegacy,lang,t]);
+    if(bal>0)yearsOfCoverage=60;
+    var sufficient=yearsOfCoverage>=rYrs;
+    var legPV=nLegacy>0?nLegacy/Math.pow(1+retR,rYrs):0;
+    var mn=pvA(afterSS,retR,rYrs)+legPV;
+    var surplus=sufficient?projected-mn:0;
+    var deficit=sufficient?0:mn-projected;
+    return{yearsOfCoverage:yearsOfCoverage,untilAge:nRetAge+yearsOfCoverage,projected:projected,mn:mn,surplus:surplus,deficit:deficit,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:afterSS,retR:retR,targetYrs:rYrs,sufficient:sufficient};
+  },[revDes,revYrs,revSS,revSav,revMo,revRet,revRetProf,nAge,nRetAge,adjProfiles,INFL,nDes,nYP,nSSRaw,nEx,mSav,nLegacy,lang,t]);
 
   var hScore=useMemo(function(){
     var s=0,bd=[],recs=[];

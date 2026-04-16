@@ -54,7 +54,7 @@ export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, n
           <div style={{fontSize:11,color:"#64748b",marginBottom:6}}>{t('retirement.stratDuring')}</div>
           <div style={{display:"flex",gap:4,flexWrap:"wrap",justifyContent:"center"}}>
             {hasPortfolio&&<TabBtn active={retProfileIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setRetProfileIdx(-1)}} color="#e879f9"/>}
-            {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={retProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setRetProfileIdx(i)}} color={p.color}/>})}
+            {adjProfiles.map(function(p,i){return <TabBtn key={p.id} active={retProfileIdx===i} iconName={p.icon} label={p.name} onClick={function(){setRetProfileIdx(i)}} color={p.color}/>})}
           </div>
         </div>
         <div style={{marginTop:24,padding:18,borderRadius:14,background:"rgba(0,0,0,0.25)",border:"1px solid rgba(255,255,255,0.05)"}}>
@@ -121,7 +121,7 @@ export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, n
         <div style={{fontSize:12,fontWeight:600,color:"#64748b",marginBottom:6}}><Icon name="umbrella" size={13} weight="regular" /> {t('retirement.retirementPhase')}</div>
         <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:4}}>
           {hasPortfolio&&<TabBtn active={chartRetireIdx===-1} label={t('profiles.myPortfolio.name')} onClick={function(){setChartRetireIdx(-1)}} color="#e879f9"/>}
-          {adjProfiles.filter(function(_,i){return i<=4}).map(function(p,i){return <TabBtn key={p.id} active={chartRetireIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartRetireIdx(i)}} color={p.color}/>})}
+          {adjProfiles.map(function(p,i){return <TabBtn key={p.id} active={chartRetireIdx===i} iconName={p.icon} label={p.name} onClick={function(){setChartRetireIdx(i)}} color={p.color}/>})}
         </div>
         <div style={{fontSize:11,color:chartRetireIdx===-1?"#e879f9":"#3b82f6"}}>
           {chartRetireIdx===-1&&hasPortfolio?t('retirement.usingPortfolio', {rate: pct(chartRetireReturn)}):t('retirement.usingProfile', {name: adjProfiles[Math.max(chartRetireIdx,0)].name, rate: pct(chartRetireReturn)})}

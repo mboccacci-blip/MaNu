@@ -61,9 +61,9 @@ const INITIAL_STATE = {
   desiredIncome: "",
   existingSavings: "",
   socialSecurity: "",
-  retProfileIdx: 4,
-  chartProfileIdx: 4,
-  chartRetireIdx: 3,
+  retProfileIdx: 3,
+  chartProfileIdx: 3,
+  chartRetireIdx: 2,
   legacy: "",
   assetTax: 0,
   manualMonthlySav: "",
@@ -74,12 +74,12 @@ const INITIAL_STATE = {
   customInflation: 2.5,
   showScenarios: true,
   customReturn: "",
-  scenProfileIdx: 5,
-  costNSProfileIdx: 4,
+  scenProfileIdx: 4,
+  costNSProfileIdx: 3,
 
   // ── Portfolio ──
-  portAlloc: [1, 1, 1, 1, 1, 1, 1],
-  portContribAlloc: [1, 1, 1, 1, 1, 1, 1],
+  portAlloc: [1, 1, 1, 1, 1, 1],
+  portContribAlloc: [1, 1, 1, 1, 1, 1],
 
   // ── Strategy & Simulation ──
   savSliders: {},
@@ -88,8 +88,8 @@ const INITIAL_STATE = {
   eiYears: "5",
   costItemName: "",
   costItemPrice: "",
-  costProfileIdx: 4,
-  goals: [{ id: 1, name: "", amount: "", years: "", profileIdx: 4 }],
+  costProfileIdx: 3,
+  goals: [{ id: 1, name: "", amount: "", years: "", profileIdx: 3 }],
   _nGId: 2,
   showRec: true,
   simSav: null,
@@ -103,11 +103,11 @@ const INITIAL_STATE = {
   revSav: "",
   revMo: "",
   revRet: 4.0,
-  revRetProf: 4,
+  revRetProf: 3,
 
   // ── Cost of Inaction ──
   ciH: 20,
-  ciDelayProf: 5,
+  ciDelayProf: 4,
   ciBase: 0,
   ciSav: null,
   ciMo: null,
@@ -243,19 +243,19 @@ const useAppStore = create(
         if (!Array.isArray(merged.goals) || merged.goals.length === 0) merged.goals = [{ id: 1, name: "", amount: "", years: "", profileIdx: 4 }];
         else merged.goals = merged.goals.filter(Boolean);
         // Ensure portAlloc arrays have correct length
-        if (!Array.isArray(merged.portAlloc) || merged.portAlloc.length !== 7) merged.portAlloc = [1,1,1,1,1,1,1];
-        if (!Array.isArray(merged.portContribAlloc) || merged.portContribAlloc.length !== 7) merged.portContribAlloc = [1,1,1,1,1,1,1];
+        if (!Array.isArray(merged.portAlloc) || merged.portAlloc.length !== 6) merged.portAlloc = [1,1,1,1,1,1];
+        if (!Array.isArray(merged.portContribAlloc) || merged.portContribAlloc.length !== 6) merged.portContribAlloc = [1,1,1,1,1,1];
         // Clamp profile indices to valid range (0-7, or -1 for portfolio)
-        var clampIdx = function(v, min, max) { var n = Number(v); return isNaN(n) ? 4 : Math.max(min, Math.min(max, n)); };
-        merged.retProfileIdx = clampIdx(merged.retProfileIdx, -1, 7);
-        merged.chartProfileIdx = clampIdx(merged.chartProfileIdx, -1, 7);
-        merged.chartRetireIdx = clampIdx(merged.chartRetireIdx, -1, 7);
-        merged.scenProfileIdx = clampIdx(merged.scenProfileIdx, -1, 7);
-        merged.costNSProfileIdx = clampIdx(merged.costNSProfileIdx, -1, 7);
-        merged.costProfileIdx = clampIdx(merged.costProfileIdx, 0, 7);
-        merged.revRetProf = clampIdx(merged.revRetProf, 0, 7);
-        merged.ciBase = clampIdx(merged.ciBase, 0, 7);
-        merged.ciDelayProf = clampIdx(merged.ciDelayProf, 0, 7);
+        var clampIdx = function(v, min, max) { var n = Number(v); return isNaN(n) ? 3 : Math.max(min, Math.min(max, n)); };
+        merged.retProfileIdx = clampIdx(merged.retProfileIdx, -1, 5);
+        merged.chartProfileIdx = clampIdx(merged.chartProfileIdx, -1, 5);
+        merged.chartRetireIdx = clampIdx(merged.chartRetireIdx, -1, 5);
+        merged.scenProfileIdx = clampIdx(merged.scenProfileIdx, -1, 5);
+        merged.costNSProfileIdx = clampIdx(merged.costNSProfileIdx, -1, 5);
+        merged.costProfileIdx = clampIdx(merged.costProfileIdx, 0, 5);
+        merged.revRetProf = clampIdx(merged.revRetProf, 0, 5);
+        merged.ciBase = clampIdx(merged.ciBase, 0, 5);
+        merged.ciDelayProf = clampIdx(merged.ciDelayProf, 0, 5);
         // Ensure tier is valid
         if (['free', 'email', 'paid'].indexOf(merged.tier) === -1) merged.tier = 'free';
         return merged;

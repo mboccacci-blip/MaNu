@@ -4,7 +4,6 @@ export const SCENARIO_SPREAD = 0.02;
 
 export const PROFILES = [
   { id:"vault",name:"Vault",nomReturn:0,realReturn:-0.025,desc:"Cash under the mattress. Loses to inflation.",icon:"lock",color:"#64748b",risk:0,vol:0},
-  { id:"cash",name:"Cash Investor",nomReturn:0.03,realReturn:0.005,desc:"Short-duration treasuries (BIL/SHV).",icon:"coins",color:"#64748b",risk:1,vol:0.01},
   { id:"cds",name:"CDs",nomReturn:0.035,realReturn:0.01,desc:"Certificates of Deposit. FDIC insured.",icon:"bank",color:"#a78bfa",risk:2,vol:0},
   { id:"treasuries",name:"Treasuries",nomReturn:0.04,realReturn:0.015,desc:"Long-term US Treasury bonds (TLT).",icon:"landmark",color:"#60a5fa",risk:3,vol:0.12},
   { id:"6040",name:"60 / 40",nomReturn:0.065,realReturn:0.04,desc:"60% stocks, 40% bonds. Balanced.",icon:"scales",color:"#34d399",risk:4,vol:0.10},
