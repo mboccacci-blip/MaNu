@@ -1,158 +1,183 @@
-# MaNu PRO — Roadmap (Actualizado 13-Abr-2026, 13:54 ART)
+# MaNu PRO — Roadmap (Actualizado 17-Abr-2026)
 
 ## Estado Actual — Snapshot
 
-| Dimensión | Score | Cambio vs inicio sesión |
-|-----------|:-----:|:-----------------------:|
-| Motor Financiero | 9/10 | → estable |
-| UX/UI | 9/10 | → estable |
-| Landing Page | 9.5/10 | → estable |
-| i18n (EN/ES) | 8.5/10 | → estable |
-| **Arquitectura** | **5.5/10** | ⬆️ +1.5 (9 componentes extraídos) |
-| **Analytics** | **6/10** | ⬆️ +6 (de 0 a funcional) |
-| **Lead Capture** | **8/10** | ⬆️ +8 (de 0 a producción) |
-| **Auth / Payments** | **0/10** | 🔴 sin cambios |
-| **Trust Layer (Legal)** | **2/10** | → sin cambios |
+| Dimension | Score | Notas |
+|-----------|:-----:|-------|
+| Motor Financiero | 9/10 | Extraido, 354 lineas, robusto |
+| UX/UI | 9/10 | Estable, responsive |
+| Landing Page | 9.5/10 | Reescrita: freemium-honest |
+| i18n (EN/ES) | 9/10 | 400+ keys, ambos idiomas completos |
+| Arquitectura | **10/10** | Monolito desmontado: 16 tabs + 15 componentes |
+| Analytics | 8/10 | 4 eventos Supabase, live en produccion |
+| Lead Capture | 9/10 | Supabase live, 2 leads test verificados |
+| AdvisorCTA | 10/10 | Self-contained, presente en los 16 tabs |
+| Auth / Payments | 0/10 | No iniciado (pendiente D2) |
+| PDF / Email | 0/10 | BLOQUEANTE — siguiente sprint |
+| Tests | 0/10 | 6 edge cases definidos, no escritos |
+| Trust Layer (Legal) | 3/10 | Disclaimer en footer, T&C pendiente D2 |
 
-**Último deploy**: `1813138` (13-Abr) — Analytics live con Supabase  
-**Producción**: https://magic-number.app ✅  
-**Revenue**: $0 | **Users**: 0 | **Leads capturados**: 2 (test) | **Eventos trackeados**: ✅ live  
-**Supabase**: Proyecto `manu-pro` con 2 tablas (`leads`, `analytics_events`)
-
----
-
-## Trabajo Completado Hoy (13-Abr) — 8 commits, 6 deploys
-
-### ✅ Fase 1: Quick Wins — COMPLETADA
-- [x] Bug 4.3% portfolio → defaults `[1,1,1,1,1,1,1]`
-- [x] Rango MN free → `0.85×` a `1.15×` con redondeo $25K
-- [x] Emojis → verificado 0 residuales en 2,660 líneas
-- [x] Color cyan → fallback `hexToRgb()` unificado a `#0099cc`
-- [x] Font-size → ya estaba en 15px (todo.md estaba desactualizado)
-- [x] Card glows → 7 variantes revisadas y mantenidas
-
-### ✅ Fase 1.1: Analytics — COMPLETADA (con Supabase)
-- [x] Tabla `analytics_events` en Supabase (RLS + índices)
-- [x] `analytics.js` reescrito: batching 5s / 20 eventos → Supabase
-- [x] 4 eventos instrumentados: `tab_viewed`, `language_changed`, `advisor_cta_clicked`, `lead_submitted`
-- [x] Flush automático en `visibilitychange` y `beforeunload`
-
-### ✅ Fase 2: Lead Capture — COMPLETADA
-- [x] Supabase proyecto `manu-pro` configurado
-- [x] Tabla `leads` con 26 columnas + RLS
-- [x] `LeadCaptureModal.jsx` con preview financiero + formulario
-- [x] 5 AdvisorCTA conectados al modal
-- [x] CSP actualizado para Supabase
-- [x] Env vars en Netlify
-- [x] Test E2E: 2 leads verificados en producción
-
-### 🟡 Fase 3: Modularización — EN PROGRESO (Paso 1 completado)
-- [x] **Paso 1**: 9 componentes inline extraídos a `/components/`
-  - AnimatedNumber, NumberInput, SectionTitle, Gauge, Slider, MiniChart, MultiLineChart, AdvisorCTA, NavButtons
-  - Monolito: 2,194 → 2,111 líneas | Componentes: 6 → 15
-- [ ] **Paso 2**: Zustand store (migrar ~55 useState)
-- [ ] **Paso 3**: Extraer tabs a archivos individuales (~1,500 líneas)
+**HEAD commit:** `2d8b5db` — AdvisorCTA global (16 tabs)
+**Produccion:** https://magic-number.app | https://master.manu-pro.pages.dev/
+**Revenue:** $0 | **Users:** 0 (pre-launch) | **Leads:** 2 (test) | **Analytics:** live
 
 ---
 
-## Próximas Fases
+## Arquitectura Actual (17-Abr-2026)
 
-### Fase 3 — Modularización (restante, ~2-3 sesiones)
-
-> [!WARNING]
-> Prerrequisito para auth, payments, y A/B testing. El monolito de 2,111 líneas sigue siendo el principal riesgo técnico.
-
-#### Paso 2: Zustand Store
-- Instalar Zustand
-- Crear `store/useAppStore.js` con los ~55 `useState` migrados
-- Integrar `usePersistedState` con Zustand middleware `persist`
-
-#### Paso 3: Extraer tabs
-Cada tab → su propio `.jsx` en `app/src/tabs/`:
-
-| Tab | Líneas aprox. | Complejidad |
-|-----|:------------:|:-----------:|
-| Achieve (MN) | ~250 | Alta |
-| Retire | ~200 | Alta |
-| Invest | ~180 | Media |
-| Situation | ~150 | Baja |
-| Inaction | ~150 | Media |
-| Save / Earn / Cost / Goals / Score / Reports | ~600 | Variada |
-
-#### Paso 4: Tests financieros
-- `financial.js` → Vitest para `fvVariable`, `yearByYear`, `pvA`, reverse calculator
-
----
-
-### Fase 4 — Monetización (~2-3 sesiones, post-modularización)
-
-> [!IMPORTANT]
-> **Decisión pendiente**: Estructura jurídica (Persona Física MVP vs LLC). Esto impacta Stripe.
-
-- Auth: Supabase Auth (magic link + Google) → conectar al tier "Email"
-- Stripe: $14.99 lifetime via Checkout hosted
-- Legal: Privacy Policy + ToS + GDPR consent
-- Persistencia cloud: localStorage + Supabase sync
-
----
-
-### Fase 5 — Go-to-Market (ongoing)
-
-- **Contenido**: ~30 videos TikTok/Reels/Shorts con hook del Magic Number
-- **SEO**: 3 mini-calculadoras standalone, schema.org FinancialCalculator
-- **Red de asesores**: 5 piloto, pitch con data real de leads, $75-$200/lead
-
----
-
-## Secuencia Propuesta
-
-```mermaid
-gantt
-    title MaNu PRO — Progreso Actualizado
-    dateFormat  YYYY-MM-DD
-    
-    section Completado ✅
-    Fase 1 Quick Wins           :done, f1, 2026-04-13, 1d
-    Fase 1.1 Analytics          :done, f1a, 2026-04-13, 1d
-    Fase 2 Lead Capture         :done, f2, 2026-04-13, 1d
-    Fase 3.1 Componentes        :done, f3a, 2026-04-13, 1d
-    
-    section En Progreso 🟡
-    Fase 3.2 Zustand Store      :f3b, 2026-04-14, 2d
-    Fase 3.3 Extraer tabs       :f3c, after f3b, 4d
-    Fase 3.4 Tests financieros  :f3d, after f3b, 2d
-    
-    section Pendiente
-    Fase 4.1 Auth               :f4a, after f3c, 2d
-    Fase 4.2 Stripe             :f4b, after f4a, 2d
-    Fase 4.3 Trust Layer        :f4c, after f3c, 2d
-    
-    section GTM
-    Fase 5 Contenido + Asesores :f5, after f4b, 14d
+```
+app/src/
+├── MagicNumberAppMain.jsx      # Orchestrator — 277 lineas (era 2,194)
+├── LandingPage.jsx             # Landing — 19KB, freemium-honest
+├── main.jsx                    # Entry point con ErrorBoundary
+├── index.jsx
+├── constants.js                # TABS, PROFILES, colores (Phosphor icons)
+├── components/ (15 archivos)
+│   ├── AdvisorCTA.jsx          # Self-contained: store + tracking internos
+│   ├── LeadCaptureModal.jsx    # Supabase submit + financial preview
+│   ├── AnimatedNumber.jsx
+│   ├── Card.jsx
+│   ├── Gauge.jsx
+│   ├── Icon.jsx                # 24 iconos Phosphor mapeados
+│   ├── MiniChart.jsx
+│   ├── MultiLineChart.jsx
+│   ├── NavButtons.jsx
+│   ├── NumberInput.jsx
+│   ├── SectionTitle.jsx
+│   ├── Slider.jsx
+│   ├── TabButton.jsx
+│   ├── Tip.jsx
+│   └── Toggle.jsx
+├── hooks/
+│   ├── useFinancialEngine.js   # Motor financiero — 354 lineas
+│   └── usePersistedState.js    # Helper localStorage
+├── i18n/
+│   ├── en.js                   # 400+ keys ingles
+│   └── es.js                   # 400+ keys espanol
+├── lib/
+│   └── supabase.js             # Client + submitLead()
+├── store/
+│   └── useAppStore.js          # Zustand + persist + merge() sanitizer — 250 lineas
+├── tabs/ (16 archivos)
+│   ├── AchieveTab.jsx          # 41KB — tab principal MN (complejo)
+│   ├── AssumptionsTab.jsx
+│   ├── CostTab.jsx
+│   ├── DashboardTab.jsx
+│   ├── DebtsTab.jsx
+│   ├── EarnTab.jsx
+│   ├── GoalsTab.jsx
+│   ├── InactionTab.jsx         # 15KB — tab inaccion
+│   ├── InvestTab.jsx
+│   ├── LearnTab.jsx
+│   ├── PortfolioTab.jsx
+│   ├── ReportsTab.jsx
+│   ├── RetirementTab.jsx
+│   ├── SaveTab.jsx
+│   ├── ScoreTab.jsx
+│   └── SituationTab.jsx
+└── utils/
+    ├── analytics.js            # Supabase-backed, batching 5s/20 eventos
+    ├── financial.js            # Funciones puras testeables
+    └── formatters.js
 ```
 
 ---
 
-## Infraestructura Actual
+## Proximas Fases
+
+### Sprint Inmediato — PDF + Email (BLOQUEANTE B2C)
+
+> Este sprint desbloquea el revenue B2C ($14.99 "Fotografia Financiera").
+
+**PDF Generation**
+- Instalar `@react-pdf/renderer`
+- Template: Magic Number, Score, YbY projection, perfil de inversion
+- Trigger desde tab Reports (tier paid/email)
+- PDF local — sin servidor, costo $0
+
+**Email Delivery**
+- Resend account + dominio magic-number.app
+- Supabase Edge Function: snapshot → PDF → Resend
+- Trigger post-submit en LeadCaptureModal (tier Email)
+- Template bilingue (EN/ES)
+
+---
+
+### Sprint Calidad — Tests (Pre-launch)
+
+- Vitest para `financial.js`
+- 6 edge cases definidos:
+  1. Jubilacion inmediata
+  2. Ahorro = 0
+  3. Inflacion = 0%
+  4. Retorno = 0%
+  5. Deuda > activos
+  6. Gastos en retiro = 0
+
+---
+
+### Fase 4 — Monetizacion (post-PDF)
+
+> **Prerequisito:** Decision D2 (estructura juridica) para activar Stripe.
+
+- Supabase Auth (magic link + Google)
+- Stripe Checkout: $14.99 one-time
+- Paywall backend-validated
+- Privacy Policy + T&C
+
+---
+
+### Fase 5 — GTM (ongoing)
+
+- Secuencia: 3 contratos B2B PRIMERO, luego trafico B2C
+- Contenido TikTok/Reels/Shorts
+- SEO: mini-calculadoras standalone, schema.org FinancialCalculator
+- Red de asesores: 5 piloto, $75-$150/lead
+
+---
+
+## Infraestructura
 
 | Servicio | Detalle | Costo |
 |----------|---------|:-----:|
-| **Netlify** | Hosting + deploys | $0 |
-| **Supabase** | DB (leads + analytics) | $0 |
+| **Cloudflare Pages** | Hosting + deploys (migrado desde Netlify) | $0 |
+| **Supabase** | DB: `leads` (26 cols) + `analytics_events` (9 cols) | $0 |
 | **GitHub** | Repo `mboccacci-blip/MaNu` | $0 |
-| **Dominio** | magic-number.app | ~$12/año |
+| **Dominio** | magic-number.app | ~$12/anio |
 | **Total** | | **$0/mes** |
 
-### Tablas Supabase
-| Tabla | Columnas | RLS | Propósito |
-|-------|:--------:|:---:|-----------|
-| `leads` | 26 | ✅ INSERT anon | Perfil financiero completo por lead |
-| `analytics_events` | 9 | ✅ INSERT anon | Eventos de usuario (batched) |
+### Protecciones Criticas (NO TOCAR sin autorizacion)
+| Capa | Archivo | Proposito |
+|------|---------|-----------|
+| ErrorBoundary | `main.jsx` | Catch de crashes de React |
+| Sanitizador | `store/useAppStore.js` → `merge()` | Previene crashes por localStorage corrupto |
+| Reset URL | `?reset=1` | Manual recovery para usuarios bloqueados |
 
-### Eventos Trackeados
-| Evento | Datos | Frecuencia esperada |
-|--------|-------|:-------------------:|
-| `tab_viewed` | tab, lang, tier | ~10/sesión |
-| `language_changed` | from, to | ~1/sesión |
-| `advisor_cta_clicked` | source_tab | ~0.5/sesión |
-| `lead_submitted` | tier, source_tab | ~0.1/sesión |
+---
+
+## Historial de Commits Relevantes
+
+| Commit | Descripcion |
+|--------|-------------|
+| `2d8b5db` | AdvisorCTA global — self-contained en 16 tabs |
+| `e266f2a` | 8-point partner feedback: Option B reverse calc, profById, 6 perfiles |
+| `e3368c0` | Simulator tracking + email CTA + paid upgrade toast |
+| `5475d3e` | Crash fix: localStorage corrupto + modal blanco + store sanitizacion |
+| `1813138` | Analytics live con Supabase (4 eventos) |
+| `210b902` `6697e66` | Lead capture Supabase full |
+| `1baf502` | Fix portfolio defaults + rango MN free |
+| `502bf45` `8580bed` | Modularizacion Fase 3 (16 tabs extraidas) |
+| `08f6862` | 9 componentes extraidos del monolito |
+
+---
+
+## Modelo de Negocio Validado (Post-Directorio, Abr-2026)
+
+| Stream | Producto | Precio | Proposito |
+|--------|----------|--------|-----------|
+| B2C | "Fotografia Financiera" (PDF one-time) | $14.99 | Liquidar CAC |
+| B2B | Lead financiero (opt-in de usuario) | $75-$150/lead | Revenue engine |
+
+**Metrica critica:** Conversion Tier 1 (rango) → Tier 2 (email) > 25%
+**Costo operativo:** $0/mes
+**GTM:** B2B primero (3 pilotos), luego escalar trafico B2C
