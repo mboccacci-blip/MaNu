@@ -26,15 +26,13 @@ Si se decidió algo (stack, enfoque, prioridad):
 - Actualizar `tasks/todo.md` del proyecto activo
 - Marcar completadas, agregar nuevas, actualizar prioridades
 
-### 4. ¿Se modificó código significativo?
-Para PRISMA:
-- Actualizar `HISTORIAL_AVANCES.md`
+### 4. ¿Se modificó información organizativa?
+**REGLA 9 EN EFECTO:** Desde el Hub Central ESTÁ ESTRICTAMENTE PROHIBIDO actualizar `HISTORIAL_AVANCES.md`, `todo.md` o repositorios de código de los otros Workspaces.
 
-Para MaNu PRO:
-- Actualizar `tasks/todo.md`
-
-Para Genealogía:
-- Actualizar el changelog en el KI `genealogy-project`
+Desde el Hub ÚNICAMENTE se permite:
+- Actualizar el KI de Hub Central si cambiaron las prioridades
+- Actualizar o purgar KIs cruzados del sistema si están cargados iterativamente
+*Para actualizar artefactos específicos de proyecto, el cierre debe ejecutarse estando parados dentro de `C:\Users\mbocc\Dev\PRISMA\` o su correspondiente Workspace URI.*
 
 ### 5. Resumen ejecutivo
 Generar una frase de resumen de lo que se logró en la sesión para que el "yo futuro" pueda entender el estado en 5 segundos.

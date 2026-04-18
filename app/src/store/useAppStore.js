@@ -61,7 +61,7 @@ const INITIAL_STATE = {
   desiredIncome: "",
   existingSavings: "",
   socialSecurity: "",
-  retProfileIdx: 3,
+  retProfileIdx: 2,
   chartProfileIdx: 3,
   chartRetireIdx: 2,
   legacy: "",

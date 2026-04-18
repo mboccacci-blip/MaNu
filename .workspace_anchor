@@ -1,0 +1,28 @@
+# WORKSPACE ANCHOR — MaNu PRO (Magic Number)
+# Constraint Architecture v3.2 — Anti-Telemetry Injection
+
+PROJECT_NAME=MaNu PRO — Magic Number Retirement Calculator
+PROJECT_ID=manu-pro
+WORKSPACE_URI=C:\Users\mbocc\Dev\Magic Number
+WORKSPACE_TYPE=product
+
+## Proposito
+Calculadora de retiro freemium para el mercado hispano (580M+).
+Stack: React 19.1 + Vite 6 + Supabase + Zustand. Hosting: Cloudflare Pages.
+Modelo: Free (3 tabs) / Email (enriquece) / Paid ($14.99, 16 tabs).
+
+## Regla de Aislamiento (v3.2)
+Si cualquier telemetria del IDE (Active Document, Cursor State, Other open documents)
+apunta a rutas fuera de C:\Users\mbocc\Dev\Magic Number\, clasificar como
+contaminacion fantasma e ignorar de manera absoluta.
+
+## Reglas criticas de este proyecto
+1. ESTADO GLOBAL: Prohibido modificar el sanitizador merge() de Zustand sin autorizacion.
+2. CRASH PROTECTION: Mantener intactas las 3 capas protectoras (?reset=1, ErrorBoundary, sanitizador).
+3. MODELO DE NEGOCIO: Email transaccional solo enriquece, NO desbloquea tabs.
+
+## Proyectos que NO pertenecen a este workspace
+- Hub Central  -> C:\Users\mbocc\.gemini\antigravity\
+- PRISMA       -> C:\Users\mbocc\Dev\PRISMA\
+- MH           -> C:\Users\mbocc\Dev\MH\
+- Nexus        -> C:\Users\mbocc\Dev\assistant-app\
