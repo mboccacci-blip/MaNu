@@ -44,7 +44,7 @@
 - [x] **W12** — Fix bug navegacion tabs: FREE_NAV y fullOrder en NavButtons invertidos vs TABS — 24-Abr-2026
 
 ### Infra (próxima sesión)
-- [/] **W21** — GitHub Actions auto-deploy creado (.github/workflows/deploy.yml). PENDIENTE: configurar secrets CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID en GitHub repo settings — 24-Abr-2026
+- [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
 
 ### Post-MVP-fixes (construir después de estabilizar las 3 tabs)
 - [ ] **W15** — PDF basado en 3 tabs MVP (descargable al instante)

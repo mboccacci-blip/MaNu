@@ -22,7 +22,7 @@ export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, t
             {savOpps.slice(0,3).map(function(o){return(
               <div key={o.id} style={{display:"flex",justifyContent:"space-between",padding:"8px 12px",borderRadius:8,marginBottom:4,background:"rgba(0,0,0,0.15)"}}>
                 <span style={{fontSize:12,color:"#64748b"}}>{t('reports.cutBy',{name:o.name,pct:o.cutPct})}</span>
-                <span style={{fontSize:12,fontWeight:600,color:"#22c55e"}}>+{fmt(o.saved)}/mo</span>
+                <span style={{fontSize:12,fontWeight:600,color:"#22c55e"}}>+{fmt(o.saved)}{t('app.perMonth')}</span>
               </div>)})}
             <div style={{textAlign:"center",marginTop:16,padding:14,borderRadius:12,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)"}}>
               <div style={{fontSize:11,color:"#64748b"}}>{t('reports.smallChanges')}</div>

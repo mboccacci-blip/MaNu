@@ -86,10 +86,10 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
           <NI label={t('achieve.desiredIncome')} value={desiredIncome} onChange={setDesiredIncome} tip={t('achieve.desiredIncomeTip')}/>
         </div>
         <NI label={t('achieve.otherRetIncome')} value={socialSecurity} onChange={setSocialSecurity} tip={t('achieve.otherRetIncomeTip')}/>
-        {nSSRaw>0&&ytr>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:12}}>{fmt(nSSRaw)}/mo {t('retirement.atRetirement')} = <strong>{fmt(nSS)}/mo {t('retirement.todayDollar')}</strong> <span style={{color:"#475569"}}>({t('retirement.inflAdjusted', {y: ytr})})</span></div>}
+        {nSSRaw>0&&ytr>0&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:12}}>{fmt(nSSRaw)}{t('app.perMonth')} {t('retirement.atRetirement', {age: nRetAge})} = <strong>{fmt(nSS)}{t('app.perMonth')} {t('retirement.todayDollar')}</strong> <span style={{color:"#475569"}}>({t('retirement.inflAdjusted', {y: ytr})})</span></div>}
         <NI label={t('achieve.currentSavings')} value={existingSavings} onChange={setExistingSavings} tip={t('achieve.currentSavingsTip')}/>
         <NI label={t('achieve.estMonthlySav')} value={manualMonthlySav} onChange={setManualMonthlySav} tip={t('achieve.estMonthlySavTip')}/>
-        {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#16a34a",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}/mo</strong> — {t('achieve.overridesEstimate')}.</div>}
+        {hasIncomeData&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#16a34a",marginBottom:12}}><Icon name="check-circle" size={12} weight="regular" /> {t('achieve.actualSavFromIncome')}: <strong>{fmt(mSavComputed)}{t('app.perMonth')}</strong> — {t('achieve.overridesEstimate')}.</div>}
         <NI label={t('achieve.legacy')} value={legacy} onChange={setLegacy} tip={t('achieve.legacyTip')}/>
         <div style={{marginTop:8,marginBottom:16}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
@@ -102,7 +102,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
             <Icon name="warning" size={12} weight="regular" /> {t('achieve.assetTaxExplain',{tax:Number(assetTax).toFixed(1)})}
           </div>}
         </div>
-        {nAge>0&&nRetAge>0&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}><div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{ytr>0?t('achieve.yearsToGo',{n:ytr}):t('achieve.atRetirement')}</div>{nYP>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{t('achieve.planToAge',{age:nRetAge+nYP})}</div>}{mSav>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#16a34a"}}>{hasIncomeData?t('achieve.savingActual',{amt:fmt(mSav)}):t('achieve.savingEstimate',{amt:fmt(mSav)})}</div>}</div>}
+
       </Cd>
       {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
         {/* FREE TIER: Range (asymmetric 0.75×–1.30× + $50K rounding) + Email CTA */}
@@ -116,7 +116,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
             <div style={{fontSize:16,fontWeight:700,color:"#64748b",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
             <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.15/25000)*25000)}</div>
             <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
-              {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years of retirement."+(nLegacy>0?" Plus "+fmt(nLegacy)+" in legacy.":""):"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")}
+              {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}
             </div>
           </div>
         </Cd>
@@ -174,7 +174,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </>}
         {/* EMAIL/PAID TIER: Exact number + full analysis */}
         {tier!=="free"&&<>
-        <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nSS>0?" (además de "+fmt(nSS)+"/mes de jubilación)":"")+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" años."}</div></div></Cd>
+        <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}</div></div></Cd>
         {/* ── Two-Column Summary: Projected Savings + Years of Coverage ── */}
         <Cd style={{padding:"20px"}}>
           <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
@@ -206,12 +206,12 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </Cd>
         <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
           <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*10,2000000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#3b82f6",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
-          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*10,50000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#16a34a",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
+          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}{t('app.perMonth')}</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*10,50000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#16a34a",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}{t('app.perMonth')} · {t('achieve.simulating')}: {fmt(simMo)}{t('app.perMonth')}</div>}</div>
           <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={-3} max={12} step={0.1} format={function(v){return Number(v).toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div>{(function(){var matched=adjProfiles.find(function(p){return Math.abs(simEffRet-p.realReturn)<0.001});return matched?<div style={{fontSize:10,color:matched.color||"#3b82f6",marginTop:4}}>{lang==="en"?"Using":"Usando"} {matched.name} {pct(matched.realReturn)} {lang==="en"?"real":"real"}</div>:<div style={{fontSize:10,color:"#f59e0b",marginTop:4}}><Icon name="gear" size={10} weight="regular" /> {lang==="en"?"Custom rate":"Retorno personalizado"}: {(simEffRet*100).toFixed(1)}% {lang==="en"?"real":"real"}</div>})()}</div>
           {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>↩ {t('achieve.resetToActual')}</button></div>:null}
         </Cd>
         <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
-        {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#ef4444"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#16a34a"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}/mo</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#3b82f6",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+"/mo",c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
+        {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#ef4444"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#16a34a"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}{t('app.perMonth')}</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#3b82f6",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+t('app.perMonth'),c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
         {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
         <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
         {/* Year-by-Year Projection (full, with profile selectors) */}
@@ -279,52 +279,62 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </>}
       </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#64748b",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}
 
-      {/* === REVERSE CALCULATOR (Option B) === */}
+      {/* === REVERSE CALCULATOR (Redesigned per minuta cruda v2) === */}
       {nAge>0&&<>
       <Cd glow={revResult&&revResult.sufficient?"green":"red"} style={{marginTop:24,borderTop:"2px solid rgba(96,165,250,0.15)",paddingTop:28}}>
         <div style={{textAlign:"center",marginBottom:20}}>
           <div style={{fontSize:28,marginBottom:8}}><Icon name="calendar" size={28} weight="regular" color="#60a5fa" /></div>
-          <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",marginBottom:6}}>{t('achieve.whenCanIRetire')}</h2>
-          <p style={{color:"#64748b",fontSize:13,lineHeight:1.6,maxWidth:400,margin:"0 auto"}}>
-            {t('achieve.reverseIntro')}
-          </p>
+          <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",marginBottom:6}}>{lang==="en"?<>How Many Years Will Your <strong>Projected Savings</strong> Last?</>:<>¿Para Cuántos Años Te Alcanza tu <strong>Ahorro Proyectado</strong>?</>}</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-          <NI label={t('achieve.desiredIncome')} value={revDes} onChange={setRevDes} placeholder={nDes>0?nDes.toLocaleString("en-US"):""} tip={t('achieve.desiredIncomeTip')}/>
-          <NI label={t('achieve.yearsInRetirement')} value={revYrs} onChange={setRevYrs} prefix="" placeholder={nYP>0?String(nYP):""} tip={t('achieve.yearsInRetTip')}/>
-        </div>
-        <NI label={t('achieve.otherRetIncome')} value={revSS} onChange={setRevSS} placeholder={nSSRaw>0?nSSRaw.toLocaleString("en-US"):""} tip={t('achieve.otherRetIncomeTip')}/>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-          <NI label={t('achieve.revCurrentSavings')} value={revSav} onChange={setRevSav} placeholder={nEx>0?nEx.toLocaleString("en-US"):""} tip={t('achieve.revCurrentSavingsTip')}/>
-          <NI label={t('achieve.revMonthlySavings')} value={revMo} onChange={setRevMo} placeholder={mSav>0?Math.round(mSav).toLocaleString("en-US"):""} tip={t('achieve.revMonthlySavingsTip')}/>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-          <div>
-            <Slider label="" value={revSav!==""?Number(revSav):nEx} onChange={function(v){setRevSav(String(v))}} min={0} max={Math.max((revSav!==""?Number(revSav):nEx)*3,500000)} step={5000} format={function(v){return fmtC(v)}} color="#60a5fa"/>
+        {/* Two-column summary: Projected Savings (left) + Years of Coverage (right) */}
+        <div style={{display:"flex",gap:16,flexWrap:"wrap",marginBottom:20}}>
+          <div style={{flex:"1 1 200px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+            <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedSavings')}</div>
+            <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult&&revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(revResult?revResult.projected:simProjected)}</div>
+            <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('achieve.atRetAge', {age: nRetAge})}</div>
           </div>
-          <div>
-            <Slider label="" value={revMo!==""?Number(revMo):Math.max(mSav,0)} onChange={function(v){setRevMo(String(v))}} min={0} max={Math.max((revMo!==""?Number(revMo):Math.max(mSav,0))*5,20000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>
+          <div style={{flex:"1 1 200px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+            <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
+            <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult&&revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{revResult?<>{Math.floor(revResult.yearsOfCoverage)>=60?"60+":Math.floor(revResult.yearsOfCoverage)} {t('app.years')}</>:"—"}</div>
+            {revResult&&<div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {revResult.untilAge>=160?"∞":revResult.untilAge}</div>}
+            {revResult&&<div style={{marginTop:10}}>{revResult.sufficient
+              ?<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#22c55e",fontWeight:700}}><Icon name="check-circle" size={13} weight="regular" /> {t('achieve.goalReached')}</span>
+              :<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#ef4444",fontWeight:700}}><Icon name="warning" size={13} weight="regular" /> {t('achieve.cannotRetireBy100')}</span>
+            }</div>}
           </div>
         </div>
-        {(revDes===""||revYrs===""||revSav===""||revMo==="")&&(nDes>0||nEx>0)&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:12}}>
-          <Icon name="ruler" size={12} weight="regular" /> {t('achieve.revEmptyFieldsNote')}
-        </div>}
+        {/* Slider 1: Desired monthly income in retirement */}
+        <div style={{marginBottom:20}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.desiredIncome')}</span>
+            <span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(revDes!==""?Number(revDes):nDes)}{t('app.perMonth')}</span>
+          </div>
+          <Slider label="" value={revDes!==""?Number(revDes):nDes} onChange={function(v){setRevDes(String(v))}} min={0} max={Math.max((revDes!==""?Number(revDes):nDes)*3,30000)} step={100} format={function(v){return fmt(v)}} color="#60a5fa"/>
+        </div>
+        {/* Slider 2: Monthly savings */}
+        <div style={{marginBottom:20}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span>
+            <span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(revMo!==""?Number(revMo):Math.max(mSav,0))}{t('app.perMonth')}</span>
+          </div>
+          <Slider label="" value={revMo!==""?Number(revMo):Math.max(mSav,0)} onChange={function(v){setRevMo(String(v))}} min={0} max={Math.max((revMo!==""?Number(revMo):Math.max(mSav,0))*5,20000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>
+        </div>
+        {/* Slider 3: Return rate with profiles + custom label + ? tooltip */}
         <div style={{marginBottom:14}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{t('achieve.revAccumReturn')}</span>
+            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.revAccumReturn')} <span onClick={function(){alert(t('achieve.negReturnTooltip'))}} style={{cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",width:16,height:16,borderRadius:"50%",background:"rgba(96,165,250,0.1)",color:"#3b82f6",fontSize:10,fontWeight:700,marginLeft:4}}>?</span></span>
             <span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{Number(revRet).toFixed(1)}%</span>
           </div>
           <Slider label="" value={revRet} onChange={setRevRet} min={-3} max={12} step={0.1} format={function(v){return Number(v).toFixed(1)+"%"}} color="#f59e0b"/>
           <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>
             {adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(revRet-p.realReturn*100)<0.05} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setRevRet(p.realReturn*100)}} color={p.color}/>})}
           </div>
+          {(function(){var matched=adjProfiles.find(function(p){return Math.abs(revRet/100-p.realReturn)<0.001});return matched?<div style={{fontSize:10,color:matched.color||"#3b82f6",marginTop:4}}>{lang==="en"?"Using":"Usando"} {matched.name} {pct(matched.realReturn)} {lang==="en"?"real":"real"}</div>:<div style={{fontSize:10,color:"#f59e0b",marginTop:4}}><Icon name="gear" size={10} weight="regular" /> {t('achieve.customReturnProfile')}: {Number(revRet).toFixed(1)}% {lang==="en"?"real":"real"}</div>})()}
         </div>
-        <div style={{marginBottom:14}}>
-          <div style={{fontSize:11,color:"#64748b",marginBottom:6}}>{t('achieve.revInvestStrategy')}</div>
-          <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-            {adjProfiles.map(function(p,i){return <TabBtn key={p.id} active={revRetProf===i} iconName={p.icon} label={p.name} onClick={function(){setRevRetProf(i)}} color={p.color}/>})}
-          </div>
-          <div style={{fontSize:10,color:"#3b82f6",marginTop:4}}>{t('achieve.revAtRealDuring',{name:adjProfiles[revRetProf].name,rate:pct(adjProfiles[revRetProf].realReturn)})}</div>
+        {/* Retirement return assumption notice (replaces old strategy section) */}
+        <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
+          <span onClick={function(){alert(t('achieve.retAssumptionTooltip'))}} style={{cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",width:16,height:16,borderRadius:"50%",background:"rgba(96,165,250,0.15)",color:"#3b82f6",fontSize:10,fontWeight:700,flexShrink:0}}>?</span>
+          {t('achieve.retAssumptionTooltip')}
         </div>
         {(nLegacy>0||TAX>0)&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
           {nLegacy>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{t('achieve.revLegacyFrom',{amt:fmt(nLegacy)})}</div>}
@@ -332,36 +342,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </div>}
       </Cd>
 
-      {revResult&&<Cd glow={revResult.sufficient?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}>
-        {revResult.sufficient?<>
-          <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:"#22c55e",marginBottom:6}}>{t('achieve.onTrack')}</div>
-          <div style={{fontFamily:"Outfit,sans-serif",fontSize:56,fontWeight:900,color:"#22c55e",lineHeight:1,marginBottom:4}}>{t('achieve.coverageYears',{years:Math.floor(revResult.yearsOfCoverage)})}</div>
-          <div style={{fontSize:13,color:"#64748b",marginTop:8,lineHeight:1.6}}>
-            {t('achieve.coverageSufficient',{years:Math.floor(revResult.yearsOfCoverage),untilAge:revResult.untilAge})}. 
-            {revResult.surplus>0?" "+t('achieve.coverageSurplus',{amt:fmtC(revResult.surplus)}):""}
-          </div>
-          <div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(34,197,94,0.05)",border:"1px solid rgba(34,197,94,0.15)"}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-              <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.retireAt')}</div><div style={{fontSize:18,fontWeight:700,color:"#22c55e"}}>{nRetAge}</div></div>
-              <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.savingsThen')}</div><div style={{fontSize:18,fontWeight:700,color:"#22c55e"}}>{fmtC(revResult.projected)}</div></div>
-            </div>
-          </div>
-        </>:<>
-          <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:"#ef4444",marginBottom:6}}>{t('achieve.cannotRetireBy100')}</div>
-          <div style={{fontFamily:"Outfit,sans-serif",fontSize:48,fontWeight:900,color:"#ef4444",lineHeight:1.1,marginBottom:4}}>{t('achieve.coverageYears',{years:Math.floor(revResult.yearsOfCoverage)})}</div>
-          <div style={{fontSize:13,color:"#ef4444",lineHeight:1.6}}>
-            {revResult.yearsOfCoverage>0
-              ? t('achieve.coverageInsufficient',{years:Math.floor(revResult.yearsOfCoverage),untilAge:revResult.untilAge,deficit:fmtC(revResult.deficit),target:revResult.targetYrs})
-              : t('achieve.revCannotRetire')}
-          </div>
-          <div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(239,68,68,0.05)",border:"1px solid rgba(239,68,68,0.15)"}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-              <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.retireAt')}</div><div style={{fontSize:18,fontWeight:700,color:"#ef4444"}}>{nRetAge}</div></div>
-              <div><div style={{fontSize:10,color:"#64748b"}}>{t('achieve.savingsThen')}</div><div style={{fontSize:18,fontWeight:700,color:"#ef4444"}}>{fmtC(revResult.projected)}</div></div>
-            </div>
-          </div>
-        </>}
-      </Cd>}
+
       {revResult&&<AdvisorCTA msg={revResult.sufficient?t('achieve.advisorReality'):t('achieve.advisorHelp')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>}
       </>}
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>

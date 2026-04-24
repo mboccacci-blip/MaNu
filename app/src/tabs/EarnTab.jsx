@@ -39,11 +39,11 @@ export default function EarnTab({ tab, goTab, tier, extraIncome, setExtraIncome,
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
           <div style={{padding:12,borderRadius:10,background:"rgba(0,0,0,0.15)",textAlign:"center"}}>
             <div style={{fontSize:10,color:"#64748b"}}>{t('earn.saveLess')}</div>
-            <div style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>+{fmt(totalSavOpp.mo)}/mo</div>
+            <div style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>+{fmt(totalSavOpp.mo)}{t('app.perMonth')}</div>
           </div>
           <div style={{padding:12,borderRadius:10,background:"rgba(0,0,0,0.15)",textAlign:"center"}}>
             <div style={{fontSize:10,color:"#64748b"}}>{t('earn.earnMore')}</div>
-            <div style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>+{fmt(nEI)}/mo</div>
+            <div style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>+{fmt(nEI)}{t('app.perMonth')}</div>
           </div>
         </div>
         <div style={{textAlign:"center",padding:"16px 20px",borderRadius:14,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)"}}>

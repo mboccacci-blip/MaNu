@@ -15,19 +15,19 @@ export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, n
     <div className="fi">
   <Cd><ST sub={t('retirement.sub')}>{t('retirement.title')}</ST>
     <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
-      {[{l:t('achieve.yourAge'),v:nAge},{l:t('achieve.retAge'),v:nRetAge},{l:t('achieve.yearsInRet'),v:nYP},{l:t('achieve.yearsToGo',{n:ytr}),v:""},{l:t('achieve.desiredIncome'),v:fmt(nDes)+"/mo"},{l:t('achieve.currentSavings'),v:fmt(nEx)}].filter(function(b){return b.v!==""}).map(function(b){return(
+      {[{l:t('achieve.yourAge'),v:nAge},{l:t('achieve.retAge'),v:nRetAge},{l:t('achieve.yearsInRet'),v:nYP},{l:t('achieve.yearsToGo',{n:ytr}),v:""},{l:t('achieve.desiredIncome'),v:fmt(nDes)+t('app.perMonth')},{l:t('achieve.currentSavings'),v:fmt(nEx)}].filter(function(b){return b.v!==""}).map(function(b){return(
         <div key={b.l} style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{b.l}: <strong>{b.v}</strong></div>)})}
-      {nSS>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#16a34a"}}>{t('retirement.retIncome')} {fmt(nSS)}/mo</div>}
+      {nSS>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.08)",fontSize:11,color:"#16a34a"}}>{t('retirement.retIncome')} {fmt(nSS)}{t('app.perMonth')}</div>}
       <div style={{padding:"5px 12px",borderRadius:8,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(15,23,42,0.08)",fontSize:11,color:"#60a5fa",cursor:"pointer"}} onClick={function(){goTab("achieve")}}>{t('retirement.editInMN')}</div>
     </div>
     {nMortPay>0&&nMortYrs>ytr&&ytr>0&&<div style={{padding:"12px 14px",borderRadius:10,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.1)",fontSize:12,color:"#92400e",lineHeight:1.6,marginBottom:16}}>
-      <Icon name="warning" size={14} weight="regular" /> <strong>{t('retirement.mortgageExtends', {n: nMortYrs-ytr})}</strong> {t('common.makeSureDes')} <strong>{fmt(nMortPay)}/mo</strong>.
+      <Icon name="warning" size={14} weight="regular" /> <strong>{t('retirement.mortgageExtends', {n: nMortYrs-ytr})}</strong> {t('common.makeSureDes')} <strong>{fmt(nMortPay)}{t('app.perMonth')}</strong>.
     </div>}
     {nMortPay>0&&nMortYrs>0&&nMortYrs<=ytr&&ytr>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#16a34a",lineHeight:1.5,marginBottom:16}}>
       <Icon name="check-circle" size={13} weight="regular" /> {t('retirement.mortgagePaidOff', {n: ytr-nMortYrs})}
     </div>}
     {nSS>0&&nDes>0&&desiredAfterSS>0&&<div style={{padding:"10px 14px",borderRadius:10,background:"rgba(34,197,94,0.06)",border:"1px solid rgba(34,197,94,0.1)",fontSize:12,color:"#16a34a",lineHeight:1.5,marginBottom:16}}>
-      <Icon name="check-circle" size={13} weight="regular" /> {t('retirement.retIncomeCover', {amt: fmt(nSS)})} <strong>{pct(nSS/nDes)}</strong> {t('retirement.ofMonthlyNeeds')} {t('retirement.onlyNeedFund')} <strong>{fmt(desiredAfterSS)}/mo</strong> {t('retirement.fromSavings')}.
+      <Icon name="check-circle" size={13} weight="regular" /> {t('retirement.retIncomeCover', {amt: fmt(nSS)})} <strong>{pct(nSS/nDes)}</strong> {t('retirement.ofMonthlyNeeds')} {t('retirement.onlyNeedFund')} <strong>{fmt(desiredAfterSS)}{t('app.perMonth')}</strong> {t('retirement.fromSavings')}.
     </div>}
   </Cd>
 
@@ -35,7 +35,7 @@ export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, n
     <div style={{fontSize:48,marginBottom:12}}><Icon name="confetti" size={48} weight="regular" color="#22c55e" /></div>
     <div style={{fontFamily:"Outfit,sans-serif",fontSize:22,fontWeight:700,color:"#22c55e",marginBottom:8}}>{t('retirement.retiCovered')}</div>
     <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,maxWidth:440,margin:"0 auto"}}>
-      {t('retirement.retIncomeCover', {amt: fmt(nSS)})} {t('retirement.meetsExceeds')} {fmt(nDes)}/mo.
+      {t('retirement.retIncomeCover', {amt: fmt(nSS)})} {t('retirement.meetsExceeds')} {fmt(nDes)}{t('app.perMonth')}.
       {t('retirement.savingsOf')} <strong style={{color:"#0f172a"}}>{fmt(nEx)}</strong> {t('retirement.addWealth')}.
     </p>
   </Cd>}

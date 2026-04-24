@@ -40,7 +40,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
                   <span style={{fontSize:11,color:"#64748b"}}>{calc.prof.name} ({pct(calc.prof.realReturn)} real)</span>
                 </div>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:16,fontWeight:700,color:calc.mo<=mSav?"#22c55e":"#f87171"}}>{fmt(calc.mo)}/mo</div>
+                  <div style={{fontSize:16,fontWeight:700,color:calc.mo<=mSav?"#22c55e":"#f87171"}}>{fmt(calc.mo)}{t('app.perMonth')}</div>
                   <div style={{fontSize:10,color:calc.mo<=mSav?"#4ade80":"#f87171"}}>{calc.mo<=mSav?t('goals.fitsBudget'):t('goals.overBudget',{amt:fmt(calc.mo-mSav)})}</div>
                 </div>
               </div>
@@ -58,7 +58,7 @@ export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalc
             <div key={g.id} style={{position:"relative",marginBottom:20,paddingLeft:16}}>
               <div style={{position:"absolute",left:-20,top:4,width:12,height:12,borderRadius:"50%",background:g.prof.color,border:"3px solid #0f1628"}}/>
               <div style={{fontSize:13,fontWeight:600,color:"#0f172a"}}>{g.name||t('goals.goalNum', {n: i+1})}</div>
-              <div style={{fontSize:12,color:"#64748b"}}>{t('goals.inYears',{amt:fmt(g.nAmt),years:g.nYrs})} · {g.mo>0?fmt(g.mo)+"/mo":t('common.covered')}</div>
+              <div style={{fontSize:12,color:"#64748b"}}>{t('goals.inYears',{amt:fmt(g.nAmt),years:g.nYrs})} · {g.mo>0?fmt(g.mo)+t('app.perMonth'):t('common.covered')}</div>
               <div style={{fontSize:10,color:g.prof.color}}>{g.prof.icon} {g.prof.name}</div>
             </div>)})}
         </div>
