@@ -107,7 +107,7 @@ export default {
     title: "Conceptos Clave",
     subtitle: "Antes de empezar, estos son los conceptos clave que usa esta app. Entenderlos te va a ayudar a tomar mejores decisiones financieras.",
     magicNumber: "El Magic Number",
-    magicNumberDesc: "Tu Magic Number es el monto total de dinero que necesitás tener ahorrado el día que te jubilás. Invertido al supuesto base de la herramienta (el perfil que seleccionaste en Jubilación), va a generar suficiente ingreso para financiar tu estilo de vida durante toda tu jubilación — y llegar a $0 en tu último año planificado.",
+    magicNumberDesc: "Tu Magic Number es el monto total de dinero que necesitás tener ahorrado el día que te jubilás. Invertido según tu perfil de inversión elegido, va a generar suficiente ingreso para financiar tu estilo de vida durante toda tu jubilación — y llegar a $0 en tu último año planificado.",
     magicNumberDepends: "Depende de: cuánto querés gastar por mes, cuánto dura tu jubilación, qué otros ingresos vas a tener (jubilación estatal, pensión), y cómo invertís durante la jubilación.",
     futureDollars: "Dólares de Hoy vs Dólares del Futuro",
     futureDollarsDesc: "Dólares de hoy significa el poder adquisitivo del dinero ahora. Por la inflación, $100 de hoy compran más que $100 en 20 años. Esta app muestra todo en dólares de hoy para que puedas comparar números intuitivamente — $5,000/mes significa $5,000 del poder adquisitivo de hoy, sin importar cuándo ocurra.",
@@ -127,7 +127,7 @@ export default {
     realEstate: "Capital Inmobiliario",
     realEstateDesc: "Si tenés propiedades de alquiler, el equity (valor de mercado menos lo que debés) cuenta en tus activos totales pero NO se incluye en las proyecciones de inversión — los inmuebles son ilíquidos y se revalorizan de forma diferente a las acciones o bonos. El ingreso neto de alquiler, sin embargo, sí se suma a tu ingreso mensual.",
     readyToStart: "¿Listo para empezar?",
-    readyToStartDesc: "Vas a ingresar tu información, explorar opciones de inversión, y descubrir tu Magic Number — el monto que necesitás para jubilarte tranquilo.",
+    readyToStartDesc: "Vas a ingresar tu información, explorar distintos escenarios, y descubrir tu Magic Number — el monto que necesitás para jubilarte tranquilo.",
     letsGo: "¡Vamos! →",
   },
 
@@ -438,10 +438,13 @@ export default {
     revTaxNet: "Retornos netos de {rate}% de impuesto anual sobre activos",
     retireAt: "Jubilarse a los",
     savingsThen: "Ahorro al momento de jubilación",
+    cannotRetireBy100: "No alcanza para jubilarte antes de los 100",
     revCannotRetire: "Con este plan, tu plata no alcanza ni para 1 año de jubilación. Considerá aumentar ahorros, retorno, o reducir el ingreso deseado.",
     revError: "Con este plan, tu plata no alcanza ni para 1 año de jubilación. Considerá aumentar ahorros, retorno, o reducir el ingreso deseado.",
     advisorReality: "Hacé realidad tu plan de jubilación",
     advisorHelp: "Dejá que un experto te ayude a encontrar un camino",
+    projectedSavings: "Ahorro Proyectado",
+    yearsOfCoverage: "Años de Cobertura",
   },
 
   // Costo de No Actuar
@@ -730,6 +733,7 @@ export default {
     mortgage: "Hipoteca",
     carLoan: "Préstamo de Auto",
     unnamed: "Sin nombre",
+    monthAbbr: "m",
   },
 
   // Enlaces de navegación

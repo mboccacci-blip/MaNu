@@ -177,6 +177,35 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         {/* EMAIL/PAID TIER: Exact number + full analysis */}
         {tier!=="free"&&<>
         <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating "+fmt(Math.round(magic.real))+" by age "+nRetAge+", you secure "+fmt(desiredAfterSS)+"/mo for "+nYP+" years."+(nSS>0?" (after "+fmt(nSS)+"/mo retirement income)":"")+(nLegacy>0?" Plus "+fmt(nLegacy)+" legacy.":"")+" Lasting until age "+(nRetAge+nYP)+".":"Juntando "+fmt(Math.round(magic.real))+" a tus "+nRetAge+" años, te asegurás "+fmt(desiredAfterSS)+" extra por mes durante "+nYP+" años."+(nSS>0?" (además de "+fmt(nSS)+"/mes de jubilación)":"")+(nLegacy>0?" Y aún te sobran "+fmt(nLegacy)+" de herencia.":"")+" Hasta los "+(nRetAge+nYP)+" años."}</div></div></Cd>
+        {/* ── Two-Column Summary: Projected Savings + Years of Coverage ── */}
+        <Cd style={{padding:"20px"}}>
+          <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+            {/* Column 1: Projected Savings */}
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:simProjected>=magic.real?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(simProjected>=magic.real?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedSavings')}</div>
+              <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(simProjected)}</div>
+              <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('retirement.atRetAge', {age: nRetAge})}</div>
+              <div style={{marginTop:14,padding:"0 8px"}}>
+                <div style={{height:8,borderRadius:4,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}>
+                  <div style={{height:"100%",borderRadius:4,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s ease"}}/>
+                </div>
+                <div style={{fontSize:11,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{simPct.toFixed(0)}% {lang==="en"?"of":"de"} {fmtC(magic.real)}</div>
+              </div>
+            </div>
+            {/* Column 2: Years of Coverage */}
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
+              {revResult?<>
+                <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{Math.floor(revResult.yearsOfCoverage)>=60?"60+":Math.floor(revResult.yearsOfCoverage)} {t('app.years')}</div>
+                <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {revResult.untilAge>=160?"∞":revResult.untilAge}</div>
+                <div style={{marginTop:12}}>{revResult.sufficient
+                  ?<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#22c55e",fontWeight:700}}><Icon name="check-circle" size={13} weight="regular" /> {t('common.covered')}</span>
+                  :<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#ef4444",fontWeight:700}}><Icon name="warning" size={13} weight="regular" /> {t('achieve.short')}</span>
+                }</div>
+              </>:<div style={{fontSize:13,color:"#94a3b8",marginTop:16}}>—</div>}
+            </div>
+          </div>
+        </Cd>
         <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
           <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*10,2000000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#3b82f6",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
           <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}/mo</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*10,50000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#16a34a",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}/mo · {t('achieve.simulating')}: {fmt(simMo)}/mo</div>}</div>
@@ -270,6 +299,14 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
           <NI label={t('achieve.revCurrentSavings')} value={revSav} onChange={setRevSav} placeholder={nEx>0?nEx.toLocaleString("en-US"):""} tip={t('achieve.revCurrentSavingsTip')}/>
           <NI label={t('achieve.revMonthlySavings')} value={revMo} onChange={setRevMo} placeholder={mSav>0?Math.round(mSav).toLocaleString("en-US"):""} tip={t('achieve.revMonthlySavingsTip')}/>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+          <div>
+            <Slider label="" value={revSav!==""?Number(revSav):nEx} onChange={function(v){setRevSav(String(v))}} min={0} max={Math.max((revSav!==""?Number(revSav):nEx)*3,500000)} step={5000} format={function(v){return fmtC(v)}} color="#60a5fa"/>
+          </div>
+          <div>
+            <Slider label="" value={revMo!==""?Number(revMo):Math.max(mSav,0)} onChange={function(v){setRevMo(String(v))}} min={0} max={Math.max((revMo!==""?Number(revMo):Math.max(mSav,0))*5,20000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>
+          </div>
         </div>
         {(revDes===""||revYrs===""||revSav===""||revMo==="")&&(nDes>0||nEx>0)&&<div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:12}}>
           <Icon name="ruler" size={12} weight="regular" /> {t('achieve.revEmptyFieldsNote')}

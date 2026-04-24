@@ -62,12 +62,6 @@ export default function LearnTab({ tab, goTab, tier }) {
         </p>
       </Cd>
 
-      <Cd><ST><Icon name="chart-bar" size={16} weight="regular" /> {t('learn.volatility')}</ST>
-        <p style={{fontSize:13,color:"#64748b",lineHeight:1.7}}>
-          {t('learn.volatilityDesc')}
-        </p>
-      </Cd>
-
       <Cd><ST><Icon name="currency-dollar" size={16} weight="regular" /> {t('learn.currentVsMonthly')}</ST>
         <p style={{fontSize:13,color:"#64748b",lineHeight:1.7}}>
           {t('learn.currentDesc')}
@@ -80,12 +74,6 @@ export default function LearnTab({ tab, goTab, tier }) {
       <Cd><ST><Icon name="ruler" size={16} weight="regular" /> {t('learn.inflation')}</ST>
         <p style={{fontSize:13,color:"#64748b",lineHeight:1.7}}>
           {t('learn.inflationDesc')}
-        </p>
-      </Cd>
-
-      <Cd><ST><Icon name="house" size={16} weight="regular" /> {t('learn.realEstate')}</ST>
-        <p style={{fontSize:13,color:"#64748b",lineHeight:1.7}}>
-          {t('learn.realEstateDesc')}
         </p>
       </Cd>
 

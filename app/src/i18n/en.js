@@ -107,7 +107,7 @@ export default {
     title: "Key Concepts",
     subtitle: "Before you dive in, here are the core concepts this app uses. Understanding them will help you make better financial decisions.",
     magicNumber: "The Magic Number",
-    magicNumberDesc: "Your Magic Number is the total amount of money you need to have saved by the day you retire. Invested at the base assumption (the profile you selected in Retirement), it will generate enough income to fund your lifestyle throughout retirement — reaching $0 in your last planned year.",
+    magicNumberDesc: "Your Magic Number is the total amount of money you need to have saved by the day you retire. Invested at your chosen investment profile, it will generate enough income to fund your lifestyle throughout retirement — reaching $0 in your last planned year.",
     magicNumberDepends: "It depends on: how much you want to spend per month, how long your retirement lasts, what other income you'll have (Social Security, pensions), and how you invest during retirement.",
     futureDollars: "Today's Dollars vs Future Dollars",
     futureDollarsDesc: "Today's dollars means the purchasing power of money right now. Because of inflation, $100 today buys more than $100 will in 20 years. This app shows everything in today's dollars so you can compare numbers intuitively — $5,000/mo means $5,000 of today's purchasing power, regardless of when it occurs.",
@@ -127,7 +127,7 @@ export default {
     realEstate: "Real Estate Equity",
     realEstateDesc: "If you own rental properties, the equity (market value minus what you owe) counts toward your total assets but is not included in investment projections — real estate is illiquid (hard to sell quickly) and appreciates differently than stocks or bonds. Net rental income, however, is added to your monthly income.",
     readyToStart: "Ready to start?",
-    readyToStartDesc: "You'll enter your basic info, explore investment options, and discover your Magic Number — the amount you need to retire comfortably.",
+    readyToStartDesc: "You'll enter your basic info, explore different scenarios, and discover your Magic Number — the amount you need to retire comfortably.",
     letsGo: "Let's Go →",
   },
 
@@ -438,10 +438,13 @@ export default {
     revTaxNet: "Returns net of {rate}% annual asset tax",
     retireAt: "Retire at",
     savingsThen: "Savings at retirement",
+    cannotRetireBy100: "Can't retire by 100",
     revCannotRetire: "With this plan, your money won't last even 1 year of retirement. Consider increasing savings, return, or reducing desired income.",
     revError: "With this plan, your money won't last even 1 year of retirement. Consider increasing savings, return, or reducing desired income.",
     advisorReality: "Make your retirement plan a reality",
     advisorHelp: "Let an expert help you find a path",
+    projectedSavings: "Projected Savings",
+    yearsOfCoverage: "Years of Coverage",
   },
 
   // Cost of Inaction tab
@@ -732,6 +735,7 @@ export default {
     mortgage: "Mortgage",
     carLoan: "Car Loan",
     unnamed: "Unnamed",
+    monthAbbr: "mo",
   },
 
   // Navigation links

@@ -2,8 +2,8 @@ import { useTranslation } from '../i18n/index.jsx';
 
 export default function NavButtons({ tab, goTab, tier }) {
   var { t: tr } = useTranslation();
-  var fullOrder = ["learn", "achieve", "inaction", "assumptions", "situation", "debts", "invest", "portfolio", "retirement", "save", "earn", "cost", "goals", "score", "reports"];
-  var FREE_NAV = ["learn", "achieve", "inaction"];
+  var fullOrder = ["achieve", "inaction", "assumptions", "situation", "debts", "invest", "portfolio", "retirement", "save", "earn", "cost", "goals", "score", "reports", "learn"];
+  var FREE_NAV = ["achieve", "inaction", "learn"];
   var order = tier === "paid" ? fullOrder : FREE_NAV;
   var idx = order.indexOf(tab); if (idx < 0) return null;
   var prev = idx > 0 ? order[idx - 1] : null; var next = idx < order.length - 1 ? order[idx + 1] : null;

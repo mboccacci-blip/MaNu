@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-18 — Sesion MVP Pivot. W1/W2/W4/W5 completados.
+> Actualizado: 2026-04-24 — W3+W10 completados. W1/W2/W4/W5 previos.
 
 ---
 
@@ -23,9 +23,9 @@
 
 ### UI — Ocultar tabs y ajustar MVP
 - [x] **W2** — Solo 3 tabs visibles (Achieve, Inaction, Learn) — ya funcionaba, verificado 18-Abr
-- [ ] **W3** — Podar Learn tab: solo terminos de Achieve + Inaction
-- [ ] **W7** — Rediseno Achieve: 2 columnas (Ahorro Proyectado + Anos de cobertura)
-- [ ] **W14** — Palancas en seccion "Para cuantos anos te alcanza" (mensual jubilacion, ahorro mensual, retorno real)
+- [x] **W3** — Podar Learn tab: solo terminos de Achieve + Inaction — 24-Abr-2026 (removidas Volatility + Real Estate Equity, 6 secciones restantes)
+- [x] **W7** — Rediseno Achieve: card bicolumna Ahorro Proyectado + Anos de Cobertura — 24-Abr-2026
+- [x] **W14** — Palancas (sliders) en reverse calculator para ahorro actual y mensual — 24-Abr-2026
 
 ### Motor Financiero
 - [x] **W4** — Default Treasuries 1.5% real (retProfileIdx: 3→2) — 18-Abr-2026
@@ -39,9 +39,9 @@
 - [ ] **W20** — Traduccion EN de la frase elegida
 
 ### Copy / i18n / Bugs
-- [ ] **W10** — Fix keys i18n expuestas (ACHIEVE.CANNOTRETIREBY100 etc.)
-- [ ] **W11** — Revision integral de copy y puntuacion (EN + ES)
-- [ ] **W12** — Fix bug navegacion tabs superiores (verificar en Demo Y Premium)
+- [x] **W10** — Fix keys i18n expuestas (achieve.cannotRetireBy100 + common.monthAbbr) — 24-Abr-2026
+- [x] **W11** — Revision copy MVP: 2 refs a tabs ocultas en Learn (EN+ES), 1 key namespace wrong (achieve.atRetAge→retirement.atRetAge) — 24-Abr-2026
+- [x] **W12** — Fix bug navegacion tabs: FREE_NAV y fullOrder en NavButtons invertidos vs TABS — 24-Abr-2026
 
 ### Infra (próxima sesión)
 - [ ] **W21** — Migrar Cloudflare Pages de Direct Upload a Git integration. Recrear proyecto con repo GitHub para deploy automático en push a master. Re-configurar custom domain.
