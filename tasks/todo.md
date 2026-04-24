@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-24 — W3+W6+W7+W8+W9+W10+W11+W12+W14 completados + W21 parcial. Prev: W1/W2/W4/W5. Score: 14/20.
+> Actualizado: 2026-04-24 (sesion 2) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24 completados. Score: 17/24.
 
 ---
 
@@ -11,7 +11,7 @@
 - [x] **D6** — Rango free: ±15% (sin cambio) — Confirmado 17-Abr-2026
 - [x] **D7** — Premium $14.99: en STAND-BY — Decidido 17-Abr-2026
 - [x] **D8** — Learn: podar a solo terminos de Achieve + Inaction — Decidido 17-Abr-2026
-- [ ] **D9** — Frase debajo del MN: 3 opciones propuestas, PENDIENTE eleccion de Martin
+- [x] **D9** — Frase debajo del MN: simplificada a "Juntando este capital a tus X anos..." — Decidido 24-Abr-2026
 - [ ] **D2** — Estructura juridica: orientacion Argentina, Stripe + investigar MercadoPago. No bloqueante.
 
 ---
@@ -35,13 +35,16 @@
 ### UI/UX Polish
 - [x] **W8** — Dinamica de palancas: ya implementado (React reactivity + confetti onTrack card) — verificado 24-Abr-2026
 - [x] **W9** — Simplificar grafico free tier: solo acumulacion (sin drawdown), titulo 'Crecimiento de Ahorros' — 24-Abr-2026
-- [ ] **W13** — Frase debajo del MN (implementar opcion elegida — D9 PENDIENTE)
-- [ ] **W20** — Traduccion EN de la frase elegida
+- [x] **W13** — Frase debajo del MN simplificada ("Juntando este capital...") — 24-Abr-2026
+- [x] **W20** — Traduccion EN de la frase ("Accumulating this capital...") — 24-Abr-2026
 
 ### Copy / i18n / Bugs
 - [x] **W10** — Fix keys i18n expuestas (achieve.cannotRetireBy100 + common.monthAbbr) — 24-Abr-2026
-- [x] **W11** — Revision copy MVP: 2 refs a tabs ocultas en Learn (EN+ES), 1 key namespace wrong (achieve.atRetAge→retirement.atRetAge) — 24-Abr-2026
-- [x] **W12** — Fix bug navegacion tabs: FREE_NAV y fullOrder en NavButtons invertidos vs TABS — 24-Abr-2026
+- [x] **W11** — Revision copy MVP: namespace wrong (retirement.atRetAge→achieve.atRetAge), achieve.short→cannotRetireBy100 — 24-Abr-2026
+- [x] **W12** — Fix bug navegacion tabs: FREE_NAV y fullOrder en NavButtons — 24-Abr-2026
+- [x] **W22** — /mo -> /mes i18n: 22 instancias en 8 tabs reemplazadas con t('app.perMonth') — 24-Abr-2026
+- [x] **W23** — Eliminada card redundante del reverse calc (info ya en 2 columnas) — 24-Abr-2026
+- [x] **W24** — Restaurado campo "Anos de jubilacion" en Datos Esenciales (quitado solo del reverse calc) — 24-Abr-2026
 
 ### Infra (próxima sesión)
 - [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
@@ -71,8 +74,9 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `fc1889e` — chore: trigger production build for custom domain
-- **Local = Remote:** sincronizado (pendiente commit de W4+W5)
+- **HEAD:** `9661817` — fix: minuta cruda v2 - reverse calc redesign, /mo->/mes i18n, MN copy simplification
+- **Local = Remote:** sincronizado (push exitoso, GitHub Actions auto-deploy)
 - **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
-- **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages, Direct Upload)
+- **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
+- **Deploy:** GitHub Actions auto on push to master
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
