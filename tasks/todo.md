@@ -30,11 +30,11 @@
 ### Motor Financiero
 - [x] **W4** — Default Treasuries 1.5% real (retProfileIdx: 3→2) — 18-Abr-2026
 - [x] **W5** — Sliders retorno real: min=-3% (AchieveTab, 2 sliders) — 18-Abr-2026
-- [ ] **W6** — Etiqueta "Perfil de retorno personalizado" cuando % no coincide con preset
+- [x] **W6** — Etiqueta 'Custom rate' / 'Retorno personalizado' cuando slider no coincide con preset — 24-Abr-2026
 
 ### UI/UX Polish
-- [ ] **W8** — Dinamica de palancas: numeros suben en tiempo real + "Alcanzaste tu objetivo"
-- [ ] **W9** — Simplificar grafico acumulacion (solo hasta jubilacion, sin curva de retiro)
+- [x] **W8** — Dinamica de palancas: ya implementado (React reactivity + confetti onTrack card) — verificado 24-Abr-2026
+- [x] **W9** — Simplificar grafico free tier: solo acumulacion (sin drawdown), titulo 'Crecimiento de Ahorros' — 24-Abr-2026
 - [ ] **W13** — Frase debajo del MN (implementar opcion elegida — D9 PENDIENTE)
 - [ ] **W20** — Traduccion EN de la frase elegida
 
