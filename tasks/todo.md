@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-24 — W3+W10 completados. W1/W2/W4/W5 previos.
+> Actualizado: 2026-04-24 — W3+W6+W7+W8+W9+W10+W11+W12+W14 completados + W21 parcial. Prev: W1/W2/W4/W5. Score: 14/20.
 
 ---
 
@@ -44,7 +44,7 @@
 - [x] **W12** — Fix bug navegacion tabs: FREE_NAV y fullOrder en NavButtons invertidos vs TABS — 24-Abr-2026
 
 ### Infra (próxima sesión)
-- [ ] **W21** — Migrar Cloudflare Pages de Direct Upload a Git integration. Recrear proyecto con repo GitHub para deploy automático en push a master. Re-configurar custom domain.
+- [/] **W21** — GitHub Actions auto-deploy creado (.github/workflows/deploy.yml). PENDIENTE: configurar secrets CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID en GitHub repo settings — 24-Abr-2026
 
 ### Post-MVP-fixes (construir después de estabilizar las 3 tabs)
 - [ ] **W15** — PDF basado en 3 tabs MVP (descargable al instante)
