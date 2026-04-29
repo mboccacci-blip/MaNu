@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-29 (sesion 3) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24+W25+W26 completados. Score: 19/26.
+> Actualizado: 2026-04-29 (sesion 4) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24+W25+W26+W27+W28+W29+W30+W31+W32+W33+W34+W35 completados. Score: 28/40.
 
 ---
 
@@ -47,6 +47,15 @@
 - [x] **W24** — Restaurado campo "Anos de jubilacion" en Datos Esenciales (quitado solo del reverse calc) — 24-Abr-2026
 - [x] **W25** — Eliminado campo "Ingreso adicional en tu jubilación" de AchieveTab (socialSecurity queda en store default=0, motor no se afecta) — 29-Abr-2026
 - [x] **W26** — Label "Ingreso mensual deseado" → "Ingreso mensual necesario" (ES) / "Required monthly income" (EN) — 29-Abr-2026
+- [x] **W27** — Retornos canonicos FIJOS (display) vs efectivos (con tax drag, para calculos) — 29-Abr-2026
+- [x] **W28** — Eliminada seccion redundante "Para Cuantos Anos Te Alcanza" (archivada en tasks/archive_reverse_calculator.jsx) — 29-Abr-2026
+- [x] **W29** — Texto intro actualizado (1.5% base, 7 numeros) — 29-Abr-2026
+- [x] **W30** — Fix bug i18n retirement.atRetAge → achieve.atRetAge — 29-Abr-2026
+- [x] **W31** — Resumen fijo (baseProjected + baseCoverage) debajo del MN, NO cambia con sliders — 29-Abr-2026
+- [x] **W32** — Resultado simulacion dos columnas (simProjected + simCoverage) debajo de palancas, SI cambia — 29-Abr-2026
+- [x] **W33** — Rangos sliders: mensual 0-10K, retorno -2% a 10.5% — 29-Abr-2026
+- [x] **W34** — Disclaimers: nota ambar retornos historicos + warning contextual >6.5% + nota italica supuesto 1.5% — 29-Abr-2026
+- [x] **W35** — Tax warning reescrito: "reduce el rendimiento neto de la cartera en X puntos porcentuales" — 29-Abr-2026
 
 ### Infra (próxima sesión)
 - [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
@@ -57,6 +66,13 @@
 - [ ] **W17** — Integracion Stripe ($3.99 micro-pago)
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
+
+### Landing/UX pendientes (auditoria 29-Abr-2026)
+- [ ] **W36** — Landing: cambiar "10 min" a "3 min" o "5 min" (inconsistente con la app)
+- [ ] **W37** — Landing: revisar "16 modulos" y "15+ categorias" (no aplica al MVP de 3 tabs)
+- [ ] **W38** — Landing: agregar hero screenshot/mockup del producto
+- [ ] **W39** — Campo "Anos en jubilacion" → considerar "Hasta que edad planificas vivir"
+- [ ] **W40** — Grafico ano-por-ano: hacerlo colapsable por defecto
 
 ---
 
@@ -76,7 +92,7 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `e128b87` — fix: remove additional retirement income field, rename desired->required income label
+- **HEAD:** `de7cf5c` — ui: amber color for returns disclaimer
 - **Local = Remote:** sincronizado (push exitoso, GitHub Actions auto-deploy)
 - **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
