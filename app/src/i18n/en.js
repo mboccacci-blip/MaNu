@@ -349,7 +349,7 @@ export default {
     yearsInRetTip: "The tool assumes you'll live this many years in retirement, regardless of what age you retire. E.g., 25 years → retiring at 60 = plan to 85; at 70 = plan to 95.",
     annualAssetTax: "Annual Asset Tax",
     assetTaxTip: "Enter your asset tax to calculate net accumulation (e.g., wealth tax). Higher tax means a higher Magic Number.",
-    assetTaxExplain: "{tax}% annual tax on assets reduces all investment returns by {tax}%. Effective returns are lower across all profiles.",
+    assetTaxExplain: "The {tax}% annual tax on assets reduces your portfolio's net return: in practice, your effective annual return is roughly {tax} percentage points below your gross investment return.",
     yearsToGo: "{n} years to go",
     atRetirement: "At retirement",
     planToAge: "Plan to age {age}",

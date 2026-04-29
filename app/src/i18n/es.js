@@ -350,7 +350,7 @@ export default {
     yearsInRetTip: "La herramienta asume que vivirás esta cantidad de años jubilado, sin importar a qué edad te jubiles. Ej: 25 años → jubilándote a los 60 = plan hasta los 85; a los 70 = hasta los 95.",
     annualAssetTax: "Impuesto Anual sobre Activos",
     assetTaxTip: "Ingresá el impuesto para calcular la acumulación neta (ej: bienes personales). A mayor impuesto, mayor tu Magic Number.",
-    assetTaxExplain: "El impuesto anual del {tax}% sobre activos reduce todos los retornos de inversión en {tax}%. Los retornos efectivos son menores en todos los perfiles.",
+    assetTaxExplain: "El impuesto anual del {tax}% sobre activos reduce el rendimiento neto de la cartera: en la práctica, tu retorno efectivo anual es cerca de {tax} puntos porcentuales inferior al retorno bruto de la inversión.",
     yearsToGo: "{n} años por delante",
     atRetirement: "En jubilación",
     planToAge: "Plan hasta los {age} años",

@@ -214,6 +214,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
                 </div>
                 <div style={{fontSize:11,fontWeight:700,marginTop:6,color:basePct>=100?"#22c55e":basePct>=60?"#eab308":"#ef4444"}}>{basePct.toFixed(0)}% {lang==="en"?"of":"de"} {fmtC(magic.real)}</div>
               </div>
+              <div style={{fontSize:10,color:"#94a3b8",marginTop:8,lineHeight:1.5,fontStyle:"italic"}}>{lang==="en"?"This projection assumes investing at "+pct(retProfReturn)+" real ("+retProfLabel+") from now until retirement.":"Este ahorro proyectado asume que desde hoy hasta que te jubilás invertís al "+pct(retProfReturn)+" real ("+retProfLabel+")."}</div>
             </div>
             {/* Column 2: Years of Coverage */}
             <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:baseCoverage&&baseCoverage.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(baseCoverage&&baseCoverage.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
