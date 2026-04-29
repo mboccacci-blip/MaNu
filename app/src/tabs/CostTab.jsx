@@ -42,7 +42,7 @@ export default function CostTab({ tab, goTab, tier, lang, costItemName, setCostI
               <span style={{fontSize:12,color:"#e879f9",fontWeight:600}}><Icon name="sliders-h" size={12} weight="regular" /> {t('profiles.myPortfolio.name')}</span>
               <div><span style={{fontSize:13,fontWeight:700,color:"#e879f9"}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}×)</span></div>
             </div>)})()}
-          {allProfiles.map(function(p){var fv=fvL(Number(costItemPrice)||0,p.realReturn,ytr);var mult=fv/(Number(costItemPrice)||1);return(
+          {allProfiles.map(function(p){var fv=fvL(Number(costItemPrice)||0,p.effReal,ytr);var mult=fv/(Number(costItemPrice)||1);return(
             <div key={p.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",borderRadius:8,marginBottom:4,background:p.id===(allProfiles[costProfileIdx]||adjProfiles[4]).id?"rgba(245,158,11,0.06)":"transparent"}}>
               <span style={{fontSize:12,color:"#64748b"}}><Icon name={p.icon} size={14} weight="light"/> {p.name}</span>
               <div><span style={{fontSize:13,fontWeight:700,color:p.color}}>{fmtC(fv)}</span><span style={{fontSize:10,color:"#64748b",marginLeft:6}}>({mult.toFixed(1)}×)</span></div>

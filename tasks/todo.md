@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-24 (sesion 2) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24 completados. Score: 17/24.
+> Actualizado: 2026-04-29 (sesion 3) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24+W25+W26 completados. Score: 19/26.
 
 ---
 
@@ -45,6 +45,8 @@
 - [x] **W22** — /mo -> /mes i18n: 22 instancias en 8 tabs reemplazadas con t('app.perMonth') — 24-Abr-2026
 - [x] **W23** — Eliminada card redundante del reverse calc (info ya en 2 columnas) — 24-Abr-2026
 - [x] **W24** — Restaurado campo "Anos de jubilacion" en Datos Esenciales (quitado solo del reverse calc) — 24-Abr-2026
+- [x] **W25** — Eliminado campo "Ingreso adicional en tu jubilación" de AchieveTab (socialSecurity queda en store default=0, motor no se afecta) — 29-Abr-2026
+- [x] **W26** — Label "Ingreso mensual deseado" → "Ingreso mensual necesario" (ES) / "Required monthly income" (EN) — 29-Abr-2026
 
 ### Infra (próxima sesión)
 - [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
@@ -74,7 +76,7 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `9661817` — fix: minuta cruda v2 - reverse calc redesign, /mo->/mes i18n, MN copy simplification
+- **HEAD:** `e128b87` — fix: remove additional retirement income field, rename desired->required income label
 - **Local = Remote:** sincronizado (push exitoso, GitHub Actions auto-deploy)
 - **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)

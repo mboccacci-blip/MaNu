@@ -48,9 +48,9 @@ export default function InactionTab({ tab, goTab, tier, engine }) {
         // Section 1: Base vs Investing (selectable base)
         var baseProf=adjProfiles[ciBase]||adjProfiles[0];
         var compareProfs=adjProfiles.filter(function(_,i){return i>ciBase});
-        var baseVal=fvVariable(iSav,iMo,baseProf.realReturn,ciH,[]);
+        var baseVal=fvVariable(iSav,iMo,baseProf.effReal,ciH,[]);
         var profVals=compareProfs.map(function(p){
-          var v=fvVariable(iSav,iMo,p.realReturn,ciH,[]);
+          var v=fvVariable(iSav,iMo,p.effReal,ciH,[]);
           return{name:p.name,icon:p.icon,color:p.color,val:v,lost:v-baseVal,real:p.realReturn};
         });
         var maxVal=Math.max.apply(null,profVals.map(function(p){return p.val}).concat([baseVal,1]));
@@ -60,7 +60,7 @@ export default function InactionTab({ tab, goTab, tier, engine }) {
         var delays=[0,1,2,3,4,5,6,7,8,9,10];
         var delayVals=delays.map(function(d){
           var yrs=Math.max(ciH-d,0);
-          var v=fvVariable(iSav,iMo,delayProf.realReturn,yrs,[]);
+          var v=fvVariable(iSav,iMo,delayProf.effReal,yrs,[]);
           return{delay:d,yrs:yrs,val:v};
         });
         var todayVal=delayVals[0].val;

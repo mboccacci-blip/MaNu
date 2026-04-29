@@ -58,8 +58,35 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
     nAge, nRetAge, nYP, nDes, nEx, nSSRaw, nSS, nLegacy, ytr, mSav, mSavComputed, hasIncomeData,
     magic, desiredAfterSS, simEffSav, simEffMo, simEffRet, simProjected, simGap, simPct,
     simNeededReturn, simNeededMonthly, adjProfiles, debtEvents, allProfiles, hasPortfolio,
-    chartAccumReturn, chartRetireReturn, ybYData, revResult, TAX, INFL, retProfLabel
+    chartAccumReturn, chartRetireReturn, ybYData, revResult, TAX, INFL, retProfLabel, retProfReturn
   } = engine;
+
+  // Base projection from essentials only (does NOT change with simulation sliders)
+  var baseProjected = useMemo(function(){
+    if(ytr<=0) return nEx;
+    return fvVariable(nEx, Math.max(mSav,0), retProfReturn, ytr, debtEvents);
+  },[nEx, mSav, retProfReturn, ytr, debtEvents]);
+  var basePct = magic.real>0 ? baseProjected/magic.real*100 : 0;
+  // Base coverage: how many years baseProjected lasts withdrawing desiredAfterSS
+  var baseCoverage = useMemo(function(){
+    if(baseProjected<=0||desiredAfterSS<=0||nYP<=0) return null;
+    var retR = (adjProfiles[2]||adjProfiles[0]).effReal; // Treasuries for retirement drawdown
+    var bal=baseProjected; var yrs=0; var annualW=desiredAfterSS*12;
+    while(bal>0&&yrs<60){ bal=bal*(1+retR)-annualW; if(bal>0)yrs++; else{yrs++;break;} }
+    if(bal>0) yrs=60;
+    var sufficient = yrs >= nYP;
+    return {yearsOfCoverage:yrs, untilAge:nRetAge+yrs, sufficient:sufficient};
+  },[baseProjected, desiredAfterSS, nYP, nRetAge, adjProfiles]);
+  // Sim coverage: same as baseCoverage but using simProjected (changes with sliders)
+  var simCoverage = useMemo(function(){
+    if(simProjected<=0||desiredAfterSS<=0||nYP<=0) return null;
+    var retR = (adjProfiles[2]||adjProfiles[0]).effReal;
+    var bal=simProjected; var yrs=0; var annualW=desiredAfterSS*12;
+    while(bal>0&&yrs<60){ bal=bal*(1+retR)-annualW; if(bal>0)yrs++; else{yrs++;break;} }
+    if(bal>0) yrs=60;
+    var sufficient = yrs >= nYP;
+    return {yearsOfCoverage:yrs, untilAge:nRetAge+yrs, sufficient:sufficient};
+  },[simProjected, desiredAfterSS, nYP, nRetAge, adjProfiles]);
 
   const q = "'";
   const Cd = Card;
@@ -173,28 +200,28 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         {/* EMAIL/PAID TIER: Exact number + full analysis */}
         {tier!=="free"&&<>
         <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}</div></div></Cd>
-        {/* ── Two-Column Summary: Projected Savings + Years of Coverage ── */}
+        {/* ── Two-Column Summary: Projected Savings + Years of Coverage (FIXED from essentials) ── */}
         <Cd style={{padding:"20px"}}>
           <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
             {/* Column 1: Projected Savings */}
-            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:simProjected>=magic.real?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(simProjected>=magic.real?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
-              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedSavings')}</div>
-              <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(simProjected)}</div>
-              <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('retirement.atRetAge', {age: nRetAge})}</div>
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:baseProjected>=magic.real?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(baseProjected>=magic.real?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:baseProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedSavings')}</div>
+              <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:baseProjected>=magic.real?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(baseProjected)}</div>
+              <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('achieve.atRetAge', {age: nRetAge})}</div>
               <div style={{marginTop:14,padding:"0 8px"}}>
                 <div style={{height:8,borderRadius:4,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}>
-                  <div style={{height:"100%",borderRadius:4,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s ease"}}/>
+                  <div style={{height:"100%",borderRadius:4,width:Math.min(basePct,100)+"%",background:basePct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":basePct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s ease"}}/>
                 </div>
-                <div style={{fontSize:11,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{simPct.toFixed(0)}% {lang==="en"?"of":"de"} {fmtC(magic.real)}</div>
+                <div style={{fontSize:11,fontWeight:700,marginTop:6,color:basePct>=100?"#22c55e":basePct>=60?"#eab308":"#ef4444"}}>{basePct.toFixed(0)}% {lang==="en"?"of":"de"} {fmtC(magic.real)}</div>
               </div>
             </div>
             {/* Column 2: Years of Coverage */}
-            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
-              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
-              {revResult?<>
-                <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{Math.floor(revResult.yearsOfCoverage)>=60?"60+":Math.floor(revResult.yearsOfCoverage)} {t('app.years')}</div>
-                <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {revResult.untilAge>=160?"∞":revResult.untilAge}</div>
-                <div style={{marginTop:12}}>{revResult.sufficient
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:baseCoverage&&baseCoverage.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(baseCoverage&&baseCoverage.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:baseCoverage&&baseCoverage.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
+              {baseCoverage?<>
+                <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:baseCoverage.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{Math.floor(baseCoverage.yearsOfCoverage)>=60?"60+":Math.floor(baseCoverage.yearsOfCoverage)} {t('app.years')}</div>
+                <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {baseCoverage.untilAge>=160?"∞":baseCoverage.untilAge}</div>
+                <div style={{marginTop:12}}>{baseCoverage.sufficient
                   ?<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#22c55e",fontWeight:700}}><Icon name="check-circle" size={13} weight="regular" /> {t('common.covered')}</span>
                   :<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#ef4444",fontWeight:700}}><Icon name="warning" size={13} weight="regular" /> {t('achieve.short')}</span>
                 }</div>
@@ -204,12 +231,42 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </Cd>
         <Cd><ST sub={t('achieve.threeLeversSub')}>{t('achieve.threeLevers')}</ST>
           <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.startingSavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(simEffSav)}</span></div><Slider label="" value={simSav!=null?simSav:nEx} onChange={function(v){setSimSav(v)}} min={0} max={Math.max(nEx*10,2000000)} step={10000} format={function(v){return fmtC(v)}} color="#60a5fa"/>{simSav!=null&&simSav!==nEx&&<div style={{fontSize:10,color:"#3b82f6",marginTop:-4}}>{t('achieve.actual')}: {fmt(nEx)} · {t('achieve.simulating')}: {fmt(simSav)}</div>}</div>
-          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}{t('app.perMonth')}</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={Math.max(mSav*10,50000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#16a34a",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}{t('app.perMonth')} · {t('achieve.simulating')}: {fmt(simMo)}{t('app.perMonth')}</div>}</div>
-          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={-3} max={12} step={0.1} format={function(v){return Number(v).toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div>{(function(){var matched=adjProfiles.find(function(p){return Math.abs(simEffRet-p.realReturn)<0.001});return matched?<div style={{fontSize:10,color:matched.color||"#3b82f6",marginTop:4}}>{lang==="en"?"Using":"Usando"} {matched.name} {pct(matched.realReturn)} {lang==="en"?"real":"real"}</div>:<div style={{fontSize:10,color:"#f59e0b",marginTop:4}}><Icon name="gear" size={10} weight="regular" /> {lang==="en"?"Custom rate":"Retorno personalizado"}: {(simEffRet*100).toFixed(1)}% {lang==="en"?"real":"real"}</div>})()}</div>
+          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span><span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(simEffMo)}{t('app.perMonth')}</span></div><Slider label="" value={simMo!=null?simMo:Math.max(mSav,0)} onChange={function(v){setSimMo(v)}} min={0} max={10000} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>{simMo!=null&&simMo!==Math.max(mSav,0)&&<div style={{fontSize:10,color:"#16a34a",marginTop:-4}}>{t('achieve.actual')}: {fmt(Math.max(mSav,0))}{t('app.perMonth')} · {t('achieve.simulating')}: {fmt(simMo)}{t('app.perMonth')}</div>}</div>
+          <div style={{marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}><span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.annualRealReturn')}</span><span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{(simEffRet*100).toFixed(1)}%</span></div><Slider label="" value={simRet!=null?simRet:(simEffRet*100)} onChange={function(v){setSimRet(v)}} min={-2} max={10.5} step={0.1} format={function(v){return Number(v).toFixed(1)+"%"}} color="#f59e0b"/><div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>{adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(simEffRet-p.realReturn)<0.001} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setSimRet(p.realReturn*100)}} color={p.color}/>})}</div>{(function(){var matched=adjProfiles.find(function(p){return Math.abs(simEffRet-p.realReturn)<0.001});return matched?<div style={{fontSize:10,color:matched.color||"#3b82f6",marginTop:4}}>{lang==="en"?"Using":"Usando"} {matched.name} {pct(matched.realReturn)} {lang==="en"?"real":"real"}</div>:<div style={{fontSize:10,color:"#f59e0b",marginTop:4}}><Icon name="gear" size={10} weight="regular" /> {lang==="en"?"Custom rate":"Retorno personalizado"}: {(simEffRet*100).toFixed(1)}% {lang==="en"?"real":"real"}</div>})()}</div>
           {simSav!=null||simMo!=null||simRet!=null?<div style={{textAlign:"center",marginBottom:12}}><button onClick={function(){setSimSav(null);setSimMo(null);setSimRet(null)}} style={{background:"rgba(15,23,42,0.06)",color:"#64748b",border:"1px solid rgba(255,255,255,0.08)",padding:"8px 20px",borderRadius:10,fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer"}}>↩ {t('achieve.resetToActual')}</button></div>:null}
         </Cd>
-        <Cd glow={simProjected>=magic.real?"green":"red"} style={{textAlign:"center",padding:"28px 24px"}}><div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:6}}>{t('achieve.projectedAt', {age: nRetAge})}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:40,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171"}}>{fmtC(simProjected)}</div><div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)"}}><div style={{height:10,borderRadius:5,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:5,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s"}}/></div><div style={{fontSize:13,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div></div></Cd>
-        {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#ef4444"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#16a34a"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}{t('app.perMonth')}</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#3b82f6",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+t('app.perMonth'),c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
+        <Cd style={{padding:"20px"}}>
+          <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+            {/* Column 1: Sim Projected Savings */}
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:simProjected>=magic.real?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(simProjected>=magic.real?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simProjected>=magic.real?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedAt', {age: nRetAge})}</div>
+              <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:simProjected>=magic.real?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(simProjected)}</div>
+              <div style={{marginTop:14,padding:"0 8px"}}>
+                <div style={{height:8,borderRadius:4,background:"rgba(0,0,0,0.04)",overflow:"hidden"}}>
+                  <div style={{height:"100%",borderRadius:4,width:Math.min(simPct,100)+"%",background:simPct>=100?"linear-gradient(90deg,#22c55e,#4ade80)":simPct>=60?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)",transition:"width 0.5s ease"}}/>
+                </div>
+                <div style={{fontSize:11,fontWeight:700,marginTop:6,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{simPct.toFixed(0)}% {lang==="en"?"of":"de"} {fmtC(magic.real)}</div>
+              </div>
+            </div>
+            {/* Column 2: Sim Years of Coverage */}
+            <div style={{flex:"1 1 250px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:simCoverage&&simCoverage.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(simCoverage&&simCoverage.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
+              <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:simCoverage&&simCoverage.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
+              {simCoverage?<>
+                <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:simCoverage.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{Math.floor(simCoverage.yearsOfCoverage)>=60?"60+":Math.floor(simCoverage.yearsOfCoverage)} {t('app.years')}</div>
+                <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {simCoverage.untilAge>=160?"∞":simCoverage.untilAge}</div>
+                <div style={{marginTop:12}}>{simCoverage.sufficient
+                  ?<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#22c55e",fontWeight:700}}><Icon name="check-circle" size={13} weight="regular" /> {t('common.covered')}</span>
+                  :<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#ef4444",fontWeight:700}}><Icon name="warning" size={13} weight="regular" /> {t('achieve.short')}</span>
+                }</div>
+              </>:<div style={{fontSize:13,color:"#94a3b8",marginTop:16}}>—</div>}
+            </div>
+          </div>
+          <div style={{marginTop:16,padding:14,borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}>
+            <div style={{fontSize:13,fontWeight:700,color:simPct>=100?"#22c55e":simPct>=60?"#eab308":"#ef4444"}}>{lang==="en"?"You're at "+simPct.toFixed(1)+"% of your goal. Adjust the levers above to reach "+fmtC(magic.real)+".":"Estás al "+simPct.toFixed(1)+"% de tu meta. Ajustá tus números arriba para llegar a "+fmtC(magic.real)+"."}</div>
+          </div>
+        </Cd>
+        <div style={{padding:"12px 16px",borderRadius:10,background:"rgba(100,116,139,0.04)",border:"1px solid rgba(100,116,139,0.08)",fontSize:11,color:"#64748b",lineHeight:1.6,display:"flex",alignItems:"flex-start",gap:8}}><Icon name="info" size={14} weight="regular" style={{marginTop:1,flexShrink:0,color:"#94a3b8"}} /><span>{t('achieve.returnsDisclaimer')}</span></div>
+        {simGap>0&&<Cd><ST sub={t('achieve.gapSub')}>{t('achieve.howToCloseGap')}</ST><div style={{display:"grid",gap:12}}>{simNeededReturn!=null?<><div style={{padding:"16px 18px",borderRadius:12,background:"rgba(245,158,11,0.04)",border:"1px solid rgba(245,158,11,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#92400e"}}>A. {t('achieve.higherReturn')}</span><span style={{fontSize:16,fontWeight:800,color:"#f59e0b"}}>{(simNeededReturn*100).toFixed(1)}%</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.higherReturnExplain', {rate: (simNeededReturn*100).toFixed(1)})}{(function(){var m=adjProfiles.find(function(p){return Math.abs(p.realReturn-simNeededReturn)<0.008});return m?" ≈ "+m.icon+" "+m.name:""})()}</div></div>{simNeededReturn>0.065&&<div style={{padding:"12px 16px",borderRadius:10,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.12)",fontSize:11,color:"#dc2626",lineHeight:1.6,display:"flex",alignItems:"flex-start",gap:8}}><Icon name="warning" size={14} weight="regular" style={{marginTop:1,flexShrink:0}} /><span>{t('achieve.unrealisticReturn', {rate: (simNeededReturn*100).toFixed(1)})}</span></div>}</>:<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(239,68,68,0.04)",border:"1px solid rgba(239,68,68,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#ef4444"}}>A. {t('achieve.returnAloneWontWork')}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(34,197,94,0.04)",border:"1px solid rgba(34,197,94,0.1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontSize:13,fontWeight:600,color:"#16a34a"}}>B. {t('achieve.saveMore')}</span><span style={{fontSize:16,fontWeight:800,color:"#22c55e"}}>{fmt(simNeededMonthly)}{t('app.perMonth')}</span></div><div style={{fontSize:12,color:"#64748b"}}>{t('achieve.atSimEffRet', {rate: (simEffRet*100).toFixed(1)})}{simNeededMonthly>simEffMo?" — "+t('achieve.morePerMonth', {amt: fmt(simNeededMonthly-simEffMo)}):""}</div></div>}{simNeededMonthly!=null&&<div style={{padding:"16px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)"}}><div style={{fontSize:13,fontWeight:600,color:"#3b82f6",marginBottom:6}}>C. {t('achieve.combineBoth')}</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:4}}>{(function(){var maxPR=adjProfiles[adjProfiles.length-1].realReturn;var baseR=simNeededReturn!=null?simNeededReturn:maxPR;var midR=simEffRet+(baseR-simEffRet)*0.5;if(midR<=simEffRet)midR=simEffRet+(maxPR-simEffRet)*0.5;var lo=0,hi=50000;for(var i=0;i<30;i++){var mid=(lo+hi)/2;if(fvVariable(simEffSav,mid,midR,ytr,debtEvents)<magic.real)lo=mid;else hi=mid}return[{l:t('achieve.higherReturn'),v:(midR*100).toFixed(1)+"%",c:"#f59e0b"},{l:t('achieve.saveMore'),v:fmt((lo+hi)/2)+t('app.perMonth'),c:"#22c55e"}].map(function(s){return <div key={s.l} style={{padding:"10px 12px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",textAlign:"center"}}><div style={{fontSize:10,color:"#64748b"}}>{s.l}</div><div style={{fontSize:15,fontWeight:700,color:s.c}}>{s.v}</div></div>})})()}</div></div>}</div></Cd>}
         {simGap<=0&&<Cd glow="green" style={{padding:"20px 24px",textAlign:"center"}}><div style={{fontSize:14,fontWeight:600,color:"#22c55e",marginBottom:8}}><Icon name="confetti" size={16} weight="regular" /> {t('achieve.onTrack')}</div><div style={{fontSize:12,color:"#64748b",lineHeight:1.6}}>{t('achieve.surpassMN', {amt: fmtC(simProjected-magic.real)})}</div></Cd>}
         <AdvisorCTA msg={simGap>0?t('advisor.helpClosingGap'):t('advisor.protectPlan')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
         {/* Year-by-Year Projection (full, with profile selectors) */}
@@ -277,72 +334,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
         </>}
       </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#64748b",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}
 
-      {/* === REVERSE CALCULATOR (Redesigned per minuta cruda v2) === */}
-      {nAge>0&&<>
-      <Cd glow={revResult&&revResult.sufficient?"green":"red"} style={{marginTop:24,borderTop:"2px solid rgba(96,165,250,0.15)",paddingTop:28}}>
-        <div style={{textAlign:"center",marginBottom:20}}>
-          <div style={{fontSize:28,marginBottom:8}}><Icon name="calendar" size={28} weight="regular" color="#60a5fa" /></div>
-          <h2 style={{fontFamily:"Outfit,sans-serif",fontSize:20,fontWeight:700,color:"#0f172a",marginBottom:6}}>{lang==="en"?<>How Many Years Will Your <strong>Projected Savings</strong> Last?</>:<>¿Para Cuántos Años Te Alcanza tu <strong>Ahorro Proyectado</strong>?</>}</h2>
-        </div>
-        {/* Two-column summary: Projected Savings (left) + Years of Coverage (right) */}
-        <div style={{display:"flex",gap:16,flexWrap:"wrap",marginBottom:20}}>
-          <div style={{flex:"1 1 200px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
-            <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.projectedSavings')}</div>
-            <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult&&revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{fmtC(revResult?revResult.projected:simProjected)}</div>
-            <div style={{fontSize:11,color:"#64748b",marginTop:4}}>{t('achieve.atRetAge', {age: nRetAge})}</div>
-          </div>
-          <div style={{flex:"1 1 200px",textAlign:"center",padding:"20px 16px",borderRadius:14,background:revResult&&revResult.sufficient?"rgba(34,197,94,0.04)":"rgba(239,68,68,0.04)",border:"1px solid "+(revResult&&revResult.sufficient?"rgba(34,197,94,0.12)":"rgba(239,68,68,0.12)")}}>
-            <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:2,color:revResult&&revResult.sufficient?"#22c55e":"#ef4444",marginBottom:8,fontWeight:700}}>{t('achieve.yearsOfCoverage')}</div>
-            <div style={{fontFamily:"Outfit,sans-serif",fontSize:32,fontWeight:900,color:revResult&&revResult.sufficient?"#22c55e":"#f87171",lineHeight:1.1}}>{revResult?<>{Math.floor(revResult.yearsOfCoverage)>=60?"60+":Math.floor(revResult.yearsOfCoverage)} {t('app.years')}</>:"—"}</div>
-            {revResult&&<div style={{fontSize:11,color:"#64748b",marginTop:4}}>{lang==="en"?"until age":"hasta los"} {revResult.untilAge>=160?"∞":revResult.untilAge}</div>}
-            {revResult&&<div style={{marginTop:10}}>{revResult.sufficient
-              ?<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(34,197,94,0.08)",fontSize:11,color:"#22c55e",fontWeight:700}}><Icon name="check-circle" size={13} weight="regular" /> {t('achieve.goalReached')}</span>
-              :<span style={{display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",borderRadius:8,background:"rgba(239,68,68,0.08)",fontSize:11,color:"#ef4444",fontWeight:700}}><Icon name="warning" size={13} weight="regular" /> {t('achieve.cannotRetireBy100')}</span>
-            }</div>}
-          </div>
-        </div>
-        {/* Slider 1: Desired monthly income in retirement */}
-        <div style={{marginBottom:20}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="currency-dollar" size={14} weight="regular" /> {t('achieve.desiredIncome')}</span>
-            <span style={{fontSize:15,fontWeight:700,color:"#60a5fa"}}>{fmt(revDes!==""?Number(revDes):nDes)}{t('app.perMonth')}</span>
-          </div>
-          <Slider label="" value={revDes!==""?Number(revDes):nDes} onChange={function(v){setRevDes(String(v))}} min={0} max={Math.max((revDes!==""?Number(revDes):nDes)*3,30000)} step={100} format={function(v){return fmt(v)}} color="#60a5fa"/>
-        </div>
-        {/* Slider 2: Monthly savings */}
-        <div style={{marginBottom:20}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="calendar" size={14} weight="regular" /> {t('achieve.monthlySavings')}</span>
-            <span style={{fontSize:15,fontWeight:700,color:"#22c55e"}}>{fmt(revMo!==""?Number(revMo):Math.max(mSav,0))}{t('app.perMonth')}</span>
-          </div>
-          <Slider label="" value={revMo!==""?Number(revMo):Math.max(mSav,0)} onChange={function(v){setRevMo(String(v))}} min={0} max={Math.max((revMo!==""?Number(revMo):Math.max(mSav,0))*5,20000)} step={100} format={function(v){return fmt(v)}} color="#22c55e"/>
-        </div>
-        {/* Slider 3: Return rate with profiles + custom label + ? tooltip */}
-        <div style={{marginBottom:14}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-            <span style={{fontSize:13,fontWeight:600,color:"#0f172a"}}><Icon name="chart-line-up" size={14} weight="regular" /> {t('achieve.revAccumReturn')} <span onClick={function(){alert(t('achieve.negReturnTooltip'))}} style={{cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",width:16,height:16,borderRadius:"50%",background:"rgba(96,165,250,0.1)",color:"#3b82f6",fontSize:10,fontWeight:700,marginLeft:4}}>?</span></span>
-            <span style={{fontSize:15,fontWeight:700,color:"#f59e0b"}}>{Number(revRet).toFixed(1)}%</span>
-          </div>
-          <Slider label="" value={revRet} onChange={setRevRet} min={-3} max={12} step={0.1} format={function(v){return Number(v).toFixed(1)+"%"}} color="#f59e0b"/>
-          <div style={{display:"flex",gap:4,flexWrap:"wrap",marginTop:6}}>
-            {adjProfiles.filter(function(_,i){return i>=1}).map(function(p){return <TabBtn key={p.id} active={Math.abs(revRet-p.realReturn*100)<0.05} iconName={p.icon} label={p.name+" "+pct(p.realReturn)} onClick={function(){setRevRet(p.realReturn*100)}} color={p.color}/>})}
-          </div>
-          {(function(){var matched=adjProfiles.find(function(p){return Math.abs(revRet/100-p.realReturn)<0.001});return matched?<div style={{fontSize:10,color:matched.color||"#3b82f6",marginTop:4}}>{lang==="en"?"Using":"Usando"} {matched.name} {pct(matched.realReturn)} {lang==="en"?"real":"real"}</div>:<div style={{fontSize:10,color:"#f59e0b",marginTop:4}}><Icon name="gear" size={10} weight="regular" /> {t('achieve.customReturnProfile')}: {Number(revRet).toFixed(1)}% {lang==="en"?"real":"real"}</div>})()}
-        </div>
-        {/* Retirement return assumption notice (replaces old strategy section) */}
-        <div style={{padding:"8px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6",marginBottom:8,display:"flex",alignItems:"center",gap:6}}>
-          <span onClick={function(){alert(t('achieve.retAssumptionTooltip'))}} style={{cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"center",width:16,height:16,borderRadius:"50%",background:"rgba(96,165,250,0.15)",color:"#3b82f6",fontSize:10,fontWeight:700,flexShrink:0}}>?</span>
-          {t('achieve.retAssumptionTooltip')}
-        </div>
-        {(nLegacy>0||TAX>0)&&<div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-          {nLegacy>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.08)",fontSize:11,color:"#3b82f6"}}>{t('achieve.revLegacyFrom',{amt:fmt(nLegacy)})}</div>}
-          {TAX>0&&<div style={{padding:"5px 12px",borderRadius:8,background:"rgba(245,158,11,0.06)",border:"1px solid rgba(245,158,11,0.08)",fontSize:11,color:"#92400e"}}>{t('achieve.revTaxFrom',{rate:Number(assetTax).toFixed(1)})}</div>}
-        </div>}
-      </Cd>
 
-
-      {revResult&&<AdvisorCTA msg={revResult.sufficient?t('achieve.advisorReality'):t('achieve.advisorHelp')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>}
-      </>}
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
     </div>
   );
