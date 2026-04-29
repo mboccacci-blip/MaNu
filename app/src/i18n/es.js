@@ -360,7 +360,7 @@ export default {
     yourAge: "Tu edad",
     retirementAge: "Edad de jubilación",
     yearsInRetirement: "Años de jubilación",
-    desiredIncome: "Ingreso mensual deseado en tu jubilación",
+    desiredIncome: "Ingreso mensual necesario en tu jubilación",
     otherRetIncome: "Ingreso adicional en tu jubilación ($/mes)",
     currentSavings: "Ahorros e inversiones actuales",
     estMonthlySav: "Ahorro mensual actual (estimado)",

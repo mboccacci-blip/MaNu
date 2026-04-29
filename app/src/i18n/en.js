@@ -359,7 +359,7 @@ export default {
     yourAge: "Your age",
     retirementAge: "Retirement age",
     yearsInRetirement: "Years in retirement",
-    desiredIncome: "Desired monthly income in retirement",
+    desiredIncome: "Required monthly income in retirement",
     otherRetIncome: "Additional retirement income ($/mo)",
     currentSavings: "Current savings & investments",
     estMonthlySav: "Current monthly savings (estimate)",
