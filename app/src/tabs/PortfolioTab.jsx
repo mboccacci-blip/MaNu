@@ -5,9 +5,14 @@ import NavButtons from '../components/NavButtons.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt, pct } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function PortfolioTab({ tab, goTab, tier, nEx, mSav, allProfiles, portAlloc, updatePortAlloc, portContribAlloc, updateContribAlloc, portReturn, portContribReturn }) {
-  const { t } = useTranslation();
+export default function PortfolioTab({ goTab, tier, engine, updatePortAlloc, updateContribAlloc }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var portAlloc = useAppStore(function(s){ return s.portAlloc; });
+  var portContribAlloc = useAppStore(function(s){ return s.portContribAlloc; });
+  var { nEx, mSav, allProfiles, portReturn, portContribReturn } = engine;
 
   return (
     <div className="fi">

@@ -7,9 +7,16 @@ import TabBtn from '../components/TabButton.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function GoalsTab({ tab, goTab, tier, goals, uG, rG, aG, goalCalcs, allProfiles, mSav, goalRetImpact, totalGoalMo, goalImpactRate }) {
-  const { t } = useTranslation();
+export default function GoalsTab({ goTab, tier, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var goals = useAppStore(function(s){ return s.goals; });
+  var uG = useAppStore(function(s){ return s.updateGoal; });
+  var rG = useAppStore(function(s){ return s.removeGoal; });
+  var aG = useAppStore(function(s){ return s.addGoal; });
+  var { goalCalcs, allProfiles, mSav, goalRetImpact, totalGoalMo, goalImpactRate } = engine;
 
   return (
     <div className="fi">

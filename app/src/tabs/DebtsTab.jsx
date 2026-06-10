@@ -7,9 +7,40 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, pct } from '../utils/formatters.js';
+import { PROFILES } from '../constants.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function DebtsTab({ tab, goTab, tier, lang, ownsHome, nMortPay, noMortgage, setNoMortgage, mortgageYearsLeft, setMortgageYearsLeft, mortgageBalance, setMortgageBalance, mortgageRate, setMortgageRate, nMortYrs, nAge, nEx, mortBal, noDebts, setNoDebts, noCarLoan, setNoCarLoan, carBalance, setCarBalance, carYearsLeft, setCarYearsLeft, carRate, setCarRate, carPayment, setCarPayment, debts, aD, uD, rD, debtAn, probDebts, totalMonthlyObligations, emergencyMonths, PROFILES }) {
-  const { t } = useTranslation();
+export default function DebtsTab({ goTab, tier, engine }) {
+  var { t, lang } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var ownsHome = store.ownsHome;
+  var noMortgage = store.noMortgage;
+  var mortgageYearsLeft = store.mortgageYearsLeft;
+  var mortgageBalance = store.mortgageBalance;
+  var mortgageRate = store.mortgageRate;
+  var noDebts = store.noDebts;
+  var noCarLoan = store.noCarLoan;
+  var carBalance = store.carBalance;
+  var carYearsLeft = store.carYearsLeft;
+  var carRate = store.carRate;
+  var carPayment = store.carPayment;
+  var debts = store.debts;
+  var aD = store.addDebt;
+  var uD = store.updateDebt;
+  var rD = store.removeDebt;
+  function setNoMortgage(v){ sf('noMortgage', v); }
+  function setMortgageYearsLeft(v){ sf('mortgageYearsLeft', v); }
+  function setMortgageBalance(v){ sf('mortgageBalance', v); }
+  function setMortgageRate(v){ sf('mortgageRate', v); }
+  function setNoDebts(v){ sf('noDebts', v); }
+  function setNoCarLoan(v){ sf('noCarLoan', v); }
+  function setCarBalance(v){ sf('carBalance', v); }
+  function setCarYearsLeft(v){ sf('carYearsLeft', v); }
+  function setCarRate(v){ sf('carRate', v); }
+  function setCarPayment(v){ sf('carPayment', v); }
+  var { nMortPay, nMortYrs, nAge, nEx, mortBal, debtAn, probDebts, totalMonthlyObligations, emergencyMonths } = engine;
   return (
     <div className="fi">
   {/* Mortgage — always shows if ownsHome, independent of noDebts */}

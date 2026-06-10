@@ -14,10 +14,11 @@ import { track, EVENTS } from '../utils/analytics.js';
 import useAppStore from '../store/useAppStore.js';
 import { useTranslation } from '../i18n/index.jsx';
 
-export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
+export default function AchieveTab({ goTab, tier, engine, isDemo }) {
   const { t, lang } = useTranslation();
   const store = useAppStore();
   const sf = store.setField;
+  const tab = store.tab;
   
   const setAge = function(v) { sf('age', v); };
   const setRetirementAge = function(v) { sf('retirementAge', v); };

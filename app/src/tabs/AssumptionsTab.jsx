@@ -8,9 +8,24 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function AssumptionsTab({ tab, goTab, tier, nAge, nRetAge, nYP, nEx, coupleMode, setCoupleMode, hasRental, setHasRental, rentalEquity, setRentalEquity, rentalNetIncome, setRentalNetIncome, nRentalEq, nRentalNet, totalNetWorth, INFL, customInflation, setCustomInflation }) {
-  const { t } = useTranslation();
+export default function AssumptionsTab({ goTab, tier, engine }) {
+  var { t } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var coupleMode = store.coupleMode;
+  var hasRental = store.hasRental;
+  var rentalEquity = store.rentalEquity;
+  var rentalNetIncome = store.rentalNetIncome;
+  var customInflation = store.customInflation;
+  function setCoupleMode(v){ sf('coupleMode', v); }
+  function setHasRental(v){ sf('hasRental', v); }
+  function setRentalEquity(v){ sf('rentalEquity', v); }
+  function setRentalNetIncome(v){ sf('rentalNetIncome', v); }
+  function setCustomInflation(v){ sf('customInflation', v); }
+  var { nAge, nRetAge, nYP, nEx, nRentalEq, nRentalNet, totalNetWorth, INFL } = engine;
 
   return (
     <div className="fi">

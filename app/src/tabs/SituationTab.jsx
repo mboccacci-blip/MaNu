@@ -7,9 +7,30 @@ import Tip from '../components/Tip.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function SituationTab({ tab, goTab, tier, lang, coupleMode, hasRental, monthlyIncome, setMonthlyIncome, partner2Income, setPartner2Income, vacationAnnual, setVacationAnnual, nEx, nRentalEq, totalNetWorth, ownsHome, setOwnsHome, mortgagePayment, setMortgagePayment, nMortPay, expenses, aE, uE, rE, nVac, mSav, totalIncome, totalMonthlyObligations, totExp, nInc, nP2I, nRentalNet, nCarPay, debtEvents }) {
-  const { t } = useTranslation();
+export default function SituationTab({ goTab, tier, engine }) {
+  var { t, lang } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var coupleMode = store.coupleMode;
+  var hasRental = store.hasRental;
+  var monthlyIncome = store.monthlyIncome;
+  var partner2Income = store.partner2Income;
+  var vacationAnnual = store.vacationAnnual;
+  var ownsHome = store.ownsHome;
+  var mortgagePayment = store.mortgagePayment;
+  var expenses = store.expenses;
+  var aE = store.addExpense;
+  var uE = store.updateExpense;
+  var rE = store.removeExpense;
+  function setMonthlyIncome(v){ sf('monthlyIncome', v); }
+  function setPartner2Income(v){ sf('partner2Income', v); }
+  function setVacationAnnual(v){ sf('vacationAnnual', v); }
+  function setOwnsHome(v){ sf('ownsHome', v); }
+  function setMortgagePayment(v){ sf('mortgagePayment', v); }
+  var { nEx, nRentalEq, totalNetWorth, nMortPay, nVac, mSav, totalIncome, totalMonthlyObligations, totExp, nInc, nP2I, nRentalNet, nCarPay, debtEvents } = engine;
   return (
     <div className="fi">
   <Cd><ST sub={t('income.subtitle')}>{t('income.title')}</ST>

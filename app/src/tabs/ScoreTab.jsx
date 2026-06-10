@@ -5,11 +5,14 @@ import NavButtons from '../components/NavButtons.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
 const ID_MAP = {"Under 35":"under35","35–44":"35to44","45–54":"45to54","55–64":"55to64","65–74":"65to74","75+":"75plus"};
 
-export default function ScoreTab({ tab, goTab, tier, hScore, nAge, savRate, totalNetWorth, bSR, bNW, percentiles }) {
-  const { t } = useTranslation();
+export default function ScoreTab({ goTab, tier, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var { hScore, nAge, savRate, totalNetWorth, bSR, bNW, percentiles } = engine;
 
   return (
     <div className="fi">

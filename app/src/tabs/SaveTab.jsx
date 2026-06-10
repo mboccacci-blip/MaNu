@@ -6,9 +6,14 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function SaveTab({ tab, goTab, tier, savOpps, setSavSliders, totalSavOpp, mSav }) {
-  const { t } = useTranslation();
+export default function SaveTab({ goTab, tier, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var sf = useAppStore(function(s){ return s.setField; });
+  var { savOpps, totalSavOpp, mSav } = engine;
+  function setSavSliders(fn){ sf('savSliders', fn); }
 
   return (
     <div className="fi">

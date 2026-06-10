@@ -11,10 +11,11 @@ import { track, EVENTS } from '../utils/analytics.js';
 import useAppStore from '../store/useAppStore.js';
 import { useTranslation } from '../i18n/index.jsx';
 
-export default function InactionTab({ tab, goTab, tier, engine }) {
+export default function InactionTab({ goTab, tier, engine }) {
   const { t, lang } = useTranslation();
   const store = useAppStore();
   const sf = store.setField;
+  const tab = store.tab;
   
   const setCiBase = function(v) { sf('ciBase', v); };
   const setCiH = function(v) { sf('ciH', v); };

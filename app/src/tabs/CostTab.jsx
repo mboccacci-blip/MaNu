@@ -8,9 +8,20 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import { fvL } from '../utils/financial.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function CostTab({ tab, goTab, tier, lang, costItemName, setCostItemName, costItemPrice, setCostItemPrice, costProfileIdx, setCostProfileIdx, adjProfiles, allProfiles, costInRet, ytr, hasPortfolio, blendedPortReturn }) {
-  const { t } = useTranslation();
+export default function CostTab({ goTab, tier, engine }) {
+  var { t, lang } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var costItemName = store.costItemName;
+  var costItemPrice = store.costItemPrice;
+  var costProfileIdx = store.costProfileIdx;
+  function setCostItemName(v){ sf('costItemName', v); }
+  function setCostItemPrice(v){ sf('costItemPrice', v); }
+  function setCostProfileIdx(v){ sf('costProfileIdx', v); }
+  var { adjProfiles, allProfiles, costInRet, ytr, hasPortfolio, blendedPortReturn } = engine;
 
   return (
     <div className="fi">

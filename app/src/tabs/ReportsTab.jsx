@@ -5,9 +5,15 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function ReportsTab({ tab, goTab, tier, hasData, mSav, savOpps, totalSavOpp, nAge, totalIncome, totExp, nMortPay, nCarPay, savRate, nEx, nRentalEq, nRentalNet, totalNetWorth, totalDebtAll, noDebts, hScore, magic, mD, nInc, nP2I, coupleMode, nVac, nRetAge, nYP, customInflation, INFL }) {
-  const { t } = useTranslation();
+export default function ReportsTab({ goTab, tier, hasData, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var noDebts = useAppStore(function(s){ return s.noDebts; });
+  var coupleMode = useAppStore(function(s){ return s.coupleMode; });
+  var customInflation = useAppStore(function(s){ return s.customInflation; });
+  var { mSav, savOpps, totalSavOpp, nAge, totalIncome, totExp, nMortPay, nCarPay, savRate, nEx, nRentalEq, nRentalNet, totalNetWorth, totalDebtAll, hScore, magic, mD, nInc, nP2I, nVac, nRetAge, nYP, INFL } = engine;
 
   return (
     <div className="fi">

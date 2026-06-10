@@ -5,9 +5,11 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { PROFILES } from '../constants.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function LearnTab({ tab, goTab, tier }) {
+export default function LearnTab({ goTab, tier }) {
   const { t } = useTranslation();
+  const tab = useAppStore(function(s){ return s.tab; });
 
   return (
     <div className="fi">

@@ -8,9 +8,19 @@ import Icon from '../components/Icon.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function EarnTab({ tab, goTab, tier, extraIncome, setExtraIncome, eiTemporary, setEiTemporary, eiYears, setEiYears, nEI, nEIYrs, earnProj, totalSavOpp, combinedImpact }) {
-  const { t } = useTranslation();
+export default function EarnTab({ goTab, tier, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var sf = useAppStore(function(s){ return s.setField; });
+  var extraIncome = useAppStore(function(s){ return s.extraIncome; });
+  var eiTemporary = useAppStore(function(s){ return s.eiTemporary; });
+  var eiYears = useAppStore(function(s){ return s.eiYears; });
+  function setExtraIncome(v){ sf('extraIncome', v); }
+  function setEiTemporary(v){ sf('eiTemporary', v); }
+  function setEiYears(v){ sf('eiYears', v); }
+  var { nEI, nEIYrs, earnProj, totalSavOpp, combinedImpact } = engine;
 
   return (
     <div className="fi">

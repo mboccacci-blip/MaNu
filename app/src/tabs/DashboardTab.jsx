@@ -4,9 +4,13 @@ import NavButtons from '../components/NavButtons.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function DashboardTab({ tab, goTab, tier, hasData, mSav, hScore, magic, nSS, nEx, mD, totalIncome, totalMonthlyObligations, noDebts, totalDebtAll, emergencyMonths, savOpps }) {
-  const { t } = useTranslation();
+export default function DashboardTab({ goTab, tier, hasData, engine }) {
+  var { t } = useTranslation();
+  var tab = useAppStore(function(s){ return s.tab; });
+  var noDebts = useAppStore(function(s){ return s.noDebts; });
+  var { mSav, hScore, magic, nSS, nEx, mD, totalIncome, totalMonthlyObligations, totalDebtAll, emergencyMonths, savOpps } = engine;
 
   return (
     <div className="fi">{!hasData?

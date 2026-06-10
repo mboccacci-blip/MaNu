@@ -10,9 +10,27 @@ import MultiLineChart from '../components/MultiLineChart.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function InvestTab({ tab, goTab, tier, lang, mSav, nEx, projYears, setProjYears, projs, maxProj, showNom, setShowNom, customReturn, setCustomReturn, customInflation, INFL, showScenarios, setShowScenarios, scenProfileIdx, setScenProfileIdx, scenarios, allProfiles, adjProfiles, hasPortfolio, blendedPortReturn, costNS, costNSProfileIdx, setCostNSProfileIdx, costNSReturn, magic, debtEvents }) {
-  const { t } = useTranslation();
+export default function InvestTab({ goTab, tier, engine }) {
+  var { t, lang } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var projYears = store.projYears;
+  var showNom = store.showNom;
+  var customReturn = store.customReturn;
+  var customInflation = store.customInflation;
+  var showScenarios = store.showScenarios;
+  var scenProfileIdx = store.scenProfileIdx;
+  var costNSProfileIdx = store.costNSProfileIdx;
+  function setProjYears(v){ sf('projYears', v); }
+  function setShowNom(v){ sf('showNom', v); }
+  function setCustomReturn(v){ sf('customReturn', v); }
+  function setShowScenarios(v){ sf('showScenarios', v); }
+  function setScenProfileIdx(v){ sf('scenProfileIdx', v); }
+  function setCostNSProfileIdx(v){ sf('costNSProfileIdx', v); }
+  var { mSav, nEx, projs, maxProj, INFL, scenarios, allProfiles, adjProfiles, hasPortfolio, blendedPortReturn, costNS, costNSReturn, magic, debtEvents } = engine;
   return (
     <div className="fi">
   <Cd>

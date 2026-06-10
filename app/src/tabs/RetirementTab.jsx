@@ -8,9 +8,22 @@ import MultiLineChart from '../components/MultiLineChart.jsx';
 import ANum from '../components/AnimatedNumber.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
+import useAppStore from '../store/useAppStore.js';
 
-export default function RetirementTab({ tab, goTab, tier, lang, nAge, nRetAge, nYP, nEx, nDes, nSS, nLegacy, ytr, mSav, magic, mD, desiredAfterSS, nMortPay, nMortYrs, retProfLabel, retProfReturn, retProfileIdx, setRetProfileIdx, adjProfiles, allProfiles, hasPortfolio, monthlyNeeded, ybYData, chartProfileIdx, setChartProfileIdx, chartRetireIdx, setChartRetireIdx, chartAccumReturn, chartRetireReturn, debtEvents, magicRevealed, blendedPortReturn, TAX, assetTax, INFL }) {
-  const { t } = useTranslation();
+export default function RetirementTab({ goTab, tier, engine }) {
+  var { t, lang } = useTranslation();
+  var store = useAppStore();
+  var sf = store.setField;
+  var tab = store.tab;
+  var retProfileIdx = store.retProfileIdx;
+  var chartProfileIdx = store.chartProfileIdx;
+  var chartRetireIdx = store.chartRetireIdx;
+  var magicRevealed = store.magicRevealed;
+  var assetTax = store.assetTax;
+  function setRetProfileIdx(v){ sf('retProfileIdx', v); }
+  function setChartProfileIdx(v){ sf('chartProfileIdx', v); }
+  function setChartRetireIdx(v){ sf('chartRetireIdx', v); }
+  var { nAge, nRetAge, nYP, nEx, nDes, nSS, nLegacy, ytr, mSav, magic, mD, desiredAfterSS, nMortPay, nMortYrs, retProfLabel, retProfReturn, adjProfiles, allProfiles, hasPortfolio, monthlyNeeded, ybYData, chartAccumReturn, chartRetireReturn, debtEvents, blendedPortReturn, TAX, INFL } = engine;
   return (
     <div className="fi">
   <Cd><ST sub={t('retirement.sub')}>{t('retirement.title')}</ST>
