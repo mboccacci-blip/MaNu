@@ -22,6 +22,13 @@ export default {
     nominal: "nominal",
     ahead: "Ahead!",
     onTrack: "on track",
+    yr: "yr",
+    demoBanner: "DEMO MODE — Full access",
+    paidToast: "You unlocked all 16 modules! Start from the Dashboard →",
+    homeBtn: "Home",
+    clearConfirm: "Clear all your data? This cannot be undone.",
+    clearBtn: "Reset",
+    tagline: "Magic Number \u00b7 Your Retirement Planner",
   },
   scenarios: {
     pessimistic: "Pessimistic",

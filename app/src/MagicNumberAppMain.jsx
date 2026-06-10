@@ -112,9 +112,9 @@ export default function MagicNumberApp({onBack}){
   return(<EngineProvider value={ctx}>
     <div className="mn-root">
       {/* Demo mode banner */}
-      {(isDemo ? true : store.demoBannerVisible)&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{lang==="en"?"DEMO MODE — Full access":"MODO DEMO — Acceso completo"}</span><button onClick={function(){sf('demoBannerVisible',false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
+      {(isDemo ? true : store.demoBannerVisible)&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{t('app.demoBanner')}</span><button onClick={function(){sf('demoBannerVisible',false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
       {/* Paid upgrade toast */}
-      {paidToast&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(34,197,94,0.3)",display:"flex",alignItems:"center",gap:10,animation:"fadeIn 0.3s ease-out"}}><Icon name="confetti" size={18} weight="regular" /> {lang==="en"?"You unlocked all 16 modules! Start from the Dashboard →":"¡Desbloqueaste los 16 módulos! Empezá desde el Dashboard →"}<button onClick={function(){setPaidToast(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,marginLeft:8}}>×</button></div>}
+      {paidToast&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(34,197,94,0.3)",display:"flex",alignItems:"center",gap:10,animation:"fadeIn 0.3s ease-out"}}><Icon name="confetti" size={18} weight="regular" /> {t('app.paidToast')}<button onClick={function(){setPaidToast(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,marginLeft:8}}>×</button></div>}
       <header className="mn-header">
         <div className="mn-logo" onClick={onBack} style={{cursor:onBack?"pointer":"default"}}>
           <span className="mn-logo-icon">MN</span>
@@ -122,8 +122,8 @@ export default function MagicNumberApp({onBack}){
           <span className="pro-badge">PRO</span>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>← {lang==="en"?"Home":"Inicio"}</button>}
-          {hasData&&<button onClick={function(){if(window.confirm(lang==="en"?"Clear all your data? This cannot be undone.":"¿Borrar todos tus datos? No se puede deshacer."))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s",display:"inline-flex",alignItems:"center",gap:4}}><Icon name="trash" size={13} weight="regular" /> {lang==="en"?"Reset":"Limpiar"}</button>}
+          {onBack&&<button onClick={onBack} style={{background:"rgba(15,23,42,0.04)",border:"1px solid rgba(15,23,42,0.10)",borderRadius:10,padding:"7px 14px",color:"#64748b",fontSize:12,fontWeight:600,fontFamily:"Outfit,sans-serif",cursor:"pointer",transition:"all 0.15s",letterSpacing:"-0.1px"}}>← {t('app.homeBtn')}</button>}
+          {hasData&&<button onClick={function(){if(window.confirm(t('app.clearConfirm')))clearAllData()}} style={{background:"rgba(239,68,68,0.06)",border:"1px solid rgba(239,68,68,0.15)",borderRadius:10,padding:"7px 14px",color:"#ef4444",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",cursor:"pointer",transition:"all 0.15s",display:"inline-flex",alignItems:"center",gap:4}}><Icon name="trash" size={13} weight="regular" /> {t('app.clearBtn')}</button>}
           <button className="mn-lang-btn" onClick={function(){toggleLang();track(EVENTS.LANGUAGE_CHANGED,{from:lang,to:lang==="en"?"es":"en"},{lang:lang,tier:tier})}} style={{display:"inline-flex",alignItems:"center",gap:4}}><Icon name="globe" size={14} weight="regular" /> {lang==="en"?"EN":"ES"}</button>
         </div>
       </header>
@@ -132,7 +132,7 @@ export default function MagicNumberApp({onBack}){
           <button key={tb.id} onClick={function(){if(!d)goTab(tb.id)}} className={"mn-tab"+(a?" active":"")+(d?" disabled":"")}>
             <span className="mn-tab-icon"><Icon name={tb.icon} size={16} weight={a?"regular":"light"} /></span>{t('tabs.'+tb.id)||tb.label}</button>)})}
       </nav>
-      <div className="mn-tagline">{lang==="en"?"Magic Number \u00b7 Your Retirement Planner":"Magic Number \u00b7 Tu planificador de retiro"}</div>
+      <div className="mn-tagline">{t('app.tagline')}</div>
       <main className="mn-content">
 
 {tab==="dashboard"&&<DashboardTab />}

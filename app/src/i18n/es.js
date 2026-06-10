@@ -23,6 +23,13 @@ export default {
     nominal: "nominal",
     ahead: "¡Adelantado!",
     onTrack: "en camino",
+    yr: "Año",
+    demoBanner: "MODO DEMO — Acceso completo",
+    paidToast: "¡Desbloqueaste los 16 módulos! Empezá desde el Dashboard →",
+    homeBtn: "Inicio",
+    clearConfirm: "¿Borrar todos tus datos? No se puede deshacer.",
+    clearBtn: "Limpiar",
+    tagline: "Magic Number \u00b7 Tu planificador de retiro",
   },
   scenarios: {
     pessimistic: "Pesimista",
