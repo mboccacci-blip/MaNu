@@ -52,9 +52,12 @@ export function clamp(v, mn, mx) {
   return Math.max(mn, Math.min(mx, v));
 }
 
-/** Year-by-year projection with accumulation and withdrawal phases */
+/** Year-by-year projection with accumulation and withdrawal phases.
+ *  Uses monthly compounding for contributions/withdrawals (consistent with fvC). */
 export function yearByYear(existingSavings, baseMonthlySav, accumReturn, yearsAccum, yearsRetire, monthlySpend, inflation, debtEvents, retireReturn) {
   var rRet = retireReturn != null ? retireReturn : accumReturn;
+  var mAccum = mR(accumReturn);
+  var mRet = mR(rRet);
   var data = [];
   var bal = existingSavings;
   for (var y = 0; y <= yearsAccum + yearsRetire; y++) {
@@ -64,24 +67,34 @@ export function yearByYear(existingSavings, baseMonthlySav, accumReturn, yearsAc
       if (debtEvents) {
         debtEvents.forEach(function(ev) { if (y >= ev.endsAtYear) extraSav += ev.monthlyAmount; });
       }
-      bal = bal * (1 + accumReturn) + (baseMonthlySav + extraSav) * 12;
+      var moSav = baseMonthlySav + extraSav;
+      for (var mo = 0; mo < 12; mo++) {
+        bal = bal * (1 + mAccum) + moSav;
+      }
     } else {
-      bal = bal * (1 + rRet) - monthlySpend * 12;
+      for (var mo = 0; mo < 12; mo++) {
+        bal = bal * (1 + mRet) - monthlySpend;
+      }
     }
     if (bal < 0) bal = 0;
   }
   return data;
 }
 
-/** Future value with variable contributions (accounts for debt payoff events) */
+/** Future value with variable contributions (accounts for debt payoff events).
+ *  Uses monthly compounding (consistent with fvC). */
 export function fvVariable(existingSavings, baseMonthlySav, realReturn, years, debtEvents) {
   var bal = existingSavings;
+  var m = mR(realReturn);
   for (var y = 0; y < years; y++) {
     var extraSav = 0;
     if (debtEvents) {
       debtEvents.forEach(function(ev) { if (y >= ev.endsAtYear) extraSav += ev.monthlyAmount; });
     }
-    bal = bal * (1 + realReturn) + (baseMonthlySav + extraSav) * 12;
+    var moSav = baseMonthlySav + extraSav;
+    for (var mo = 0; mo < 12; mo++) {
+      bal = bal * (1 + m) + moSav;
+    }
     if (bal < 0) bal = 0;
   }
   return bal;
