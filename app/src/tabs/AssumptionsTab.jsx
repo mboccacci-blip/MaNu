@@ -9,8 +9,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function AssumptionsTab({ goTab, tier, engine }) {
+export default function AssumptionsTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;

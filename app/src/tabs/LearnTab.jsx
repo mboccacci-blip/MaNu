@@ -6,8 +6,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { PROFILES } from '../constants.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function LearnTab({ goTab, tier }) {
+export default function LearnTab() {
+  var { goTab, tier } = useEngine();
   const { t } = useTranslation();
   const tab = useAppStore(function(s){ return s.tab; });
 

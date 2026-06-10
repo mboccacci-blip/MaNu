@@ -8,8 +8,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function GoalsTab({ goTab, tier, engine }) {
+export default function GoalsTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var goals = useAppStore(function(s){ return s.goals; });

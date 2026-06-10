@@ -9,8 +9,10 @@ import ANum from '../components/AnimatedNumber.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function RetirementTab({ goTab, tier, engine }) {
+export default function RetirementTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t, lang } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;

@@ -6,8 +6,10 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt, pct } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function PortfolioTab({ goTab, tier, engine, updatePortAlloc, updateContribAlloc }) {
+export default function PortfolioTab({ updatePortAlloc, updateContribAlloc }) {
+  var { engine, goTab, tier } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var portAlloc = useAppStore(function(s){ return s.portAlloc; });

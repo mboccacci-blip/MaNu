@@ -10,9 +10,11 @@ import { fvVariable } from '../utils/financial.js';
 import { track, EVENTS } from '../utils/analytics.js';
 import { submitEmailGate } from '../utils/emailGate.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 
-export default function InactionTab({ goTab, tier, engine }) {
+export default function InactionTab() {
+  var { engine, goTab, tier } = useEngine();
   const { t, lang } = useTranslation();
   const store = useAppStore();
   const sf = store.setField;

@@ -135,22 +135,22 @@ export default function MagicNumberApp({onBack}){
       <div className="mn-tagline">{lang==="en"?"Magic Number \u00b7 Your Retirement Planner":"Magic Number \u00b7 Tu planificador de retiro"}</div>
       <main className="mn-content">
 
-{tab==="dashboard"&&<DashboardTab goTab={goTab} tier={tier} hasData={hasData} engine={engine} />}
-{tab==="learn"&&<LearnTab goTab={goTab} tier={tier} />}
-{tab==="assumptions"&&<AssumptionsTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="situation"&&<SituationTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="debts"&&<DebtsTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="retirement"&&<RetirementTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="invest"&&<InvestTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="portfolio"&&<PortfolioTab goTab={goTab} tier={tier} engine={engine} updatePortAlloc={updatePortAlloc} updateContribAlloc={updateContribAlloc} />}
-{tab==="achieve"&&<AchieveTab goTab={goTab} tier={tier} engine={engine} isDemo={isDemo} />}
-{tab==="inaction"&&<InactionTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="save"&&<SaveTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="earn"&&<EarnTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="cost"&&<CostTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="goals"&&<GoalsTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="score"&&<ScoreTab goTab={goTab} tier={tier} engine={engine} />}
-{tab==="reports"&&<ReportsTab goTab={goTab} tier={tier} hasData={hasData} engine={engine} />}
+{tab==="dashboard"&&<DashboardTab />}
+{tab==="learn"&&<LearnTab />}
+{tab==="assumptions"&&<AssumptionsTab />}
+{tab==="situation"&&<SituationTab />}
+{tab==="debts"&&<DebtsTab />}
+{tab==="retirement"&&<RetirementTab />}
+{tab==="invest"&&<InvestTab />}
+{tab==="portfolio"&&<PortfolioTab updatePortAlloc={updatePortAlloc} updateContribAlloc={updateContribAlloc} />}
+{tab==="achieve"&&<AchieveTab />}
+{tab==="inaction"&&<InactionTab />}
+{tab==="save"&&<SaveTab />}
+{tab==="earn"&&<EarnTab />}
+{tab==="cost"&&<CostTab />}
+{tab==="goals"&&<GoalsTab />}
+{tab==="score"&&<ScoreTab />}
+{tab==="reports"&&<ReportsTab />}
 
         <div style={{marginTop:36,padding:"14px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)",fontSize:11,color:"#3b82f6",lineHeight:1.7,textAlign:"center"}}>
           <strong>{t('disclaimer.important')}</strong> {t('disclaimer.text')} {t('disclaimer.inflation')} {(engine.INFL*100).toFixed(1)}%/{t('app.yr')}.

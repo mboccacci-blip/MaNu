@@ -9,8 +9,10 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import { fvL } from '../utils/financial.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function CostTab({ goTab, tier, engine }) {
+export default function CostTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t, lang } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;

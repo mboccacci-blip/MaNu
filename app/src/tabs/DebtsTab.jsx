@@ -9,8 +9,10 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, pct } from '../utils/formatters.js';
 import { PROFILES } from '../constants.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function DebtsTab({ goTab, tier, engine }) {
+export default function DebtsTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t, lang } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;

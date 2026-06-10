@@ -11,8 +11,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function InvestTab({ goTab, tier, engine }) {
+export default function InvestTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t, lang } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;

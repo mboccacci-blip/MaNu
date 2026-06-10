@@ -8,10 +8,12 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
 import { track, EVENTS } from '../utils/analytics.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
 const ID_MAP = {"Under 35":"under35","35–44":"35to44","45–54":"45to54","55–64":"55to64","65–74":"65to74","75+":"75plus"};
 
-export default function ScoreTab({ goTab, tier, engine }) {
+export default function ScoreTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var { hScore, nAge, savRate, totalNetWorth, bSR, bNW, percentiles } = engine;

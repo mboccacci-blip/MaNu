@@ -9,8 +9,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function EarnTab({ goTab, tier, engine }) {
+export default function EarnTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var sf = useAppStore(function(s){ return s.setField; });

@@ -5,8 +5,10 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function DashboardTab({ goTab, tier, hasData, engine }) {
+export default function DashboardTab() {
+  var { engine, goTab, tier, hasData } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var noDebts = useAppStore(function(s){ return s.noDebts; });

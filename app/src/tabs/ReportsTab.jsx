@@ -6,8 +6,10 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function ReportsTab({ goTab, tier, hasData, engine }) {
+export default function ReportsTab() {
+  var { engine, goTab, tier, hasData } = useEngine();
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var noDebts = useAppStore(function(s){ return s.noDebts; });

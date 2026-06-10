@@ -13,9 +13,11 @@ import { fvVariable, drawdownYears } from '../utils/financial.js';
 import { track, EVENTS } from '../utils/analytics.js';
 import { submitEmailGate } from '../utils/emailGate.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 
-export default function AchieveTab({ goTab, tier, engine, isDemo }) {
+export default function AchieveTab() {
+  var { engine, goTab, tier, isDemo } = useEngine();
   const { t, lang } = useTranslation();
   const store = useAppStore();
   const sf = store.setField;

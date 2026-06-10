@@ -8,8 +8,10 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { useTranslation } from '../i18n/index.jsx';
 import { fmt } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { useEngine } from '../hooks/EngineContext.jsx';
 
-export default function SituationTab({ goTab, tier, engine }) {
+export default function SituationTab() {
+  var { engine, goTab, tier } = useEngine();
   var { t, lang } = useTranslation();
   var store = useAppStore();
   var sf = store.setField;
