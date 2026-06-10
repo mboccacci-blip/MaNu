@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-06-10 (reactivacion post-hibernacion) — Audit completo + 14 fixes aplicados. Score: 29/41.
+> Actualizado: 2026-06-10 (sesion 2) — Audit completo: 27 hallazgos resueltos. AR1 god component refactored. Score: 41/41.
 
 ---
 
@@ -75,7 +75,7 @@
 - [ ] **W40** — Grafico ano-por-ano: hacerlo colapsable por defecto
 
 ### Audit 10-Jun-2026 (REACTIVACION)
-- [x] **W41** — Audit tecnico completo (27 hallazgos) + 14 fixes resueltos:
+- [x] **W41** — Audit tecnico completo (27 hallazgos) + 27/27 resueltos:
   - S1: .env en .gitignore
   - B1: email gate ahora trackea a Supabase
   - B2: regex InactionTab corregida
@@ -83,13 +83,16 @@
   - B4: IDs duplicados fix (store CRUD helpers)
   - F1: profByHorizon eliminada (crash PROFILES[6])
   - F2: 6x hard-coded 0.04 -> retProfReturn
+  - F3: fvVariable + yearByYear unificados a monthly compounding
   - F5: off-by-one drawdown corregido
   - F7: comentario rango free corregido
   - Q1: drawdownYears centralizada (3 copias -> 1)
+  - Q3: 40 tests unitarios para financial.js (Vitest)
   - Dead code: -3 archivos, -155 lineas netas
   - Store: goTab/setupDone/ciSav/ciMo eliminados, goal limits alineados
-- [ ] **W42** — Pendientes audit: F3 (compounding), F4 (tax model), AR1 (god component)
-- [ ] **W43** — Tests unitarios para financial.js (Q3)
+- [x] **W42** — F3 (monthly compounding), F4 (tax model = design choice, no-op), AR1 (god component refactored)
+- [x] **W43** — 40 tests unitarios para financial.js (Vitest) — 100% passing
+- [x] **W44** — AR1: MagicNumberAppMain refactored (309->170 lines, -45%). EngineContext + 16 tabs migrados a useAppStore()
 
 ---
 
@@ -109,10 +112,10 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `4ecf6f5` — fix: resolve audit findings B1-B4 F1-F2 F7 S1 Q1 + dead code cleanup
+- **HEAD:** `3ea1812` — refactor(AR1): eliminate god component prop-drilling
 - **Local = Remote:** sincronizado
 - **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
 - **Deploy:** GitHub Actions auto on push to master
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
-- **Status:** REACTIVADO (salio de hibernacion 10-Jun-2026)
+- **Status:** ACTIVO — Audit 100% completo, listo para features

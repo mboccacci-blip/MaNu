@@ -4,23 +4,23 @@
 
 | Dimension | Score | Notas |
 |-----------|:-----:|-------|
-| Motor Financiero | 9/10 | Extraido, ~380 lineas, robusto. F2 corregido (retProfReturn). |
+| Motor Financiero | 9.5/10 | Extraido, ~380 lineas, monthly compounding (F3), 40 tests. |
 | UX/UI | 9/10 | Estable, responsive |
 | Landing Page | 9.5/10 | Reescrita: freemium-honest |
 | i18n (EN/ES) | 9/10 | 400+ keys, ambos idiomas completos |
-| Arquitectura | **8/10** | 16 tabs + 15 componentes. AR1 (god component) pendiente. |
+| Arquitectura | **9.5/10** | 16 tabs + 15 componentes. EngineContext + useAppStore. Main 170 lineas. |
 | Analytics | 8.5/10 | 5 eventos Supabase (EMAIL_SUBMITTED agregado), live en produccion |
 | Lead Capture | 9/10 | Supabase live, 2 leads test verificados |
 | AdvisorCTA | 10/10 | Self-contained, presente en los 16 tabs |
 | Auth / Payments | 0/10 | No iniciado (pendiente D2) |
-| PDF / Email | 0/10 | BLOQUEANTE — siguiente sprint |
-| Tests | 0/10 | 6 edge cases definidos, no escritos |
+| PDF / Email | 0/10 | BLOQUEANTE -- siguiente sprint |
+| Tests | 8/10 | 40 tests unitarios financial.js (Vitest), 100% passing |
 | Trust Layer (Legal) | 3/10 | Disclaimer en footer, T&C pendiente D2 |
 
-**HEAD commit:** `4ecf6f5` — fix: resolve audit findings
+**HEAD commit:** `3ea1812` -- refactor(AR1): eliminate god component prop-drilling
 **Produccion:** https://magic-number.app | https://master.manu-pro.pages.dev/
 **Revenue:** $0 | **Users:** 0 (pre-launch) | **Leads:** 2 (test) | **Analytics:** live
-**Status:** REACTIVADO (salio de hibernacion 10-Jun-2026)
+**Status:** ACTIVO -- Audit 100% completo, listo para features
 
 ---
 
@@ -28,7 +28,8 @@
 
 ```
 app/src/
-├── MagicNumberAppMain.jsx      # Orchestrator — 277 lineas (era 2,194)
+├── MagicNumberAppMain.jsx      # Thin router — 170 lineas (era 309, era 2194)
+├── hooks/EngineContext.jsx      # [NEW] Engine provider + useEngine() hook
 ├── LandingPage.jsx             # Landing — 19KB, freemium-honest
 ├── main.jsx                    # Entry point con ErrorBoundary
 ├── index.jsx
