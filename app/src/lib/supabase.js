@@ -7,6 +7,10 @@ export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
+// M4: Rate limit — max 3 lead submissions per session
+var leadSubmitCount = 0;
+var MAX_LEADS_PER_SESSION = 3;
+
 /**
  * Submit a lead to Supabase with the user's financial profile snapshot.
  * @param {Object} contact - { name, email, phone }
@@ -14,6 +18,9 @@ export const supabase = supabaseUrl && supabaseAnonKey
  * @returns {Object} { success: boolean, error?: string }
  */
 export async function submitLead(contact, financials) {
+  if (leadSubmitCount >= MAX_LEADS_PER_SESSION) {
+    return { success: false, error: 'Too many submissions. Please reload the page.' };
+  }
   if (!supabase) {
     console.warn('[MaNu] Supabase not configured — lead not saved');
     return { success: false, error: 'Supabase not configured' };
@@ -61,5 +68,6 @@ export async function submitLead(contact, financials) {
     return { success: false, error: error.message };
   }
 
+  leadSubmitCount++;
   return { success: true };
 }

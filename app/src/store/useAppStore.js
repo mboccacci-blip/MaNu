@@ -228,7 +228,7 @@ const useAppStore = create(
         else merged.expenses = merged.expenses.filter(Boolean);
         if (!Array.isArray(merged.debts) || merged.debts.length === 0) merged.debts = [{ id: 1, name: "", balance: "", rate: "", minPayment: "" }];
         else merged.debts = merged.debts.filter(Boolean);
-        if (!Array.isArray(merged.goals) || merged.goals.length === 0) merged.goals = [{ id: 1, name: "", amount: "", years: "", profileIdx: 4 }];
+        if (!Array.isArray(merged.goals) || merged.goals.length === 0) merged.goals = [{ id: 1, name: "", amount: "", years: "", profileIdx: 3 }];
         else merged.goals = merged.goals.filter(Boolean);
         // Ensure portAlloc arrays have correct length
         if (!Array.isArray(merged.portAlloc) || merged.portAlloc.length !== 6) merged.portAlloc = [1,1,1,1,1,1];

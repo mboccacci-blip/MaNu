@@ -41,7 +41,7 @@ export default function MagicNumberApp({onBack}){
 
   // ── Engine (computed ONCE, provided via context) ───────────────────
   var engine = useFinancialEngine(store, t, lang);
-  var { nAge, nRetAge, nEx, mSav, hasIncomeData, magicRevealed } = engine;
+  var { nAge, nRetAge, nEx, mSav, hasIncomeData } = engine;
   var hasData = nAge > 0 && (hasIncomeData || (store.manualMonthlySav !== "" && nEx > 0));
 
   // ── Navigation ─────────────────────────────────────────────────────
@@ -68,6 +68,11 @@ export default function MagicNumberApp({onBack}){
     if(meta) meta.setAttribute('content', t('dashboard.welcomeSub') || "");
   }, [lang]);
 
+  // M1: Track demo mode entry
+  useEffect(function(){
+    if(isDemo) track(EVENTS.DEMO_MODE_ENTERED, {}, {lang:lang, tier:'paid'});
+  }, [isDemo]);
+
   // ── Portfolio allocation helpers (stay in Main — used by PortfolioTab) ──
   function updatePortAlloc(idx,val){
     sf('portAlloc', function(prev){
@@ -90,7 +95,7 @@ export default function MagicNumberApp({onBack}){
     });
   }
 
-  function clearAllData(){ store.clearAll(); }
+  function clearAllData(){ store.clearAll(); track(EVENTS.DATA_CLEARED, {}, {lang:lang, tier:tier}); }
 
   // ── Context value (engine + navigation + shared derived state) ─────
   var ctx = {

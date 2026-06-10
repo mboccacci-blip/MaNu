@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import Card from '../components/Card.jsx';
 import SectionTitle from '../components/SectionTitle.jsx';
 import NumberInput from '../components/NumberInput.jsx';
@@ -11,6 +11,7 @@ import Icon from '../components/Icon.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import { fvVariable, drawdownYears } from '../utils/financial.js';
 import { track, EVENTS } from '../utils/analytics.js';
+import { submitEmailGate } from '../utils/emailGate.js';
 import useAppStore from '../store/useAppStore.js';
 import { useTranslation } from '../i18n/index.jsx';
 
@@ -19,6 +20,7 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
   const store = useAppStore();
   const sf = store.setField;
   const tab = store.tab;
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
   
   const setAge = function(v) { sf('age', v); };
   const setRetirementAge = function(v) { sf('retirementAge', v); };
@@ -93,6 +95,24 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
   const ST = SectionTitle;
   const NI = NumberInput;
   const TabBtn = TabButton;
+
+  // M1: Track when magic number is first calculated
+  var mnTracked = useRef(false);
+  useEffect(function(){
+    if(magic.real > 0 && !mnTracked.current){
+      mnTracked.current = true;
+      track(EVENTS.MAGIC_NUMBER_CALCULATED, {magic_number: Math.round(magic.real)}, {lang:lang, tier:tier});
+    }
+  },[magic.real]);
+
+  // M1: Track when paywall is viewed (free tier with valid MN)
+  var paywallTracked = useRef(false);
+  useEffect(function(){
+    if(tier==="free" && !isDemo && magic.real > 0 && !paywallTracked.current){
+      paywallTracked.current = true;
+      track(EVENTS.PAYWALL_VIEWED, {source_tab:'achieve'}, {lang:lang, tier:tier});
+    }
+  },[tier, magic.real]);
 
   return (
     <div className="fi">
@@ -177,7 +197,7 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
             <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Get your exact Magic Number + interactive scenario simulator to test different savings and return strategies.":"Conocé tu Magic Number exacto + simulador interactivo de escenarios para probar distintas estrategias de ahorro y retorno."}</p>
             <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
               <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"12px 14px",borderRadius:10,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.25)"),background:"#fff",fontSize:13,fontFamily:"Inter,sans-serif",outline:"none"}}/>
-              <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return;}track(EVENTS.EMAIL_SUBMITTED,{email:userEmail},{lang:lang,tier:tier});setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});}} className="bp" style={{padding:"12px 20px",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal →":"Revelar →"}</button>
+              <button disabled={emailSubmitting} onClick={function(){setEmailSubmitting(true);submitEmailGate({email:userEmail,lang:lang,tier:tier,tab:tab,engine:engine,store:store}).then(function(r){setEmailSubmitting(false);if(!r.success){setEmailError(r.error);return;}setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});});}} className="bp" style={{padding:"12px 20px",fontSize:13,fontWeight:700,whiteSpace:"nowrap",opacity:emailSubmitting?0.6:1}}>{emailSubmitting?(lang==="en"?"Saving...":"Guardando..."):(lang==="en"?"Reveal →":"Revelar →")}</button>
             </div>
             {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
             <div style={{fontSize:10,color:"#94a3b8",marginTop:8}}><Icon name="lock" size={10} weight="regular" /> {lang==="en"?"No spam, ever.":"Sin spam, nunca."}</div>
@@ -190,9 +210,9 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
           </div>
           {/* Path B: pay directly */}
           <div style={{padding:"16px 20px",borderRadius:14,background:"rgba(234,179,8,0.05)",border:"1px solid rgba(234,179,8,0.2)"}}>
-            <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{lang==="en"?"⚡ Full access — $14.99":"⚡ Acceso completo — $14.99"}</div>
+            <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{lang==="en"?"⚡ Full access — $3.99":"⚡ Acceso completo — $3.99"}</div>
             <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Unlock all 16 modules instantly. No email required.":"Desbloqueá los 16 módulos al instante. Sin email necesario."}</p>
-            <button className="bp" style={{padding:"12px 24px",fontSize:13,fontWeight:700,background:"linear-gradient(135deg,#a16207,#ca8a04)"}} onClick={function(){alert(lang==="en"?"Stripe coming soon! Price: $14.99":"¡Stripe próximamente! Precio: $14.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
+            <button className="bp" style={{padding:"12px 24px",fontSize:13,fontWeight:700,background:"linear-gradient(135deg,#a16207,#ca8a04)"}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
           </div>
         </Cd>
         <AdvisorCTA onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
@@ -328,9 +348,9 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
         </Cd>}
         {tier==="email"&&<Cd glow="gold" style={{textAlign:"center",padding:"24px"}}>
           <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{lang==="en"?"Enjoying the full picture?":"¿Te gusta lo que ves?"}</div>
-          <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Upgrade to Full Profile — $14.99":"Pasate al Perfil Full — $14.99"}</div>
+          <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Upgrade to Full Profile — $3.99":"Pasate al Perfil Full — $3.99"}</div>
           <p style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:14}}>{lang==="en"?"All 16 modules, year-by-year projections, debt analysis, goals simulator and premium PDF report.":"16 módulos completos, proyecciones año por año, análisis de deudas, simulador de metas e informe PDF premium."}</p>
-          <button className="bp" style={{padding:"12px 28px",fontSize:14,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe coming soon! Price: $14.99":"¡Stripe próximamente! Precio: $14.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
+          <button className="bp" style={{padding:"12px 28px",fontSize:14,fontWeight:700}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
         </Cd>}
         </>}
       </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#64748b",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}

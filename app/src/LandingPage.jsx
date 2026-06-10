@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './landing.css';
 import Icon from './components/Icon';
+import { track, pageView, EVENTS } from './utils/analytics.js';
 
 /* ----------------------------------------------------------------
    Financial metrics — Magic Number PRO context
@@ -103,7 +104,7 @@ const T = {
     freePill:     'Sin registro · Sin tarjeta · Resultado en minutos',
     h1a:          'Calculá tu',
     h1b:          'Magic Number.',
-    sub:          'Descubrí exactamente cuánto necesitás para alcanzar tu libertad financiera. Sin formularios, sin datos personales — solo abrís y empezás.',
+    sub:          'Descubrí exactamente cuánto necesitás para alcanzar tu libertad financiera. Solo abrís la app, completás tus datos básicos y listo.',
     noReg1:       'Sin registro',
     noReg2:       'Sin tarjeta de crédito',
     noReg3:       'Resultado en segundos',
@@ -111,8 +112,8 @@ const T = {
     g1:           'Empez\u00e1 gratis',
     g2:           'Sin crear cuenta',
     g3:           'Corre en tu navegador',
-    badge1num:    '16',
-    badge1lbl:    'Módulos de análisis',
+    badge1num:    '3',
+    badge1lbl:    'Módulos esenciales',
     badge2num:    '7+',
     badge2lbl:    'Perfiles de inversión',
     badge3num:    '0-100',
@@ -129,12 +130,12 @@ const T = {
     feat2desc:    'Explorá distintos escenarios de retiro: cuándo, cuánto ahorrás, qué retorno esperás. Decidí con datos reales.',
     feat3title:   'Analítica Personal',
     feat3desc:    'Visualizá tu avance, identificá brechas y recibí insights sobre cómo acelerar tu camino a la libertad financiera.',
-    stat1num:     '10 min',
+    stat1num:     '3 min',
     stat1lbl:     'Calculá tu número',
     stat2num:     '3',
     stat2lbl:     'Escenarios simultáneos',
-    stat3num:     '15+',
-    stat3lbl:     'Categorías de gasto',
+    stat3num:     '6',
+    stat3lbl:     'Perfiles de inversión',
     stat4num:     '100%',
     stat4lbl:     'Gratis · Siempre',
     ctaH2:        'Tu futuro empieza hoy.',
@@ -157,7 +158,7 @@ const T = {
     freePill:     'No signup · No credit card · Results in minutes',
     h1a:          'Calculate your',
     h1b:          'Magic Number.',
-    sub:          'Find exactly how much you need to achieve financial freedom. No forms, no personal data — just open and start.',
+    sub:          'Find exactly how much you need to achieve financial freedom. Open the app, enter your basic numbers, and get your answer.',
     noReg1:       'No signup required',
     noReg2:       'No credit card',
     noReg3:       'Results in seconds',
@@ -165,8 +166,8 @@ const T = {
     g1:           'Start free',
     g2:           'No account needed',
     g3:           'Runs in your browser',
-    badge1num:    '16',
-    badge1lbl:    'Analysis modules',
+    badge1num:    '3',
+    badge1lbl:    'Essential modules',
     badge2num:    '7+',
     badge2lbl:    'Investment profiles',
     badge3num:    '0-100',
@@ -183,12 +184,12 @@ const T = {
     feat2desc:    'Explore retirement scenarios: when you retire, savings rate, expected return. Decide with real data.',
     feat3title:   'Personal Analytics',
     feat3desc:    'Track your progress, spot gaps, and get automatic insights on how to accelerate your financial freedom.',
-    stat1num:     '10 min',
+    stat1num:     '3 min',
     stat1lbl:     'Calculate your number',
     stat2num:     '3',
     stat2lbl:     'Simultaneous scenarios',
-    stat3num:     '15+',
-    stat3lbl:     'Expense categories',
+    stat3num:     '6',
+    stat3lbl:     'Investment profiles',
     stat4num:     '100%',
     stat4lbl:     'Free · Always',
     ctaH2:        'Your future starts today.',
@@ -315,6 +316,17 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
   const [lang, setLang] = useState(initialLang);
   const t = T[lang];
 
+  // M1: Track page view on mount
+  useEffect(function() {
+    pageView('/', { lang: lang, tier: 'free' });
+  }, []);
+
+  // M1: Wrap onEnter to track landing->app transition
+  function handleEnter() {
+    track(EVENTS.LANDING_ENTERED_APP, {}, { lang: lang, tier: 'free' });
+    onEnter();
+  }
+
   return (
     <div className="lp-root">
       {/* ---- NAVBAR ---- */}
@@ -338,7 +350,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
           <button className="lp-lang-btn" onClick={() => setLang(l => l === 'es' ? 'en' : 'es')}>
             {lang === 'es' ? 'EN' : 'ES'}
           </button>
-          <button className="lp-btn-cyan" onClick={onEnter}>{t.register}</button>
+          <button className="lp-btn-cyan" onClick={handleEnter}>{t.register}</button>
         </div>
       </nav>
 
@@ -347,7 +359,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
       <section className="lp-hero">
 
         {/* LEFT — Ticker panel */}
-        <TickerPanel lang={lang} t={t} onEnter={onEnter} />
+        <TickerPanel lang={lang} t={t} onEnter={handleEnter} />
 
         {/* RIGHT — Text & CTA */}
         <div className="lp-hero-left">
@@ -378,7 +390,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
 
           {/* CTA block */}
           <div className="lp-cta-block lp-fade-up lp-fade-up-d4">
-            <button className="lp-cta-main" onClick={onEnter}>{t.cta}</button>
+            <button className="lp-cta-main" onClick={handleEnter}>{t.cta}</button>
             <div className="lp-cta-guarantees">
               {[
                 { icon: 'infinity', label: t.g1 },
@@ -466,7 +478,7 @@ export default function LandingPage({ onEnter, initialLang = 'es' }) {
           </div>
           <div className="lp-cta-actions">
             <button className="lp-btn-ghost" onClick={function(){window.location.href = window.location.pathname + '?demo=1';}}>{t.ctaSecond}</button>
-            <button className="lp-btn-cyan" onClick={onEnter} style={{ padding: '14px 28px', fontSize: 15 }}>
+            <button className="lp-btn-cyan" onClick={handleEnter} style={{ padding: '14px 28px', fontSize: 15 }}>
               {t.ctaMain}
             </button>
           </div>

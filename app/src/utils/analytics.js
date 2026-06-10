@@ -62,16 +62,32 @@ if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', flush);
 }
 
-// ── Public API ──────────────────────────────────────────────────────
+// ── Rate limiting (M4) ──────────────────────────────────────────────
+const MAX_SESSION_EVENTS = 200;
+let sessionEventCount = 0;
+let lastEventKey = '';
+let lastEventTime = 0;
 
 /**
  * Track a named event with optional properties.
  * Events are batched and sent every 5s to minimize DB calls.
+ * Rate-limited: max 200 events per session, dedup within 1s.
  * @param {string} event - Event name (use EVENTS constants)
  * @param {Object} [props] - Event properties
  * @param {Object} [context] - { lang, tier } from app state
  */
 export function track(event, props, context) {
+  // M4: Session cap
+  if (sessionEventCount >= MAX_SESSION_EVENTS) return;
+
+  // M4: Dedup — same event+props within 1 second
+  var key = event + JSON.stringify(props || {});
+  var now = Date.now();
+  if (key === lastEventKey && (now - lastEventTime) < 1000) return;
+  lastEventKey = key;
+  lastEventTime = now;
+  sessionEventCount++;
+
   var ctx = context || {};
   eventQueue.push({
     event: event,

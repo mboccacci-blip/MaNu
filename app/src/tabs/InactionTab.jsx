@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from '../components/Card.jsx';
 import SectionTitle from '../components/SectionTitle.jsx';
 import TabButton from '../components/TabButton.jsx';
@@ -8,6 +8,7 @@ import Icon from '../components/Icon.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
 import { fvVariable } from '../utils/financial.js';
 import { track, EVENTS } from '../utils/analytics.js';
+import { submitEmailGate } from '../utils/emailGate.js';
 import useAppStore from '../store/useAppStore.js';
 import { useTranslation } from '../i18n/index.jsx';
 
@@ -16,6 +17,7 @@ export default function InactionTab({ goTab, tier, engine }) {
   const store = useAppStore();
   const sf = store.setField;
   const tab = store.tab;
+  const [emailSubmitting, setEmailSubmitting] = useState(false);
   
   const setCiBase = function(v) { sf('ciBase', v); };
   const setCiH = function(v) { sf('ciH', v); };
@@ -186,7 +188,7 @@ export default function InactionTab({ goTab, tier, engine }) {
           <p style={{fontSize:14,color:"#64748b",lineHeight:1.6,maxWidth:380,margin:"0 auto 20px"}}>{lang==="en"?"Enter your email to unlock your exact Magic Number and an interactive scenario simulator.":"Dejá tu email para desbloquear tu Magic Number exacto y un simulador interactivo de escenarios."}</p>
           <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
             <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"14px 16px",borderRadius:12,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.2)"),background:"#fff",fontSize:14,fontFamily:"Inter,sans-serif",outline:"none"}}/>
-            <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return;}track(EVENTS.EMAIL_SUBMITTED,{email:userEmail},{lang:lang,tier:tier});setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Unlock":"Desbloquear"} →</button>
+            <button disabled={emailSubmitting} onClick={function(){setEmailSubmitting(true);submitEmailGate({email:userEmail,lang:lang,tier:tier,tab:tab,engine:engine,store:store}).then(function(r){setEmailSubmitting(false);if(!r.success){setEmailError(r.error);return;}setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});});}} className="bp" style={{padding:"14px 24px",fontSize:14,fontWeight:700,whiteSpace:"nowrap",opacity:emailSubmitting?0.6:1}}>{emailSubmitting?(lang==="en"?"Saving...":"Guardando..."):(lang==="en"?"Unlock":"Desbloquear")} →</button>
           </div>
           {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
           <div style={{fontSize:11,color:"#64748b",marginTop:10}}><Icon name="lock" size={11} weight="regular" /> {lang==="en"?"We won't share your email. No spam, ever.":"No compartimos tu email. Sin spam, nunca."}</div>
@@ -196,7 +198,7 @@ export default function InactionTab({ goTab, tier, engine }) {
           <div style={{fontSize:28,marginBottom:10}}><Icon name="star" size={28} weight="fill" color="#eab308" /></div>
           <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"Desbloqueá tu Perfil Full"}</div>
           <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis across all 16 modules, detailed projections, and a premium PDF report.":"Obtené tu análisis financiero completo en los 16 módulos, proyecciones detalladas e informe PDF premium."}</p>
-          <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Stripe integration coming soon! Price: $14.99":"¡Integración con Stripe próximamente! Precio: $14.99")}}>{lang==="en"?"Unlock Full Profile — $14.99":"Desbloquear Perfil Full — $14.99"}</button>
+          <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99")}}>{lang==="en"?"Unlock Full Profile — $3.99":"Desbloquear Perfil Full — $3.99"}</button>
         </Cd>}
 
         </> )})()}

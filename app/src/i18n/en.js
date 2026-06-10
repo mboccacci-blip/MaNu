@@ -710,6 +710,7 @@ export default {
     median: "Median",
     you: "You",
     age: "Age {age}",
+    disclaimer: "Benchmarks based on US Federal Reserve Survey of Consumer Finances. Used as international reference.",
   },
 
   // Common

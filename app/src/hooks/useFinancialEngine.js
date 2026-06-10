@@ -13,7 +13,7 @@ export default function useFinancialEngine(store, t, lang) {
     assetTax, portAlloc, portContribAlloc, retProfileIdx, chartProfileIdx, chartRetireIdx,
     showNom, projYears, showScenarios, scenProfileIdx, costNSProfileIdx, customReturn,
     savSliders, extraIncome, eiTemporary, eiYears, costItemPrice, costProfileIdx, goals,
-    simSav, simMo, simRet, revDes, revYrs, revSS, revSav, revMo, revRet, revRetProf, ciBase, ciH, ciDelayProf
+    simSav, simMo, simRet, revDes, revYrs, revSS, revSav, revMo, revRet, revRetProf
   } = store;
 
   const INFL=customInflation/100;

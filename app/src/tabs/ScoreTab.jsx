@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import Cd from '../components/Card.jsx';
 import ST from '../components/SectionTitle.jsx';
 import Gauge from '../components/Gauge.jsx';
@@ -6,6 +7,7 @@ import { useTranslation } from '../i18n/index.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import { fmt, fmtC } from '../utils/formatters.js';
 import useAppStore from '../store/useAppStore.js';
+import { track, EVENTS } from '../utils/analytics.js';
 
 const ID_MAP = {"Under 35":"under35","35–44":"35to44","45–54":"45to54","55–64":"55to64","65–74":"65to74","75+":"75plus"};
 
@@ -13,6 +15,15 @@ export default function ScoreTab({ goTab, tier, engine }) {
   var { t } = useTranslation();
   var tab = useAppStore(function(s){ return s.tab; });
   var { hScore, nAge, savRate, totalNetWorth, bSR, bNW, percentiles } = engine;
+
+  // M1: Track score viewed
+  var scoreTracked = useRef(false);
+  useEffect(function(){
+    if(!scoreTracked.current){
+      scoreTracked.current = true;
+      track(EVENTS.SCORE_VIEWED, {score: hScore.s}, {lang: t('app.lang') || 'es', tier: tier});
+    }
+  },[]);
 
   return (
     <div className="fi">
@@ -72,6 +83,7 @@ export default function ScoreTab({ goTab, tier, engine }) {
               </div>
             </div>)})}
         </div>:<p style={{color:"#64748b",fontSize:13}}>{t('score.enterAge')} <span style={{color:"#22c55e",cursor:"pointer",textDecoration:"underline"}} onClick={function(){goTab("situation")}}>{t('score.enterAgeLink')}</span>.</p>}
+        <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.08)",fontSize:10,color:"#64748b",textAlign:"center",marginTop:12,lineHeight:1.5,fontStyle:"italic"}}>{t('benchmarking.disclaimer') || 'Benchmarks based on US Federal Reserve Survey of Consumer Finances. Used as international reference.'}</div>
       </Cd>
       <AdvisorCTA tab={tab}/>
       <NavButtons tab={tab} goTab={goTab} tier={tier}/>
