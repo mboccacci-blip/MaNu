@@ -33,14 +33,17 @@ export function gB(d, a) {
   return d.find(function(b) { return a >= b.minAge && a <= b.maxAge; }) || d[0];
 }
 
-/** Suggest profile based on investment horizon */
-export function profByHorizon(y) {
-  if (y < 1) return PROFILES[0];
-  if (y < 2) return PROFILES[1];
-  if (y < 3) return PROFILES[3];
-  if (y < 5) return PROFILES[4];
-  if (y < 10) return PROFILES[5];
-  return PROFILES[6];
+/** Simulate retirement drawdown: how many years does startBalance last?
+ *  Returns number of years of coverage (capped at maxYears). */
+export function drawdownYears(startBalance, annualWithdraw, returnRate, maxYears) {
+  var bal = startBalance, yrs = 0;
+  while (bal > 0 && yrs < maxYears) {
+    bal = bal * (1 + returnRate) - annualWithdraw;
+    yrs++;
+    if (bal <= 0) break;
+  }
+  if (bal > 0) yrs = maxYears;
+  return yrs;
 }
 
 /** Clamp value between min and max */

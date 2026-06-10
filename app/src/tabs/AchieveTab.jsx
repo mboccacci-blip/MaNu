@@ -9,7 +9,7 @@ import AdvisorCTA from '../components/AdvisorCTA.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
-import { fvVariable } from '../utils/financial.js';
+import { fvVariable, drawdownYears } from '../utils/financial.js';
 import { track, EVENTS } from '../utils/analytics.js';
 import useAppStore from '../store/useAppStore.js';
 import { useTranslation } from '../i18n/index.jsx';
@@ -70,10 +70,8 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
   // Base coverage: how many years baseProjected lasts withdrawing desiredAfterSS
   var baseCoverage = useMemo(function(){
     if(baseProjected<=0||desiredAfterSS<=0||nYP<=0) return null;
-    var retR = (adjProfiles[2]||adjProfiles[0]).effReal; // Treasuries for retirement drawdown
-    var bal=baseProjected; var yrs=0; var annualW=desiredAfterSS*12;
-    while(bal>0&&yrs<60){ bal=bal*(1+retR)-annualW; if(bal>0)yrs++; else{yrs++;break;} }
-    if(bal>0) yrs=60;
+    var retR = (adjProfiles[2]||adjProfiles[0]).effReal;
+    var yrs = drawdownYears(baseProjected, desiredAfterSS*12, retR, 60);
     var sufficient = yrs >= nYP;
     return {yearsOfCoverage:yrs, untilAge:nRetAge+yrs, sufficient:sufficient};
   },[baseProjected, desiredAfterSS, nYP, nRetAge, adjProfiles]);
@@ -81,9 +79,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
   var simCoverage = useMemo(function(){
     if(simProjected<=0||desiredAfterSS<=0||nYP<=0) return null;
     var retR = (adjProfiles[2]||adjProfiles[0]).effReal;
-    var bal=simProjected; var yrs=0; var annualW=desiredAfterSS*12;
-    while(bal>0&&yrs<60){ bal=bal*(1+retR)-annualW; if(bal>0)yrs++; else{yrs++;break;} }
-    if(bal>0) yrs=60;
+    var yrs = drawdownYears(simProjected, desiredAfterSS*12, retR, 60);
     var sufficient = yrs >= nYP;
     return {yearsOfCoverage:yrs, untilAge:nRetAge+yrs, sufficient:sufficient};
   },[simProjected, desiredAfterSS, nYP, nRetAge, adjProfiles]);
@@ -133,7 +129,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
 
       </Cd>
       {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
-        {/* FREE TIER: Range (asymmetric 0.75×–1.30× + $50K rounding) + Email CTA */}
+        {/* FREE TIER: Range (0.85×–1.15× + $25K rounding) + Email CTA */}
         {tier==="free"&&!isDemo&&<>
         <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
@@ -180,7 +176,7 @@ export default function AchieveTab({ tab, goTab, tier, engine, isDemo }) {
             <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Get your exact Magic Number + interactive scenario simulator to test different savings and return strategies.":"Conocé tu Magic Number exacto + simulador interactivo de escenarios para probar distintas estrategias de ahorro y retorno."}</p>
             <div style={{display:"flex",gap:8,maxWidth:400,margin:"0 auto"}}>
               <input type="email" value={userEmail} onChange={function(e){setUserEmail(e.target.value);setEmailError("")}} placeholder={lang==="en"?"your@email.com":"tu@email.com"} style={{flex:1,padding:"12px 14px",borderRadius:10,border:"1px solid "+(emailError?"#ef4444":"rgba(96,165,250,0.25)"),background:"#fff",fontSize:13,fontFamily:"Inter,sans-serif",outline:"none"}}/>
-              <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return;}setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});}} className="bp" style={{padding:"12px 20px",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal →":"Revelar →"}</button>
+              <button onClick={function(){var re=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!re.test(userEmail)){setEmailError(lang==="en"?"Enter a valid email":"Ingresá un email válido");return;}track(EVENTS.EMAIL_SUBMITTED,{email:userEmail},{lang:lang,tier:tier});setTier("email");setEmailError("");window.scrollTo({top:0,behavior:"smooth"});}} className="bp" style={{padding:"12px 20px",fontSize:13,fontWeight:700,whiteSpace:"nowrap"}}>{lang==="en"?"Reveal →":"Revelar →"}</button>
             </div>
             {emailError&&<div style={{color:"#ef4444",fontSize:12,marginTop:6}}>{emailError}</div>}
             <div style={{fontSize:10,color:"#94a3b8",marginTop:8}}><Icon name="lock" size={10} weight="regular" /> {lang==="en"?"No spam, ever.":"Sin spam, nunca."}</div>

@@ -14,6 +14,7 @@ import ReportsTab from './tabs/ReportsTab.jsx';
 import AchieveTab from './tabs/AchieveTab.jsx';
 import InactionTab from './tabs/InactionTab.jsx';
 import useFinancialEngine from './hooks/useFinancialEngine.js';
+
 import GoalsTab from './tabs/GoalsTab.jsx';
 import SaveTab from './tabs/SaveTab.jsx';
 import EarnTab from './tabs/EarnTab.jsx';
@@ -35,10 +36,7 @@ export default function MagicNumberApp({onBack}){
   // Destructure all state for backward compatibility with existing JSX
   const tab = store.tab;
   const setTab = function(v) { sf('tab', v); };
-  const setupDone = store.setupDone;
-  const setSetupDone = function(v) { sf('setupDone', v); };
   const tier = isDemo ? "paid" : store.tier;
-  const setTier = function(v) { sf('tier', v); };
   const demoBannerVisible = isDemo ? true : store.demoBannerVisible;
   const setDemoBannerVisible = function(v) { sf('demoBannerVisible', v); };
   const showLeadModal = store.showLeadModal;
@@ -71,7 +69,6 @@ export default function MagicNumberApp({onBack}){
   const age = store.age; const setAge = function(v) { sf('age', v); };
   const monthlyIncome = store.monthlyIncome; const setMonthlyIncome = function(v) { sf('monthlyIncome', v); };
   const expenses = store.expenses; const setExpenses = function(v) { sf('expenses', v); };
-  const nEId = useRef(store._nEId);
   const ownsHome = store.ownsHome; const setOwnsHome = function(v) { sf('ownsHome', v); };
   const vacationAnnual = store.vacationAnnual; const setVacationAnnual = function(v) { sf('vacationAnnual', v); };
   const coupleMode = store.coupleMode; const setCoupleMode = function(v) { sf('coupleMode', v); };
@@ -82,18 +79,17 @@ export default function MagicNumberApp({onBack}){
 
   // Debts
   const debts = store.debts; const setDebts = function(v) { sf('debts', v); };
-  const noDebts = store.noDebts; const setNoDebts = function(v) { sf('noDebts', v); };
   const noMortgage = store.noMortgage; const setNoMortgage = function(v) { sf('noMortgage', v); };
+  const mortgageYearsLeft = store.mortgageYearsLeft; const setMortgageYearsLeft = function(v) { sf('mortgageYearsLeft', v); };
   const mortgageBalance = store.mortgageBalance; const setMortgageBalance = function(v) { sf('mortgageBalance', v); };
   const mortgageRate = store.mortgageRate; const setMortgageRate = function(v) { sf('mortgageRate', v); };
   const mortgagePayment = store.mortgagePayment; const setMortgagePayment = function(v) { sf('mortgagePayment', v); };
-  const mortgageYearsLeft = store.mortgageYearsLeft; const setMortgageYearsLeft = function(v) { sf('mortgageYearsLeft', v); };
+  const noDebts = store.noDebts; const setNoDebts = function(v) { sf('noDebts', v); };
   const noCarLoan = store.noCarLoan; const setNoCarLoan = function(v) { sf('noCarLoan', v); };
   const carBalance = store.carBalance; const setCarBalance = function(v) { sf('carBalance', v); };
+  const carYearsLeft = store.carYearsLeft; const setCarYearsLeft = function(v) { sf('carYearsLeft', v); };
   const carRate = store.carRate; const setCarRate = function(v) { sf('carRate', v); };
   const carPayment = store.carPayment; const setCarPayment = function(v) { sf('carPayment', v); };
-  const carYearsLeft = store.carYearsLeft; const setCarYearsLeft = function(v) { sf('carYearsLeft', v); };
-  const nDId = useRef(store._nDId);
 
   // Retirement
   const retirementAge = store.retirementAge; const setRetirementAge = function(v) { sf('retirementAge', v); };
@@ -128,7 +124,6 @@ export default function MagicNumberApp({onBack}){
   const costItemPrice = store.costItemPrice; const setCostItemPrice = function(v) { sf('costItemPrice', v); };
   const costProfileIdx = store.costProfileIdx; const setCostProfileIdx = function(v) { sf('costProfileIdx', v); };
   const goals = store.goals; const setGoals = function(v) { sf('goals', v); };
-  const nGId = useRef(store._nGId);
   const showRec = store.showRec; const setShowRec = function(v) { sf('showRec', v); };
   const simSav = store.simSav; const setSimSav = function(v) { sf('simSav', v); };
   const simMo = store.simMo; const setSimMo = function(v) { sf('simMo', v); };
@@ -149,15 +144,12 @@ export default function MagicNumberApp({onBack}){
   const ciH = store.ciH; const setCiH = function(v) { sf('ciH', v); };
   const ciDelayProf = store.ciDelayProf; const setCiDelayProf = function(v) { sf('ciDelayProf', v); };
   const ciBase = store.ciBase; const setCiBase = function(v) { sf('ciBase', v); };
-  const ciSav = store.ciSav; const setCiSav = function(v) { sf('ciSav', v); };
-  const ciMo = store.ciMo; const setCiMo = function(v) { sf('ciMo', v); };
 
   // ── No more manual persistence — Zustand persist middleware handles it ──
   const loaded = true; // Always loaded with Zustand
 
   function clearAllData() {
     store.clearAll();
-    nEId.current = 6; nDId.current = 2; nGId.current = 2;
   }
 
   const engine = useFinancialEngine(store, t, lang);
@@ -176,12 +168,15 @@ export default function MagicNumberApp({onBack}){
   var goTab=useCallback(function(t){setTab(t);track(EVENTS.TAB_VIEWED,{tab:t},{lang:lang,tier:tier});if(t==="retirement"&&!magicRevealed)setTimeout(function(){setMagicRevealed(true)},400);window.scrollTo({top:0,behavior:"smooth"})},[magicRevealed,lang,tier]);
   var hasData=nAge>0&&(hasIncomeData||(manualMonthlySav!==""&&nEx>0));
   var hasAssumptions=nAge>0&&nRetAge>0;
-  var uE=useCallback(function(id,f,v){setExpenses(function(p){return p.map(function(e){return e.id===id?Object.assign({},e,{[f]:v}):e})})},[]);
-  var aE=useCallback(function(){if(expenses.length>=15)return;setExpenses(function(p){return p.concat([{id:nEId.current++,name:"",amount:"",discretionary:true}])})},[expenses.length]);
-  var rE=useCallback(function(id){setExpenses(function(p){return p.filter(function(e){return e.id!==id})})},[]);
-  var uD=useCallback(function(id,f,v){setDebts(function(p){return p.map(function(d){return d.id===id?Object.assign({},d,{[f]:v}):d})})},[]);
-  var aD=useCallback(function(){if(debts.length>=8)return;setDebts(function(p){return p.concat([{id:nDId.current++,name:"",balance:"",rate:"",minPayment:""}])})},[debts.length]);
-  var rD=useCallback(function(id){setDebts(function(p){return p.filter(function(d){return d.id!==id})})},[]);
+  var uE=store.updateExpense;
+  var aE=store.addExpense;
+  var rE=store.removeExpense;
+  var uD=store.updateDebt;
+  var aD=store.addDebt;
+  var rD=store.removeDebt;
+  var uG=store.updateGoal;
+  var aG=store.addGoal;
+  var rG=store.removeGoal;
 
   function updatePortAlloc(idx,val){
     setPortAlloc(function(prev){
@@ -201,10 +196,6 @@ export default function MagicNumberApp({onBack}){
         var nt=n.reduce(function(s,v){return s+v},0);if(nt>100)n[idx]-=(nt-100)}
       return n});
   }
-
-  function uG(id,f,v){setGoals(function(p){return p.map(function(g){return g.id===id?Object.assign({},g,{[f]:v}):g})})}
-  function aG(){if(goals.length>=10)return;setGoals(function(p){return p.concat([{id:nGId.current++,name:"",amount:"",years:"",profileIdx:4}])})}
-  function rG(id){setGoals(function(p){return p.filter(function(g){return g.id!==id})})}
 
 
   return(<>

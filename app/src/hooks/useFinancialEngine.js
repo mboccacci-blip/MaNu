@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PROFILES, SCENARIO_SPREAD, BENCH_SR, BENCH_NW } from '../constants.js';
-import { mR, fvC, fvL, pvA, gB, clamp, yearByYear, fvVariable } from '../utils/financial.js';
+import { mR, fvC, fvL, pvA, gB, clamp, yearByYear, fvVariable, drawdownYears } from '../utils/financial.js';
 
 function profById(id, list) { return list.find(function(p){ return p.id === id; }) || list[list.length-1]; }
 
@@ -232,30 +232,30 @@ export default function useFinancialEngine(store, t, lang) {
     var a=Number(e.amount),cut=savSliders[e.id]!==undefined?savSliders[e.id]:50;
     var saved=a*(cut/100);
     return Object.assign({},e,{cur:a,cutPct:cut,saved:saved,
-      imp10:fvC(saved,0.04,10),imp20:fvC(saved,0.04,20),imp30:fvC(saved,0.04,30)});
-  }).sort(function(a,b){return b.imp10-a.imp10})},[expenses,savSliders]);
+      imp10:fvC(saved,retProfReturn,10),imp20:fvC(saved,retProfReturn,20),imp30:fvC(saved,retProfReturn,30)});
+  }).sort(function(a,b){return b.imp10-a.imp10})},[expenses,savSliders,retProfReturn]);
 
   var totalSavOpp=useMemo(function(){
     var mo=savOpps.reduce(function(s,o){return s+o.saved},0);
-    return{mo:mo,imp10:fvC(mo,0.04,10),imp20:fvC(mo,0.04,20),imp30:fvC(mo,0.04,30)};
-  },[savOpps]);
+    return{mo:mo,imp10:fvC(mo,retProfReturn,10),imp20:fvC(mo,retProfReturn,20),imp30:fvC(mo,retProfReturn,30)};
+  },[savOpps,retProfReturn]);
 
   var earnProj=useMemo(function(){if(nEI<=0)return null;
     var yrs=eiTemporary?nEIYrs:50;
     function earnFV(totalYears){
-      if(!eiTemporary)return fvC(nEI,0.04,totalYears);
-      var atEnd=fvC(nEI,0.04,Math.min(totalYears,yrs));
-      if(totalYears>yrs)atEnd=fvL(atEnd,0.04,totalYears-yrs);
+      if(!eiTemporary)return fvC(nEI,retProfReturn,totalYears);
+      var atEnd=fvC(nEI,retProfReturn,Math.min(totalYears,yrs));
+      if(totalYears>yrs)atEnd=fvL(atEnd,retProfReturn,totalYears-yrs);
       return atEnd;
     }
     return{imp10:earnFV(10),imp20:earnFV(20),imp30:earnFV(30),
       data:Array.from({length:31},function(_,y){return{l:t('app.yr')+" "+y,v:earnFV(y)}})};
-  },[nEI,eiTemporary,nEIYrs,t]);
+  },[nEI,eiTemporary,nEIYrs,retProfReturn,t]);
 
   var combinedImpact=useMemo(function(){
     var mo=totalSavOpp.mo+nEI;
-    return{mo:mo,imp10:fvC(mo,0.04,10),imp20:fvC(mo,0.04,20),imp30:fvC(mo,0.04,30)};
-  },[totalSavOpp.mo,nEI]);
+    return{mo:mo,imp10:fvC(mo,retProfReturn,10),imp20:fvC(mo,retProfReturn,20),imp30:fvC(mo,retProfReturn,30)};
+  },[totalSavOpp.mo,nEI,retProfReturn]);
 
   var costInRet=useMemo(function(){
     var price=Number(costItemPrice)||0;if(price<=0||ytr<=0)return null;
@@ -328,12 +328,7 @@ export default function useFinancialEngine(store, t, lang) {
     var afterSS=Math.max(rDes-ssToday,0);
     if(afterSS<=0)return{yearsOfCoverage:rYrs,untilAge:nRetAge+rYrs,projected:projected,surplus:projected,yrsToRetire:yrsToRetire,ssToday:ssToday,afterSS:0,retR:retR,targetYrs:rYrs,sufficient:true};
     // Simulate drawdown: how many years does projected last?
-    var bal=projected;var yearsOfCoverage=0;var annualWithdraw=afterSS*12;
-    while(bal>0&&yearsOfCoverage<60){
-      bal=bal*(1+retR)-annualWithdraw;
-      if(bal>0)yearsOfCoverage++;else{yearsOfCoverage++;break;}
-    }
-    if(bal>0)yearsOfCoverage=60;
+    var yearsOfCoverage = drawdownYears(projected, afterSS*12, retR, 60);
     var sufficient=yearsOfCoverage>=rYrs;
     var legPV=nLegacy>0?nLegacy/Math.pow(1+retR,rYrs):0;
     var mn=pvA(afterSS,retR,rYrs)+legPV;
@@ -353,12 +348,12 @@ export default function useFinancialEngine(store, t, lang) {
     else if(!noDebts&&totalDebtAll>0)ds=22;
     s+=ds;bd.push({l:t('score.debtHealth'),s:ds,m:25,st:ds>=20?"good":ds>=15?"ok":"bad"});
     var rs=0;
-    if(magic.real>0&&ytr>0){var proj=fvVariable(nEx,mSav,0.04,ytr,debtEvents);var otp=proj/magic.real;
+    if(magic.real>0&&ytr>0){var proj=fvVariable(nEx,mSav,retProfReturn,ytr,debtEvents);var otp=proj/magic.real;
       rs=otp>=1?25:otp>=0.8?22:otp>=0.6?18:otp>=0.4?14:otp>=0.2?10:5;
       if(otp<0.8)recs.push({cat:t('score.retirementProgress'),priority:otp<0.4?1:2,text:otp<0.4?t('score.significantlyBehind'):t('score.makingProgressInvest')})}
     else if(nEx>0)rs=10;
     s+=rs;
-    var rOT=magic.real>0&&ytr>0?((fvVariable(nEx,mSav,0.04,ytr,debtEvents))/magic.real*100).toFixed(0):null;
+    var rOT=magic.real>0&&ytr>0?((fvVariable(nEx,mSav,retProfReturn,ytr,debtEvents))/magic.real*100).toFixed(0):null;
     bd.push({l:t('score.retirementProgress'),s:rs,m:25,st:rs>=20?"good":rs>=14?"ok":"bad",det:rOT?t('score.onTrackDet', {rate: rOT, yrs: ytr}):null});
     var ps=nEx>0&&mSav>0?20:nEx>0||mSav>0?12:3;
     s+=ps;bd.push({l:t('score.savingsHabit'),s:ps,m:20,st:ps>=15?"good":ps>=8?"ok":"bad",det:ps>=15?t('score.savingMonthly'):t('score.savingTip')});

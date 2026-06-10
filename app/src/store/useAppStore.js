@@ -18,7 +18,6 @@ const DEFAULT_EXP = [
 const INITIAL_STATE = {
   // ── Navigation & UI ──
   tab: "achieve",
-  setupDone: false,
   tier: "free",
   demoBannerVisible: false,
   showLeadModal: false,
@@ -109,8 +108,6 @@ const INITIAL_STATE = {
   ciH: 20,
   ciDelayProf: 4,
   ciBase: 0,
-  ciSav: null,
-  ciMo: null,
 };
 
 // Fields that get persisted to localStorage
@@ -138,15 +135,6 @@ const useAppStore = create(
             u[field] = typeof value === 'function' ? value(s[field]) : value;
             return u;
           });
-        },
-
-        // ── Tab navigation ──
-        goTab: function (t) {
-          set({ tab: t });
-          if (t === "retirement" && !get().magicRevealed) {
-            setTimeout(function () { set({ magicRevealed: true }); }, 400);
-          }
-          window.scrollTo({ top: 0, behavior: "smooth" });
         },
 
         // ── Expense helpers ──
@@ -203,10 +191,10 @@ const useAppStore = create(
         },
         addGoal: function () {
           set(function (s) {
-            if (s.goals.length >= 8) return {};
+            if (s.goals.length >= 10) return {};
             var nId = s._nGId;
             return {
-              goals: s.goals.concat([{ id: nId, name: "", amount: "", years: "", profileIdx: 4 }]),
+              goals: s.goals.concat([{ id: nId, name: "", amount: "", years: "", profileIdx: 3 }]),
               _nGId: nId + 1,
             };
           });

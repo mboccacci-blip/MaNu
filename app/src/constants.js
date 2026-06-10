@@ -1,5 +1,5 @@
 export const INFLATION_DEFAULT = 0.025;
-export const RET_NOM = 0.04;
+
 export const SCENARIO_SPREAD = 0.02;
 
 export const PROFILES = [
@@ -11,13 +11,7 @@ export const PROFILES = [
   { id:"equities",name:"100% Equities",nomReturn:0.09,realReturn:0.065,desc:"All stocks (S&P 500). Highest return and volatility.",icon:"rocket",color:"#f59e0b",risk:6,vol:0.15},
 ];
 
-export const DEFAULT_EXP = [
-  {id:1,name:"Housing / Rent",amount:"",discretionary:false,mortgageAlt:"Property Tax, Insurance & HOA"},
-  {id:2,name:"Food & Groceries",amount:"",discretionary:false},
-  {id:3,name:"Transportation",amount:"",discretionary:true},
-  {id:4,name:"Utilities & Bills",amount:"",discretionary:false},
-  {id:5,name:"Dining Out",amount:"",discretionary:true},
-];
+
 
 export const BENCH_SR = [
   {minAge:16,maxAge:24,med:5,p25:2,p75:10,l:"Under 25"},
@@ -38,6 +32,7 @@ export const BENCH_NW = [
 ];
 
 export const TABS = [
+  {id:"dashboard",label:"Dashboard",icon:"squares-four"},
   {id:"achieve",label:"Your MN",icon:"target"},
   {id:"inaction",label:"Cost of Inaction",icon:"hourglass"},
   {id:"assumptions",label:"You",icon:"user"},
