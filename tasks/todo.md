@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-04-29 (sesion 4) — W3+W6+W7+W8+W9+W10+W11+W12+W14+W21+W22+W23+W24+W25+W26+W27+W28+W29+W30+W31+W32+W33+W34+W35 completados. Score: 28/40.
+> Actualizado: 2026-06-10 (reactivacion post-hibernacion) — Audit completo + 14 fixes aplicados. Score: 29/41.
 
 ---
 
@@ -74,6 +74,23 @@
 - [ ] **W39** — Campo "Anos en jubilacion" → considerar "Hasta que edad planificas vivir"
 - [ ] **W40** — Grafico ano-por-ano: hacerlo colapsable por defecto
 
+### Audit 10-Jun-2026 (REACTIVACION)
+- [x] **W41** — Audit tecnico completo (27 hallazgos) + 14 fixes resueltos:
+  - S1: .env en .gitignore
+  - B1: email gate ahora trackea a Supabase
+  - B2: regex InactionTab corregida
+  - B3: Dashboard agregado a TABS
+  - B4: IDs duplicados fix (store CRUD helpers)
+  - F1: profByHorizon eliminada (crash PROFILES[6])
+  - F2: 6x hard-coded 0.04 -> retProfReturn
+  - F5: off-by-one drawdown corregido
+  - F7: comentario rango free corregido
+  - Q1: drawdownYears centralizada (3 copias -> 1)
+  - Dead code: -3 archivos, -155 lineas netas
+  - Store: goTab/setupDone/ciSav/ciMo eliminados, goal limits alineados
+- [ ] **W42** — Pendientes audit: F3 (compounding), F4 (tax model), AR1 (god component)
+- [ ] **W43** — Tests unitarios para financial.js (Q3)
+
 ---
 
 ## FASES COMPLETADAS (referencia historica)
@@ -91,10 +108,11 @@
 
 ## Estado del Repositorio
 - **Branch:** `master`
-- **Remote:** `origin` → `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `de7cf5c` — ui: amber color for returns disclaimer
-- **Local = Remote:** sincronizado (push exitoso, GitHub Actions auto-deploy)
+- **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
+- **HEAD:** `4ecf6f5` — fix: resolve audit findings B1-B4 F1-F2 F7 S1 Q1 + dead code cleanup
+- **Local = Remote:** sincronizado
 - **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
 - **Deploy:** GitHub Actions auto on push to master
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
+- **Status:** REACTIVADO (salio de hibernacion 10-Jun-2026)

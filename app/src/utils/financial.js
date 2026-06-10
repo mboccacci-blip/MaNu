@@ -34,13 +34,14 @@ export function gB(d, a) {
 }
 
 /** Simulate retirement drawdown: how many years does startBalance last?
- *  Returns number of years of coverage (capped at maxYears). */
+ *  Returns number of FULL years of coverage (capped at maxYears).
+ *  A year is only counted if the balance remains positive after withdrawal. */
 export function drawdownYears(startBalance, annualWithdraw, returnRate, maxYears) {
   var bal = startBalance, yrs = 0;
-  while (bal > 0 && yrs < maxYears) {
+  while (yrs < maxYears) {
     bal = bal * (1 + returnRate) - annualWithdraw;
-    yrs++;
     if (bal <= 0) break;
+    yrs++;
   }
   if (bal > 0) yrs = maxYears;
   return yrs;

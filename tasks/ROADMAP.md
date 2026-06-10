@@ -1,15 +1,15 @@
-# MaNu PRO — Roadmap (Actualizado 17-Abr-2026)
+# MaNu PRO — Roadmap (Actualizado 10-Jun-2026)
 
 ## Estado Actual — Snapshot
 
 | Dimension | Score | Notas |
 |-----------|:-----:|-------|
-| Motor Financiero | 9/10 | Extraido, 354 lineas, robusto |
+| Motor Financiero | 9/10 | Extraido, ~380 lineas, robusto. F2 corregido (retProfReturn). |
 | UX/UI | 9/10 | Estable, responsive |
 | Landing Page | 9.5/10 | Reescrita: freemium-honest |
 | i18n (EN/ES) | 9/10 | 400+ keys, ambos idiomas completos |
-| Arquitectura | **10/10** | Monolito desmontado: 16 tabs + 15 componentes |
-| Analytics | 8/10 | 4 eventos Supabase, live en produccion |
+| Arquitectura | **8/10** | 16 tabs + 15 componentes. AR1 (god component) pendiente. |
+| Analytics | 8.5/10 | 5 eventos Supabase (EMAIL_SUBMITTED agregado), live en produccion |
 | Lead Capture | 9/10 | Supabase live, 2 leads test verificados |
 | AdvisorCTA | 10/10 | Self-contained, presente en los 16 tabs |
 | Auth / Payments | 0/10 | No iniciado (pendiente D2) |
@@ -17,9 +17,10 @@
 | Tests | 0/10 | 6 edge cases definidos, no escritos |
 | Trust Layer (Legal) | 3/10 | Disclaimer en footer, T&C pendiente D2 |
 
-**HEAD commit:** `2d8b5db` — AdvisorCTA global (16 tabs)
+**HEAD commit:** `4ecf6f5` — fix: resolve audit findings
 **Produccion:** https://magic-number.app | https://master.manu-pro.pages.dev/
 **Revenue:** $0 | **Users:** 0 (pre-launch) | **Leads:** 2 (test) | **Analytics:** live
+**Status:** REACTIVADO (salio de hibernacion 10-Jun-2026)
 
 ---
 
@@ -49,8 +50,7 @@ app/src/
 │   ├── Tip.jsx
 │   └── Toggle.jsx
 ├── hooks/
-│   ├── useFinancialEngine.js   # Motor financiero — 354 lineas
-│   └── usePersistedState.js    # Helper localStorage
+│   └── useFinancialEngine.js   # Motor financiero — ~380 lineas
 ├── i18n/
 │   ├── en.js                   # 400+ keys ingles
 │   └── es.js                   # 400+ keys espanol
@@ -159,6 +159,7 @@ app/src/
 
 | Commit | Descripcion |
 |--------|-------------|
+| `4ecf6f5` | Audit fix: B1-B4 F1-F2 F5 F7 S1 Q1 + dead code cleanup (reactivacion) |
 | `2d8b5db` | AdvisorCTA global — self-contained en 16 tabs |
 | `e266f2a` | 8-point partner feedback: Option B reverse calc, profById, 6 perfiles |
 | `e3368c0` | Simulator tracking + email CTA + paid upgrade toast |
