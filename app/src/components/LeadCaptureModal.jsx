@@ -13,6 +13,7 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
   const [phone, setPhone] = useState('');
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
   const [errorMsg, setErrorMsg] = useState('');
+  const [consent, setConsent] = useState(false);
 
   if (!show) return null;
 
@@ -37,6 +38,10 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     privacy: lang === 'en'
       ? 'Your data is only shared with verified advisors. We never sell your information.'
       : 'Tu información solo se comparte con asesores verificados. Nunca vendemos tus datos.',
+    consent: lang === 'en'
+      ? 'I agree to share my financial profile with a verified advisor and accept the'
+      : 'Acepto compartir mi perfil financiero con un asesor verificado y acepto la',
+    consentLink: lang === 'en' ? 'privacy policy' : 'política de privacidad',
   };
 
   function fmt(v) {
@@ -62,7 +67,8 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     }
     setStatus('sending');
     setErrorMsg('');
-    var result = await submitLead({ name: name, email: email, phone: phone }, financials);
+    var leadFinancials = Object.assign({}, financials, { consent_given: true, consent_timestamp: new Date().toISOString() });
+    var result = await submitLead({ name: name, email: email, phone: phone }, leadFinancials);
     if (result.success) {
       setStatus('success');
       track(EVENTS.LEAD_SUBMITTED, { tier: financials.tier, source_tab: financials.sourceTab }, { lang: lang, tier: financials.tier });
@@ -160,7 +166,15 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
             </div>
           </div>
 
-          <button type="submit" disabled={status==='sending'} className="bp" style={{width:'100%',padding:'14px 24px',fontSize:15,fontWeight:700,opacity:status==='sending'?0.7:1}}>
+          {/* Consent checkbox */}
+          <div style={{display:'flex',gap:8,alignItems:'flex-start',marginBottom:16}}>
+            <input type="checkbox" id="lead-consent" checked={consent} onChange={function(e){setConsent(e.target.checked)}} style={{marginTop:3,accentColor:'#3b82f6',cursor:'pointer',flexShrink:0}} />
+            <label htmlFor="lead-consent" style={{fontSize:11,color:'#475569',lineHeight:1.5,cursor:'pointer'}}>
+              {t.consent} <a href="/privacy.html" target="_blank" rel="noopener" style={{color:'#3b82f6',textDecoration:'underline'}}>{t.consentLink}</a>.
+            </label>
+          </div>
+
+          <button type="submit" disabled={status==='sending'||!consent} className="bp" style={{width:'100%',padding:'14px 24px',fontSize:15,fontWeight:700,opacity:(status==='sending'||!consent)?0.5:1,cursor:(status==='sending'||!consent)?'not-allowed':'pointer'}}>
             {status === 'sending' ? t.sending : t.submit}
           </button>
         </form>

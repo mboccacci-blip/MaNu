@@ -67,7 +67,7 @@ export async function submitEmailGate(params) {
   }
 
   // 4. Track analytics event (complementary — fire-and-forget is OK for analytics)
-  track(EVENTS.EMAIL_SUBMITTED, { email: email }, { lang: lang, tier: params.tier || 'free' });
+  track(EVENTS.EMAIL_SUBMITTED, { source_tab: params.tab || null }, { lang: lang, tier: params.tier || 'free' });
 
   // 5. Track tier change
   track(EVENTS.TIER_CHANGED, { from: params.tier, to: 'email' }, { lang: lang, tier: 'email' });

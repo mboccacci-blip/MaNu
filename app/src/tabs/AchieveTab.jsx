@@ -150,16 +150,16 @@ export default function AchieveTab({ goTab, tier, engine, isDemo }) {
 
       </Cd>
       {magic.real>0&&ytr>0&&nEx>=0&&(mSav>0||nEx>0)?<>
-        {/* FREE TIER: Range (0.85×–1.15× + $25K rounding) + Email CTA */}
+        {/* FREE TIER: Range (0.80×–1.20× + $25K rounding) + Email CTA */}
         {tier==="free"&&!isDemo&&<>
         <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/>
           <div style={{position:"relative"}}>
             <div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div>
             <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:600,color:"#64748b",marginBottom:8}}>{lang==="en"?"Your Magic Number is between":"Tu Magic Number está entre"}</div>
-            <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.85/25000)*25000)}</div>
+            <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:4}}>{fmt(Math.round(magic.real*0.80/25000)*25000)}</div>
             <div style={{fontSize:16,fontWeight:700,color:"#64748b",margin:"4px 0"}}>{lang==="en"?"and":"y"}</div>
-            <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.15/25000)*25000)}</div>
+            <div style={{fontFamily:"Outfit,sans-serif",fontSize:36,fontWeight:900,color:"#60a5fa",lineHeight:1.2,marginBottom:12}}>{fmt(Math.round(magic.real*1.20/25000)*25000)}</div>
             <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
               {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}
             </div>
