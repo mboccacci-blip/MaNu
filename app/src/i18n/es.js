@@ -761,7 +761,7 @@ export default {
   disclaimer: {
     important: "Importante:",
     text: "Esta herramienta es solo con fines educativos y no constituye asesoramiento financiero. El rendimiento pasado y los promedios históricos no garantizan retornos futuros. Todas las proyecciones son estimaciones basadas en supuestos que pueden no reflejar las condiciones reales del mercado.",
-    inflation: "Supuesto de inflación:",
+    inflation: "Planificamos en dólares constantes (USD). Supuesto de inflación:",
     advisor: "Hablá con un Asesor Financiero →",
     advisorSub: "para orientación personalizada adaptada a tu situación.",
     allInTodayDollars: "Todos los valores en dólares de hoy.",

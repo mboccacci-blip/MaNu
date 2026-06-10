@@ -179,6 +179,24 @@ export default function InactionTab() {
               {t('inaction.potentialWealth',{pct:todayVal>0?((todayVal-lastDelay.val)/todayVal*100).toFixed(1):"0"})}
             </div>
           </div>
+
+          {/* Share button */}
+          <button onClick={function(){
+            var wait5=delayVals[5]?todayVal-delayVals[5].val:0;
+            var monthlyCost=wait5>0?Math.round(wait5/(5*12)):0;
+            var shareText=lang==="en"
+              ?"Waiting to invest costs me $"+monthlyCost.toLocaleString("en-US")+"/month in lost growth. In "+ciH+" years with "+delayProf.name+", I'd have "+fmtC(todayVal)+" — but waiting just 5 years drops it by "+fmtC(wait5)+". Calculate yours free:"
+              :"Esperar para invertir me cuesta $"+monthlyCost.toLocaleString("en-US")+"/mes en crecimiento perdido. En "+ciH+" años con "+delayProf.name+", tendría "+fmtC(todayVal)+" — pero esperar 5 años lo reduce en "+fmtC(wait5)+". Calculá el tuyo gratis:";
+            shareText+="\nhttps://manu-pro.pages.dev";
+            if(navigator.share){
+              navigator.share({title:lang==="en"?"The Cost of Waiting":"El Costo de Esperar",text:shareText}).catch(function(){});
+            }else{
+              navigator.clipboard.writeText(shareText).then(function(){alert(lang==="en"?"Copied! Share it via WhatsApp, email or text.":"¡Copiado! Compartilo por WhatsApp, email o mensaje.")});
+            }
+            track(EVENTS.INACTION_SHARED,{delay_years:5,monthly_cost:monthlyCost,profile:delayProf.name},{lang:lang,tier:tier});
+          }} style={{width:"100%",marginTop:12,background:"linear-gradient(135deg,#f59e0b,#ea580c)",color:"#fff",border:"none",padding:"14px 24px",borderRadius:14,fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",cursor:"pointer",boxShadow:"0 4px 20px rgba(245,158,11,0.25)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            <Icon name="share-network" size={16} weight="regular" /> {lang==="en"?"Share: \"Waiting costs me $"+Math.round((delayVals[5]?todayVal-delayVals[5].val:0)/(5*12)).toLocaleString("en-US")+"/mo\"":"Compartir: \"Esperar me cuesta $"+Math.round((delayVals[5]?todayVal-delayVals[5].val:0)/(5*12)).toLocaleString("en-US")+"/mes\""}
+          </button>
         </Cd>
 
         <AdvisorCTA msg={t('inaction.dontLetInaction')} onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>

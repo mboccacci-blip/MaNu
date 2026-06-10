@@ -148,4 +148,5 @@ export const EVENTS = {
   EMAIL_SUBMITTED:        'email_submitted',
   TIER_CHANGED:           'tier_changed',
   SIMULATOR_INTERACTION:  'simulator_interaction',
+  INACTION_SHARED:        'inaction_shared',
 };
