@@ -21,6 +21,8 @@ const INITIAL_STATE = {
   tier: "free",
   demoBannerVisible: false,
   showLeadModal: false,
+  showPaymentModal: false,
+  showMethodology: false,
   userEmail: "",
   emailError: "",
   magicRevealed: false,

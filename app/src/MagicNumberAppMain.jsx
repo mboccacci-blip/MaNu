@@ -4,6 +4,10 @@ import { useTranslation } from './i18n/index.jsx';
 import useAppStore from './store/useAppStore.js';
 import Icon from './components/Icon.jsx';
 import LeadCaptureModal from './components/LeadCaptureModal.jsx';
+import PaymentModal from './components/PaymentModal.jsx';
+import MethodologyModal from './components/MethodologyModal.jsx';
+import { getReturnedSession, clearReturnParams, verifySession } from './utils/payment.js';
+import { downloadPremiumPdf, emailPremiumReport } from './utils/premiumDelivery.js';
 import { track, EVENTS } from './utils/analytics.js';
 import useFinancialEngine from './hooks/useFinancialEngine.js';
 import { EngineProvider } from './hooks/EngineContext.jsx';
@@ -38,6 +42,8 @@ export default function MagicNumberApp({onBack}){
   var FREE_TABS = ["achieve", "inaction", "learn"];
   var [paidToast, setPaidToast] = useState(false);
   var prevTierRef = useRef(tier);
+  var [payState, setPayState] = useState(null); // null | 'verifying' | 'failed'
+  var payCheckedRef = useRef(false);
 
   // ── Engine (computed ONCE, provided via context) ───────────────────
   var engine = useFinancialEngine(store, t, lang);
@@ -72,6 +78,44 @@ export default function MagicNumberApp({onBack}){
   useEffect(function(){
     if(isDemo) track(EVENTS.DEMO_MODE_ENTERED, {}, {lang:lang, tier:'paid'});
   }, [isDemo]);
+
+  // ── W17: Return from Stripe checkout (?paid=1&session_id=...) ──────
+  // Verifica la sesión SERVER-SIDE antes de activar el tier paid.
+  useEffect(function(){
+    var ret = getReturnedSession();
+    if(!ret || payCheckedRef.current) return;
+    payCheckedRef.current = true;
+    setPayState('verifying');
+    verifySession(ret.sessionId).then(function(v){
+      clearReturnParams();
+      if(v.paid){
+        if(v.email) sf('userEmail', v.email);
+        sf('tier', 'paid');
+        setPayState(null);
+        track(EVENTS.PAYMENT_COMPLETED, {method:'stripe_link'}, {lang:lang, tier:'paid'});
+        // Entrega premium (best effort): PDF descarga + email con adjunto
+        if(engine.magic && engine.magic.real > 0){
+          downloadPremiumPdf(engine, store, lang, 'paid');
+          var toEmail = v.email || store.userEmail;
+          if(toEmail) emailPremiumReport(engine, store, lang, toEmail, 'paid');
+        }
+      } else {
+        setPayState('failed');
+        track(EVENTS.PAYMENT_FAILED, {error: v.error || null}, {lang:lang, tier:tier});
+      }
+    });
+  }, []);
+
+  // ── W17: Sandbox (solo dev local, sin Payment Link) ────────────────
+  function handleSandboxPaid(){
+    sf('showPaymentModal', false);
+    sf('tier', 'paid');
+    track(EVENTS.PAYMENT_COMPLETED, {method:'sandbox'}, {lang:lang, tier:'paid'});
+    if(engine.magic && engine.magic.real > 0){
+      downloadPremiumPdf(engine, store, lang, 'paid');
+      if(store.userEmail) emailPremiumReport(engine, store, lang, store.userEmail, 'paid');
+    }
+  }
 
   // ── Portfolio allocation helpers (stay in Main — used by PortfolioTab) ──
   function updatePortAlloc(idx,val){
@@ -113,6 +157,9 @@ export default function MagicNumberApp({onBack}){
     <div className="mn-root">
       {/* Demo mode banner */}
       {(isDemo ? true : store.demoBannerVisible)&&<div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"8px 16px",background:"linear-gradient(90deg,rgba(124,58,237,0.95),rgba(0,153,204,0.95))",color:"#fff",fontSize:12,fontWeight:700,fontFamily:"Outfit,sans-serif",letterSpacing:1,textTransform:"uppercase",backdropFilter:"blur(8px)",boxShadow:"0 2px 20px rgba(0,0,0,0.2)"}}><span>{t('app.demoBanner')}</span><button onClick={function(){sf('demoBannerVisible',false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
+      {/* Payment verification banners (W17) */}
+      {payState==="verifying"&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#3b82f6,#2563eb)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(59,130,246,0.3)"}}>{lang==="en"?"Verifying your payment...":"Verificando tu pago..."}</div>}
+      {payState==="failed"&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#f59e0b,#d97706)",color:"#fff",fontSize:13,fontWeight:600,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(245,158,11,0.3)",display:"flex",alignItems:"center",gap:10,maxWidth:"90vw"}}>{lang==="en"?"We couldn't verify your payment. If you were charged, reload this page or contact us.":"No pudimos verificar tu pago. Si te cobraron, recargá esta página o escribinos."}<button onClick={function(){setPayState(null)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,fontWeight:600}}>×</button></div>}
       {/* Paid upgrade toast */}
       {paidToast&&<div style={{position:"fixed",top:12,left:"50%",transform:"translateX(-50%)",zIndex:9999,padding:"14px 28px",borderRadius:14,background:"linear-gradient(135deg,#22c55e,#16a34a)",color:"#fff",fontSize:14,fontWeight:700,fontFamily:"Outfit,sans-serif",boxShadow:"0 4px 24px rgba(34,197,94,0.3)",display:"flex",alignItems:"center",gap:10,animation:"fadeIn 0.3s ease-out"}}><Icon name="confetti" size={18} weight="regular" /> {t('app.paidToast')}<button onClick={function(){setPaidToast(false)}} style={{background:"rgba(255,255,255,0.2)",border:"none",color:"#fff",borderRadius:4,padding:"2px 8px",cursor:"pointer",fontSize:11,marginLeft:8}}>×</button></div>}
       <header className="mn-header">
@@ -154,7 +201,8 @@ export default function MagicNumberApp({onBack}){
 
         <div style={{marginTop:36,padding:"14px 18px",borderRadius:12,background:"rgba(96,165,250,0.04)",border:"1px solid rgba(96,165,250,0.1)",fontSize:11,color:"#3b82f6",lineHeight:1.7,textAlign:"center"}}>
           <strong>{t('disclaimer.important')}</strong> {t('disclaimer.text')} {t('disclaimer.inflation')} {(engine.INFL*100).toFixed(1)}%/{t('app.yr')}.
-          <div style={{marginTop:8}}><a href="#" onClick={function(e){e.preventDefault()}} style={{color:"#60a5fa",fontWeight:600,textDecoration:"underline"}}>{t('disclaimer.advisor')}</a> {t('disclaimer.advisorSub')}</div>
+          <div style={{marginTop:8}}><a href="#" onClick={function(e){e.preventDefault();sf('showLeadModal',true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:'footer'},{lang:lang,tier:tier})}} style={{color:"#60a5fa",fontWeight:600,textDecoration:"underline"}}>{t('disclaimer.advisor')}</a> {t('disclaimer.advisorSub')}</div>
+          <div style={{marginTop:8}}><a href="#" onClick={function(e){e.preventDefault();sf('showMethodology',true);track(EVENTS.METHODOLOGY_VIEWED,{source:'footer'},{lang:lang,tier:tier})}} style={{color:"#60a5fa",fontWeight:600,textDecoration:"underline"}}><Icon name="calculator" size={11} weight="regular" /> {lang==="en"?"How we calculate":"Cómo calculamos"} →</a></div>
         </div>
       </main>
     </div>
@@ -183,6 +231,22 @@ export default function MagicNumberApp({onBack}){
         sourceTab: tab,
         lang: lang,
       }}
+    />
+    <PaymentModal
+      show={store.showPaymentModal}
+      onClose={function(){sf('showPaymentModal',false)}}
+      lang={lang}
+      tier={tier}
+      sourceTab={tab}
+      userEmail={store.userEmail}
+      onSandboxSuccess={handleSandboxPaid}
+    />
+    <MethodologyModal
+      show={store.showMethodology}
+      onClose={function(){sf('showMethodology',false)}}
+      lang={lang}
+      profiles={engine.adjProfiles}
+      inflation={engine.INFL}
     />
   </EngineProvider>);
 }

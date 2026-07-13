@@ -10,7 +10,8 @@ import {
   ClipboardText, Printer, CalendarBlank, HouseLine, Shield, Siren,
   Lightning, ChartBar, MagicWand, Money, ChatTeardropDots,
   Gear, Trash, Confetti, Car, Infinity, LockOpen, Globe,
-  CaretDown, ArrowRight
+  CaretDown, ArrowRight, Info, ShareNetwork, DownloadSimple,
+  PaperPlaneTilt, Calculator
 } from '@phosphor-icons/react';
 
 const ICON_MAP = {
@@ -71,6 +72,11 @@ const ICON_MAP = {
   globe: Globe,
   'caret-down': CaretDown,
   'arrow-right': ArrowRight,
+  info: Info,
+  'share-network': ShareNetwork,
+  'download-simple': DownloadSimple,
+  'paper-plane-tilt': PaperPlaneTilt,
+  calculator: Calculator,
 };
 
 /**

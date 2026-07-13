@@ -6,6 +6,7 @@ import Slider from '../components/Slider.jsx';
 import TabButton from '../components/TabButton.jsx';
 import MultiLineChart from '../components/MultiLineChart.jsx';
 import AdvisorCTA from '../components/AdvisorCTA.jsx';
+import PremiumReportCard from '../components/PremiumReportCard.jsx';
 import NavButtons from '../components/NavButtons.jsx';
 import Icon from '../components/Icon.jsx';
 import { fmt, fmtC, pct } from '../utils/formatters.js';
@@ -42,6 +43,8 @@ export default function AchieveTab() {
   const setEmailError = function(v) { sf('emailError', v); };
   const setTier = function(v) { sf('tier', v); };
   const setShowLeadModal = function(v) { sf('showLeadModal', v); };
+  const setShowPaymentModal = function(v) { sf('showPaymentModal', v); };
+  const setShowMethodology = function(v) { sf('showMethodology', v); };
   const setChartProfileIdx = function(v) { sf('chartProfileIdx', v); };
   const setChartRetireIdx = function(v) { sf('chartRetireIdx', v); };
   const setRevRetProf = function(v) { sf('revRetProf', v); };
@@ -165,6 +168,7 @@ export default function AchieveTab() {
             <div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>
               {lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}
             </div>
+            <div style={{marginTop:10}}><a href="#" onClick={function(e){e.preventDefault();setShowMethodology(true);track(EVENTS.METHODOLOGY_VIEWED,{source:'achieve_free'},{lang:lang,tier:tier})}} style={{fontSize:11,color:"#94a3b8",textDecoration:"underline"}}>{lang==="en"?"How do we calculate this number?":"¿De dónde sale este número? Cómo calculamos"} →</a></div>
           </div>
         </Cd>
         {/* Year-by-Year Chart (Free tier - accumulation only, no drawdown) */}
@@ -212,16 +216,17 @@ export default function AchieveTab() {
           </div>
           {/* Path B: pay directly */}
           <div style={{padding:"16px 20px",borderRadius:14,background:"rgba(234,179,8,0.05)",border:"1px solid rgba(234,179,8,0.2)"}}>
-            <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{lang==="en"?"⚡ Full access — $3.99":"⚡ Acceso completo — $3.99"}</div>
-            <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Unlock all 16 modules instantly. No email required.":"Desbloqueá los 16 módulos al instante. Sin email necesario."}</p>
-            <button className="bp" style={{padding:"12px 24px",fontSize:13,fontWeight:700,background:"linear-gradient(135deg,#a16207,#ca8a04)"}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
+            <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:8}}>{lang==="en"?"⚡ Full Profile — $3.99":"⚡ Perfil Full — $3.99"}</div>
+            <p style={{fontSize:13,color:"#475569",lineHeight:1.5,marginBottom:12,margin:"0 0 12px"}}>{lang==="en"?"Your exact Magic Number + premium PDF report with your full retirement plan (downloadable & emailed) + every analysis module.":"Tu Magic Number exacto + informe PDF premium con tu plan de retiro completo (descargable y por email) + todos los módulos de análisis."}</p>
+            <button className="bp" style={{padding:"12px 24px",fontSize:13,fontWeight:700,background:"linear-gradient(135deg,#a16207,#ca8a04)"}} onClick={function(){setShowPaymentModal(true);}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
           </div>
         </Cd>
         <AdvisorCTA onContact={function(){setShowLeadModal(true);track(EVENTS.ADVISOR_CTA_CLICKED,{source_tab:tab},{lang:lang,tier:tier})}}/>
         </>}
         {/* EMAIL/PAID TIER: Exact number + full analysis */}
         {tier!=="free"&&<>
-        <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}</div></div></Cd>
+        <Cd glow="blue" style={{textAlign:"center",padding:"40px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:400,height:400,borderRadius:"50%",background:"radial-gradient(circle,rgba(96,165,250,0.05) 0%,transparent 70%)",pointerEvents:"none"}}/><div style={{position:"relative"}}><div style={{fontSize:12,fontWeight:600,color:"#60a5fa",textTransform:"uppercase",letterSpacing:3,marginBottom:10}}>{t('achieve.yourMN')}</div><div style={{fontFamily:"Outfit,sans-serif",fontSize:50,fontWeight:900,color:"#60a5fa",lineHeight:1.1,marginBottom:12,textShadow:"0 0 40px rgba(96,165,250,0.3),0 0 80px rgba(96,165,250,0.15)"}}>{fmt(Math.round(magic.real))}</div><div style={{padding:"10px 16px",borderRadius:10,background:"rgba(96,165,250,0.06)",border:"1px solid rgba(96,165,250,0.10)",fontSize:13,color:"#334155",lineHeight:1.6}}>{lang==="en"?"Accumulating this capital by age "+nRetAge+", you secure "+fmt(nDes)+"/mo for "+nYP+" years of retirement.":"Juntando este capital a tus "+nRetAge+" años, te asegurás "+fmt(nDes)+" extra por mes durante "+nYP+" años."}</div><div style={{marginTop:10}}><a href="#" onClick={function(e){e.preventDefault();setShowMethodology(true);track(EVENTS.METHODOLOGY_VIEWED,{source:'achieve_unlocked'},{lang:lang,tier:tier})}} style={{fontSize:11,color:"#94a3b8",textDecoration:"underline"}}>{lang==="en"?"How do we calculate this number?":"¿De dónde sale este número? Cómo calculamos"} →</a></div></div></Cd>
+        <PremiumReportCard />
         {/* ── Two-Column Summary: Projected Savings + Years of Coverage (FIXED from essentials) ── */}
         <Cd style={{padding:"20px"}}>
           <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
@@ -351,8 +356,8 @@ export default function AchieveTab() {
         {tier==="email"&&<Cd glow="gold" style={{textAlign:"center",padding:"24px"}}>
           <div style={{fontSize:12,fontWeight:700,color:"#a16207",textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{lang==="en"?"Enjoying the full picture?":"¿Te gusta lo que ves?"}</div>
           <div style={{fontFamily:"Outfit,sans-serif",fontSize:16,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Upgrade to Full Profile — $3.99":"Pasate al Perfil Full — $3.99"}</div>
-          <p style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:14}}>{lang==="en"?"All 16 modules, year-by-year projections, debt analysis, goals simulator and premium PDF report.":"16 módulos completos, proyecciones año por año, análisis de deudas, simulador de metas e informe PDF premium."}</p>
-          <button className="bp" style={{padding:"12px 28px",fontSize:14,fontWeight:700}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99");}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
+          <p style={{fontSize:12,color:"#64748b",lineHeight:1.5,marginBottom:14}}>{lang==="en"?"Premium PDF report with your full retirement plan (downloadable & emailed), plus every analysis module: debts, goals, score and more.":"Informe PDF premium con tu plan de retiro completo (descargable y por email), más todos los módulos de análisis: deudas, metas, score y más."}</p>
+          <button className="bp" style={{padding:"12px 28px",fontSize:14,fontWeight:700}} onClick={function(){setShowPaymentModal(true);}}>{lang==="en"?"Unlock Full Profile →":"Desbloquear Perfil Full →"}</button>
         </Cd>}
         </>}
       </>:<Cd style={{textAlign:"center",padding:"24px 20px"}}><div style={{fontSize:13,color:"#64748b",lineHeight:1.6}}>{t('achieve.fillFields')}</div></Cd>}

@@ -72,6 +72,15 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     if (result.success) {
       setStatus('success');
       track(EVENTS.LEAD_SUBMITTED, { tier: financials.tier, source_tab: financials.sourceTab }, { lang: lang, tier: financials.tier });
+      // W48: notify the advisor by email (fire-and-forget, non-blocking).
+      // Requiere /api/notify-lead configurada (Resend + ADVISOR_EMAIL).
+      try {
+        fetch('/api/notify-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact: { name: name, email: email, phone: phone }, financials: leadFinancials }),
+        }).catch(function () {});
+      } catch (err) { /* nunca bloquear el flujo del usuario */ }
     } else {
       setStatus('error');
       setErrorMsg(t.errorMsg);

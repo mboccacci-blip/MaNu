@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-06-10 (sesion 2) — Audit completo: 27 hallazgos resueltos. AR1 god component refactored. Score: 41/41.
+> Actualizado: 2026-06-12 (sesion 9) — Reunión con Fede Amui: foco en alcanzar versión final, armar presentación para Javier, y definir estrategia y presupuesto de pauta (consulta pendiente a Fede Poletto).
 
 ---
 
@@ -61,15 +61,24 @@
 - [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
 
 ### Post-MVP-fixes (construir después de estabilizar las 3 tabs)
-- [ ] **W15** — PDF basado en 3 tabs MVP (descargable al instante)
-- [ ] **W16** — Email con tarjeta HTML (dashboard macro del MN) + PDF adjunto
-- [ ] **W17** — Integracion Stripe ($3.99 micro-pago)
+- [x] **W15** — PDF premium (jsPDF client-side, chunk separado, ES/EN): MN exacto + proyección, trayectoria año a año + ahorro por perfil + costo de esperar, metodología + disclaimers. ADEMÁS secciones condicionales (solo si hay datos cargados): Health Score, análisis de deudas, oportunidades de ahorro, metas intermedias. `src/utils/reportPdf.js` — 06-Jul-2026
+- [x] **W16** — Email tarjeta HTML + PDF adjunto vía Resend: `functions/api/send-report.js` + `src/utils/premiumDelivery.js`. CÓDIGO LISTO — falta config (RESEND_API_KEY + dominio verificado). Ver docs/SETUP-PAGOS-EMAILS.md — 06-Jul-2026
+- [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
 
+### Estrategia / Partnership (sesion 9, 12-Jun-2026 - Post-reunión Fede Amui)
+- [x] **W45** — Conversacion con Fede: Realizada 12-Jun. Acuerdos: versión final, presentación para Javier, estrategia publicitaria.
+- [x] **W46** — "Cómo calculamos" (`MethodologyModal.jsx`): 7 secciones + tabla de perfiles. Links en footer y bajo el MN (free y unlocked). Cierra el audit externo — 06-Jul-2026
+- [x] **W47** — Versión final A NIVEL CÓDIGO (sesión 10, 06-Jul-2026). Pendiente solo config externa: (1) cuenta Stripe → VITE_STRIPE_LINK + STRIPE_SECRET_KEY, (2) Resend → RESEND_API_KEY + dominio, (3) ADVISOR_EMAIL. Ver docs/SETUP-PAGOS-EMAILS.md
+- [ ] **W48** — Armar Presentación para Javier: propuesta concreta, modelo de negocio claro. PRODUCTO YA LISTO PARA DEMO (`?demo=1` muestra experiencia paid + PDF descargable). Lead routing implementado: `functions/api/notify-lead.js` → ADVISOR_EMAIL (cambiar asesor = 1 env var).
+- [ ] **W49** — Estrategia de Pauta y Presupuesto: Consultar a Federico Poletto sobre Google Ads, Instagram, etc., y armar presupuesto estimado.
+- [ ] **W50** — Preparar reunión potencial con Javier.
+- [ ] **W51** — **Fastlane (usefastlane.ai) — Herramienta de marketing short-form video**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Activar cuando se defina GTM con Fede y producto este en version final (PDF + Stripe). Registrado 25-Jun-2026.
+
 ### Landing/UX pendientes (auditoria 29-Abr-2026)
-- [ ] **W36** — Landing: cambiar "10 min" a "3 min" o "5 min" (inconsistente con la app)
-- [ ] **W37** — Landing: revisar "16 modulos" y "15+ categorias" (no aplica al MVP de 3 tabs)
+- [x] **W36** — Landing ya dice "3 min" (verificado en LandingPage.jsx) — tildado 06-Jul-2026
+- [x] **W37** — Landing ya dice "3 Módulos esenciales" (sin "16 modulos" ni "15+ categorias"). ADEMÁS: corregido copy del paywall in-app que prometía "16 módulos" (ahora oferta real: MN exacto + PDF + módulos) y URL vieja manu-pro.pages.dev → magic-number.app en botón compartir — 06-Jul-2026
 - [ ] **W38** — Landing: agregar hero screenshot/mockup del producto
 - [ ] **W39** — Campo "Anos en jubilacion" → considerar "Hasta que edad planificas vivir"
 - [ ] **W40** — Grafico ano-por-ano: hacerlo colapsable por defecto

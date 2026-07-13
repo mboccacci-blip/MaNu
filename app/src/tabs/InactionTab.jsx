@@ -25,6 +25,7 @@ export default function InactionTab() {
   const setCiH = function(v) { sf('ciH', v); };
   const setCiDelayProf = function(v) { sf('ciDelayProf', v); };
   const setShowLeadModal = function(v) { sf('showLeadModal', v); };
+  const setShowPaymentModal = function(v) { sf('showPaymentModal', v); };
   const setUserEmail = function(v) { sf('userEmail', v); };
   const setEmailError = function(v) { sf('emailError', v); };
   const setTier = function(v) { sf('tier', v); };
@@ -187,7 +188,7 @@ export default function InactionTab() {
             var shareText=lang==="en"
               ?"Waiting to invest costs me $"+monthlyCost.toLocaleString("en-US")+"/month in lost growth. In "+ciH+" years with "+delayProf.name+", I'd have "+fmtC(todayVal)+" — but waiting just 5 years drops it by "+fmtC(wait5)+". Calculate yours free:"
               :"Esperar para invertir me cuesta $"+monthlyCost.toLocaleString("en-US")+"/mes en crecimiento perdido. En "+ciH+" años con "+delayProf.name+", tendría "+fmtC(todayVal)+" — pero esperar 5 años lo reduce en "+fmtC(wait5)+". Calculá el tuyo gratis:";
-            shareText+="\nhttps://manu-pro.pages.dev";
+            shareText+="\nhttps://magic-number.app";
             if(navigator.share){
               navigator.share({title:lang==="en"?"The Cost of Waiting":"El Costo de Esperar",text:shareText}).catch(function(){});
             }else{
@@ -217,8 +218,8 @@ export default function InactionTab() {
         {tier==="email" && <Cd glow="gold" style={{textAlign:"center",padding:"28px 24px"}}>
           <div style={{fontSize:28,marginBottom:10}}><Icon name="star" size={28} weight="fill" color="#eab308" /></div>
           <div style={{fontFamily:"Outfit,sans-serif",fontSize:18,fontWeight:800,color:"#0f172a",marginBottom:8}}>{lang==="en"?"Unlock your Full Profile":"Desbloqueá tu Perfil Full"}</div>
-          <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Get your complete financial analysis across all 16 modules, detailed projections, and a premium PDF report.":"Obtené tu análisis financiero completo en los 16 módulos, proyecciones detalladas e informe PDF premium."}</p>
-          <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){alert(lang==="en"?"Payment integration coming soon — $3.99":"Integración de pagos próximamente — $3.99")}}>{lang==="en"?"Unlock Full Profile — $3.99":"Desbloquear Perfil Full — $3.99"}</button>
+          <p style={{fontSize:13,color:"#64748b",lineHeight:1.6,marginBottom:16}}>{lang==="en"?"Premium PDF report with your full retirement plan (downloadable & emailed), plus every analysis module unlocked.":"Informe PDF premium con tu plan de retiro completo (descargable y por email), más todos los módulos de análisis desbloqueados."}</p>
+          <button className="bp" style={{padding:"14px 32px",fontSize:16,fontWeight:700}} onClick={function(){setShowPaymentModal(true);}}>{lang==="en"?"Unlock Full Profile — $3.99":"Desbloquear Perfil Full — $3.99"}</button>
         </Cd>}
 
         </> )})()}

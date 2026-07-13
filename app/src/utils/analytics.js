@@ -149,4 +149,10 @@ export const EVENTS = {
   TIER_CHANGED:           'tier_changed',
   SIMULATOR_INTERACTION:  'simulator_interaction',
   INACTION_SHARED:        'inaction_shared',
+  CHECKOUT_STARTED:       'checkout_started',
+  PAYMENT_COMPLETED:      'payment_completed',
+  PAYMENT_FAILED:         'payment_failed',
+  PDF_DOWNLOADED:         'pdf_downloaded',
+  REPORT_EMAILED:         'report_emailed',
+  METHODOLOGY_VIEWED:     'methodology_viewed',
 };
