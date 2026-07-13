@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-06-12 (sesion 9) — Reunión con Fede Amui: foco en alcanzar versión final, armar presentación para Javier, y definir estrategia y presupuesto de pauta (consulta pendiente a Fede Poletto).
+> Actualizado: 2026-07-13 (sesion 11) — Resend operativo, deploy pipeline fix (wrangler-action@v3), 3 endpoints serverless LIVE en produccion. Pendiente: Stripe (Fede), presentacion Javier.
 
 ---
 
@@ -57,13 +57,16 @@
 - [x] **W34** — Disclaimers: nota ambar retornos historicos + warning contextual >6.5% + nota italica supuesto 1.5% — 29-Abr-2026
 - [x] **W35** — Tax warning reescrito: "reduce el rendimiento neto de la cartera en X puntos porcentuales" — 29-Abr-2026
 
-### Infra (próxima sesión)
+### Infra
 - [x] **W21** — GitHub Actions auto-deploy: workflow + secrets + test push exitoso (run #24906193912) — 24-Abr-2026
+- [x] **W52** — Fix deploy pipeline: `pages-action@v1` → `wrangler-action@v3`. La v1 usaba Direct Upload API que NO soporta Pages Functions. Las 3 funciones serverless nunca se habian deployeado a produccion. Tambien removido paths filter para permitir redeploys sin cambios en app/ — 13-Jul-2026
+- [x] **W53** — Resend setup completo: cuenta creada, dominio `magic-number.app` verificado (DKIM+SPF+MX+DMARC en Cloudflare DNS), API key generada, env vars (`RESEND_API_KEY`, `FROM_EMAIL`, `ADVISOR_EMAIL`) cargadas como secrets en Cloudflare Pages — 13-Jul-2026
+- [x] **W54** — Meta tags SEO corregidos: "16 modulos" → "3 minutos, 6 perfiles" en description, og:description y twitter:title — 13-Jul-2026
 
 ### Post-MVP-fixes (construir después de estabilizar las 3 tabs)
 - [x] **W15** — PDF premium (jsPDF client-side, chunk separado, ES/EN): MN exacto + proyección, trayectoria año a año + ahorro por perfil + costo de esperar, metodología + disclaimers. ADEMÁS secciones condicionales (solo si hay datos cargados): Health Score, análisis de deudas, oportunidades de ahorro, metas intermedias. `src/utils/reportPdf.js` — 06-Jul-2026
-- [x] **W16** — Email tarjeta HTML + PDF adjunto vía Resend: `functions/api/send-report.js` + `src/utils/premiumDelivery.js`. CÓDIGO LISTO — falta config (RESEND_API_KEY + dominio verificado). Ver docs/SETUP-PAGOS-EMAILS.md — 06-Jul-2026
-- [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
+- [x] **W16** — Email tarjeta HTML + PDF adjunto vía Resend: `functions/api/send-report.js` + `src/utils/premiumDelivery.js`. **OPERATIVO EN PRODUCCION** — Resend configurado, dominio verificado, email de prueba enviado exitosamente 13-Jul-2026
+- [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Endpoint live responde `not_configured`. Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
 
@@ -121,10 +124,13 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `3ea1812` — refactor(AR1): eliminate god component prop-drilling
+- **HEAD:** `cd5623a` — fix(deploy): switch to wrangler-action@v3 for Pages Functions support
 - **Local = Remote:** sincronizado
-- **Active URL:** https://manu-pro.pages.dev/ (Cloudflare Pages — Production)
+- **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
-- **Deploy:** GitHub Actions auto on push to master
+- **Deploy:** GitHub Actions auto on push to master (`wrangler-action@v3`)
+- **Serverless Functions:** 3/3 LIVE (`/api/verify-session`, `/api/send-report`, `/api/notify-lead`)
+- **Resend:** Dominio verificado, email operativo desde `informes@magic-number.app`
+- **Stripe:** Pendiente cuenta (Fede) — endpoint responde `not_configured`
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
-- **Status:** ACTIVO — Audit 100% completo, listo para features
+- **Status:** ACTIVO — Codigo completo, infra email+leads operativa, falta Stripe
