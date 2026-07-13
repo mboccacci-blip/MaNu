@@ -3,8 +3,6 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [master]
-    paths:
-      - 'app/**'
 
 jobs:
   deploy:
@@ -30,10 +28,13 @@ jobs:
         working-directory: app
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: manu-pro
-          directory: app/dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          # wrangler pages deploy desde app/ detecta functions/ y las
+          # bundlea como Pages Functions (verify-session, send-report,
+          # notify-lead). pages-action@v1 usaba Direct Upload que NO
+          # soporta functions — por eso se migró a wrangler-action@v3.
+          workingDirectory: app
+          command: pages deploy dist --project-name=manu-pro
