@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-07-13 (sesion 11) — Resend operativo, deploy pipeline fix (wrangler-action@v3), 3 endpoints serverless LIVE en produccion. Pendiente: Stripe (Fede), presentacion Javier.
+> Actualizado: 2026-07-14 (sesion 11b) — Deck Javier listo (W48), og-image optimizada para WhatsApp (W56), PWA icons + manifest (W55). Produccion 100% operativa menos Stripe.
 
 ---
 
@@ -76,6 +76,7 @@
 - [x] **W47** — Versión final A NIVEL CÓDIGO (sesión 10, 06-Jul-2026). Pendiente solo config externa: (1) cuenta Stripe → VITE_STRIPE_LINK + STRIPE_SECRET_KEY, (2) Resend → RESEND_API_KEY + dominio, (3) ADVISOR_EMAIL. Ver docs/SETUP-PAGOS-EMAILS.md
 - [x] **W48** — Presentación para Javier ARMADA: `MaNu-PRO-Propuesta-Javier.pptx` (+PDF) en raíz del repo. 11 slides con notas de orador: problema (CPL USD 20-40 LATAM), producto, informe premium, embudo, el lead (mockup del email real), propuesta de COMISIÓN POR CLIENTE CONVERTIDO (modelo referido, % a acordar), escenarios conservadores de pauta (300/500/1000 USD → 4-24 leads/mes, supuestos citados), confianza técnica, equipo+plan, next steps con QR. Abierto: % de comisión y fecha de reunión — 13-Jul-2026
 - [x] **W55** — Assets de marca: og-image 1200×630 (preview WhatsApp/redes), íconos PWA 192/512 + apple-touch (instalable como app desktop), site.webmanifest, meta tags og:image — 13-Jul-2026
+- [x] **W56** — og-image optimizada para WhatsApp: logo-first design legible a 80px (thumbnail compression), JPG 35KB, CORP cross-origin headers en `_headers`. 3 iteraciones hasta diseño final — 14-Jul-2026
 - [ ] **W49** — Estrategia de Pauta y Presupuesto: Consultar a Federico Poletto sobre Google Ads, Instagram, etc., y armar presupuesto estimado.
 - [ ] **W50** — Preparar reunión potencial con Javier.
 - [ ] **W51** — **Fastlane (usefastlane.ai) — Herramienta de marketing short-form video**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Activar cuando se defina GTM con Fede y producto este en version final (PDF + Stripe). Registrado 25-Jun-2026.
@@ -125,7 +126,7 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `cd5623a` — fix(deploy): switch to wrangler-action@v3 for Pages Functions support
+- **HEAD:** `a1ede85` — fix: og-image logo-first, legible a 80px (thumbnail WhatsApp)
 - **Local = Remote:** sincronizado
 - **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
@@ -133,5 +134,6 @@
 - **Serverless Functions:** 3/3 LIVE (`/api/verify-session`, `/api/send-report`, `/api/notify-lead`)
 - **Resend:** Dominio verificado, email operativo desde `informes@magic-number.app`
 - **Stripe:** Pendiente cuenta (Fede) — endpoint responde `not_configured`
+- **Deck Javier:** PPTX+PDF en repo, 11 slides con notas de orador
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
-- **Status:** ACTIVO — Codigo completo, infra email+leads operativa, falta Stripe
+- **Status:** ACTIVO — Produccion completa, solo falta Stripe (Fede)
