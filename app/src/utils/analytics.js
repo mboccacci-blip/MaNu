@@ -10,6 +10,7 @@
  */
 
 import { supabase } from '../lib/supabase.js';
+import { getUtms } from './utm.js';
 
 const IS_DEV = typeof import.meta !== 'undefined' && import.meta.env
   ? import.meta.env.DEV
@@ -89,9 +90,11 @@ export function track(event, props, context) {
   sessionEventCount++;
 
   var ctx = context || {};
+  // W56: adjuntar UTMs a cada evento (en props JSONB — no requiere migración).
+  // Consulta ejemplo: select props->>'utm_campaign', count(*) from analytics_events ...
   eventQueue.push({
     event: event,
-    props: props || {},
+    props: Object.assign({}, getUtms(), props || {}),
     session_id: SESSION_ID,
     lang: ctx.lang || 'es',
     tier: ctx.tier || 'free',

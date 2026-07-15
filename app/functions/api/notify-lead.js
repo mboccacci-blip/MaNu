@@ -69,6 +69,9 @@ export async function onRequestPost(context) {
     ['—', '—'],
     ['Tier', esc(f.tier) || 'free'],
     ['Tab de origen', esc(f.sourceTab) || '—'],
+    ['Campaña de origen', f.utms && f.utms.utm_source
+      ? esc([f.utms.utm_source, f.utms.utm_medium, f.utms.utm_campaign].filter(Boolean).join(' / '))
+      : 'Directo / orgánico sin etiquetar'],
     ['Idioma', esc(f.lang) || 'es'],
     ['Consentimiento', f.consent_given ? 'Sí (' + esc(f.consent_timestamp) + ')' : 'No registrado'],
   ];

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getUtmColumns } from '../utils/utm.js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -61,7 +62,20 @@ export async function submitLead(contact, financials) {
     referrer: document.referrer || null,
   };
 
-  const { error } = await supabase.from('leads').insert([lead]);
+  // W56: atribución de campaña (requiere migration-utm-leads.sql en Supabase)
+  var utms = getUtmColumns();
+  var hasUtms = Object.keys(utms).length > 0;
+  var payload = hasUtms ? Object.assign({}, lead, utms) : lead;
+
+  var { error } = await supabase.from('leads').insert([payload]);
+
+  // Si la migración no está corrida (columnas utm_* inexistentes), reintentar
+  // SIN utms: un lead jamás se pierde por atribución.
+  if (error && hasUtms && /utm/i.test(error.message || '')) {
+    console.warn('[MaNu] Columnas UTM ausentes en leads — correr migration-utm-leads.sql. Reintentando sin UTMs.');
+    var retry = await supabase.from('leads').insert([lead]);
+    error = retry.error;
+  }
 
   if (error) {
     console.error('[MaNu] Lead submission error:', error.message);

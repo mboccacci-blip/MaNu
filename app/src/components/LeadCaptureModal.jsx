@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Icon from './Icon';
 import { submitLead } from '../lib/supabase';
 import { track, EVENTS } from '../utils/analytics.js';
+import { getUtms } from '../utils/utm.js';
 
 /**
  * LeadCaptureModal — Premium modal that captures advisor leads
@@ -78,7 +79,10 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
         fetch('/api/notify-lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contact: { name: name, email: email, phone: phone }, financials: leadFinancials }),
+          body: JSON.stringify({
+            contact: { name: name, email: email, phone: phone },
+            financials: Object.assign({}, leadFinancials, { utms: getUtms() }),
+          }),
         }).catch(function () {});
       } catch (err) { /* nunca bloquear el flujo del usuario */ }
     } else {

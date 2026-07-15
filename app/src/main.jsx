@@ -4,9 +4,12 @@ import { I18nProvider } from './i18n/index.jsx'
 import './index.css'
 import MagicNumberApp from './MagicNumberAppMain.jsx'
 import LandingPage from './LandingPage.jsx'
+import { captureUtms } from './utils/utm.js'
 
 // ── Emergency reset: ?reset=1 clears all persisted data before React mounts ──
 if (typeof window !== 'undefined') {
+  // W56: capturar UTMs ANTES de cualquier limpieza de URL o tracking
+  captureUtms();
   var params = new URLSearchParams(window.location.search);
   if (params.get('reset') === '1') {
     try { localStorage.removeItem('manu-pro-state'); } catch (e) {}

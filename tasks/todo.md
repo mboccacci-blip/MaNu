@@ -69,6 +69,8 @@
 - [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Endpoint live responde `not_configured`. Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
+- [x] **W56** — Captura de UTMs: `src/utils/utm.js` (first+last touch, 30 días, localStorage), merge en props de TODOS los eventos analytics, columnas utm_* en leads con fallback anti-pérdida (si la migración no corrió, el lead se guarda sin UTMs), "Campaña de origen" en el email al asesor. REQUIERE correr `supabase/migration-utm-leads.sql` en Supabase (incluye queries de embudo por campaña) — 14-Jul-2026
+- [ ] **W57** — Meta Pixel + CAPI con evento custom MagicNumberCalculated (solo si se pauta por conversiones; con UTMs alcanza para el test inicial)
 
 ### Estrategia / Partnership (sesion 9, 12-Jun-2026 - Post-reunión Fede Amui)
 - [x] **W45** — Conversacion con Fede: Realizada 12-Jun. Acuerdos: versión final, presentación para Javier, estrategia publicitaria.
@@ -77,7 +79,7 @@
 - [x] **W48** — Presentación para Javier ARMADA: `MaNu-PRO-Propuesta-Javier.pptx` (+PDF) en raíz del repo. 11 slides con notas de orador: problema (CPL USD 20-40 LATAM), producto, informe premium, embudo, el lead (mockup del email real), propuesta de COMISIÓN POR CLIENTE CONVERTIDO (modelo referido, % a acordar), escenarios conservadores de pauta (300/500/1000 USD → 4-24 leads/mes, supuestos citados), confianza técnica, equipo+plan, next steps con QR. Abierto: % de comisión y fecha de reunión — 13-Jul-2026
 - [x] **W55** — Assets de marca: og-image 1200×630 (preview WhatsApp/redes), íconos PWA 192/512 + apple-touch (instalable como app desktop), site.webmanifest, meta tags og:image — 13-Jul-2026
 - [x] **W56** — og-image optimizada para WhatsApp: logo-first design legible a 80px (thumbnail compression), JPG 35KB, CORP cross-origin headers en `_headers`. 3 iteraciones hasta diseño final — 14-Jul-2026
-- [ ] **W49** — Estrategia de Pauta y Presupuesto: Consultar a Federico Poletto sobre Google Ads, Instagram, etc., y armar presupuesto estimado.
+- [ ] **W49** — Estrategia de Pauta y Presupuesto: PLAN ARMADO en `docs/PLAN-MARKETING-REDES.md` (14-Jul-2026): video-first IG/TikTok, 16 guiones honestos (sin testimonios inventados), producción Fastlane+UGC, escenarios USD 300/500/1000, calendario 4 semanas, compliance Meta. FALTA: decisión de presupuesto con Fede + consulta a Poletto (Google Ads como canal 2) + backlog técnico W56 (UTMs) y W57 (Meta Pixel).
 - [ ] **W50** — Preparar reunión potencial con Javier.
 - [ ] **W51** — **Fastlane (usefastlane.ai) — Herramienta de marketing short-form video**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Activar cuando se defina GTM con Fede y producto este en version final (PDF + Stripe). Registrado 25-Jun-2026.
 
