@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-07-14 (sesion 11b) — Deck Javier listo (W48), og-image optimizada para WhatsApp (W56), PWA icons + manifest (W55). Produccion 100% operativa menos Stripe.
+> Actualizado: 2026-07-15 (sesion 12) — W56 UTMs end-to-end (code + migracion Supabase), plan marketing redes (W49-prep). Deploy auto. Produccion 100% operativa menos Stripe.
 
 ---
 
@@ -69,7 +69,7 @@
 - [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Endpoint live responde `not_configured`. Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
-- [x] **W56** — Captura de UTMs: `src/utils/utm.js` (first+last touch, 30 días, localStorage), merge en props de TODOS los eventos analytics, columnas utm_* en leads con fallback anti-pérdida (si la migración no corrió, el lead se guarda sin UTMs), "Campaña de origen" en el email al asesor. REQUIERE correr `supabase/migration-utm-leads.sql` en Supabase (incluye queries de embudo por campaña) — 14-Jul-2026
+- [x] **W56** — Captura de UTMs end-to-end COMPLETO: `src/utils/utm.js` (first+last touch, 30 dias, localStorage), merge en props de TODOS los eventos analytics, columnas utm_* en leads con fallback anti-perdida, "Campana de origen" en email al asesor. Migracion SQL corrida en Supabase (5 columnas + 2 indices). Commit `1996be1`. Deploy auto OK — 15-Jul-2026
 - [ ] **W57** — Meta Pixel + CAPI con evento custom MagicNumberCalculated (solo si se pauta por conversiones; con UTMs alcanza para el test inicial)
 
 ### Estrategia / Partnership (sesion 9, 12-Jun-2026 - Post-reunión Fede Amui)
@@ -79,7 +79,7 @@
 - [x] **W48** — Presentación para Javier ARMADA: `MaNu-PRO-Propuesta-Javier.pptx` (+PDF) en raíz del repo. 11 slides con notas de orador: problema (CPL USD 20-40 LATAM), producto, informe premium, embudo, el lead (mockup del email real), propuesta de COMISIÓN POR CLIENTE CONVERTIDO (modelo referido, % a acordar), escenarios conservadores de pauta (300/500/1000 USD → 4-24 leads/mes, supuestos citados), confianza técnica, equipo+plan, next steps con QR. Abierto: % de comisión y fecha de reunión — 13-Jul-2026
 - [x] **W55** — Assets de marca: og-image 1200×630 (preview WhatsApp/redes), íconos PWA 192/512 + apple-touch (instalable como app desktop), site.webmanifest, meta tags og:image — 13-Jul-2026
 - [x] **W56** — og-image optimizada para WhatsApp: logo-first design legible a 80px (thumbnail compression), JPG 35KB, CORP cross-origin headers en `_headers`. 3 iteraciones hasta diseño final — 14-Jul-2026
-- [ ] **W49** — Estrategia de Pauta y Presupuesto: PLAN ARMADO en `docs/PLAN-MARKETING-REDES.md` (14-Jul-2026): video-first IG/TikTok, 16 guiones honestos (sin testimonios inventados), producción Fastlane+UGC, escenarios USD 300/500/1000, calendario 4 semanas, compliance Meta. FALTA: decisión de presupuesto con Fede + consulta a Poletto (Google Ads como canal 2) + backlog técnico W56 (UTMs) y W57 (Meta Pixel).
+- [ ] **W49** — Estrategia de Pauta y Presupuesto: PLAN ARMADO en `docs/PLAN-MARKETING-REDES.md` (14-Jul-2026): video-first IG/TikTok, 16 guiones honestos (sin testimonios inventados), produccion Fastlane+UGC, escenarios USD 300/500/1000, calendario 4 semanas, compliance Meta. Prerequisito tecnico W56 (UTMs) CUMPLIDO 15-Jul. FALTA: decision de presupuesto con Fede + consulta a Poletto (Google Ads como canal 2) + W57 (Meta Pixel, opcional).
 - [ ] **W50** — Preparar reunión potencial con Javier.
 - [ ] **W51** — **Fastlane (usefastlane.ai) — Herramienta de marketing short-form video**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Activar cuando se defina GTM con Fede y producto este en version final (PDF + Stripe). Registrado 25-Jun-2026.
 
@@ -128,7 +128,7 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `a1ede85` — fix: og-image logo-first, legible a 80px (thumbnail WhatsApp)
+- **HEAD:** `1996be1` — feat(W56): captura de UTMs end-to-end + plan de marketing (W49-prep)
 - **Local = Remote:** sincronizado
 - **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
@@ -136,6 +136,7 @@
 - **Serverless Functions:** 3/3 LIVE (`/api/verify-session`, `/api/send-report`, `/api/notify-lead`)
 - **Resend:** Dominio verificado, email operativo desde `informes@magic-number.app`
 - **Stripe:** Pendiente cuenta (Fede) — endpoint responde `not_configured`
+- **UTMs:** Captura end-to-end operativa (analytics + leads + email asesor). Supabase migrado.
 - **Deck Javier:** PPTX+PDF en repo, 11 slides con notas de orador
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
 - **Status:** ACTIVO — Produccion completa, solo falta Stripe (Fede)
