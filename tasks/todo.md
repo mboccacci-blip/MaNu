@@ -1,5 +1,5 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-07-15 (sesion 12) — W56 UTMs end-to-end (code + migracion Supabase), plan marketing redes (W49-prep). Deploy auto. Produccion 100% operativa menos Stripe.
+> Actualizado: 2026-07-16 (sesion 13) — Stripe OPERATIVO (cuenta Divit). Bug fix critico: Supabase no funcionaba en produccion (env vars faltantes en build). Briefing enviado a Fede. PRODUCCION 100%.
 
 ---
 
@@ -66,7 +66,7 @@
 ### Post-MVP-fixes (construir después de estabilizar las 3 tabs)
 - [x] **W15** — PDF premium (jsPDF client-side, chunk separado, ES/EN): MN exacto + proyección, trayectoria año a año + ahorro por perfil + costo de esperar, metodología + disclaimers. ADEMÁS secciones condicionales (solo si hay datos cargados): Health Score, análisis de deudas, oportunidades de ahorro, metas intermedias. `src/utils/reportPdf.js` — 06-Jul-2026
 - [x] **W16** — Email tarjeta HTML + PDF adjunto vía Resend: `functions/api/send-report.js` + `src/utils/premiumDelivery.js`. **OPERATIVO EN PRODUCCION** — Resend configurado, dominio verificado, email de prueba enviado exitosamente 13-Jul-2026
-- [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. CÓDIGO LISTO — falta cuenta Stripe (Fede). Endpoint live responde `not_configured`. Paywall estricto: tier paid SOLO con sesión verificada — 06-Jul-2026
+- [x] **W17** — Flujo Stripe completo: PaymentModal + Payment Link (VITE_STRIPE_LINK) + verificación server-side (`functions/api/verify-session.js`) + entrega automática post-pago + sandbox dev. **OPERATIVO EN PRODUCCION** via cuenta Divit (empresa hermano). Payment Link configurado, STRIPE_SECRET_KEY en Cloudflare Pages, VITE_STRIPE_LINK en GitHub Actions. Paywall estricto: tier paid SOLO con sesión verificada — 16-Jul-2026
 - [ ] **W18** — Admin Dashboard (emails + leads para fundadores)
 - [ ] **W19** — Investigar Mercado Pago + Stripe
 - [x] **W56** — Captura de UTMs end-to-end COMPLETO: `src/utils/utm.js` (first+last touch, 30 dias, localStorage), merge en props de TODOS los eventos analytics, columnas utm_* en leads con fallback anti-perdida, "Campana de origen" en email al asesor. Migracion SQL corrida en Supabase (5 columnas + 2 indices). Commit `1996be1`. Deploy auto OK — 15-Jul-2026
@@ -80,8 +80,10 @@
 - [x] **W55** — Assets de marca: og-image 1200×630 (preview WhatsApp/redes), íconos PWA 192/512 + apple-touch (instalable como app desktop), site.webmanifest, meta tags og:image — 13-Jul-2026
 - [x] **W56** — og-image optimizada para WhatsApp: logo-first design legible a 80px (thumbnail compression), JPG 35KB, CORP cross-origin headers en `_headers`. 3 iteraciones hasta diseño final — 14-Jul-2026
 - [ ] **W49** — Estrategia de Pauta y Presupuesto: PLAN ARMADO en `docs/PLAN-MARKETING-REDES.md` (14-Jul-2026): video-first IG/TikTok, 16 guiones honestos (sin testimonios inventados), produccion Fastlane+UGC, escenarios USD 300/500/1000, calendario 4 semanas, compliance Meta. Prerequisito tecnico W56 (UTMs) CUMPLIDO 15-Jul. FALTA: decision de presupuesto con Fede + consulta a Poletto (Google Ads como canal 2) + W57 (Meta Pixel, opcional).
-- [ ] **W50** — Preparar reunión potencial con Javier.
-- [ ] **W51** — **Fastlane (usefastlane.ai) — Herramienta de marketing short-form video**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Activar cuando se defina GTM con Fede y producto este en version final (PDF + Stripe). Registrado 25-Jun-2026.
+- [ ] **W50** — Preparar reunion con Javier: (1) **Acordar % comision de referido con Fede ANTES de la reunion** — el deck lo deja abierto a proposito (slide 7), hay que entrar sabiendo el numero. (2) Coordinar fecha. (3) Prep de la reunion cuando haya fecha confirmada.
+- [ ] **W51** — **Fastlane (usefastlane.ai) — Produccion video short-form**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Cuenta registrada. **Accion concreta: semana 1 del calendario de marketing (W49).** Activar cuando se confirme presupuesto con Fede.
+- [ ] **W58** — Verificacion og-image WhatsApp: pegar link `magic-number.app?v=7` en WhatsApp desde telefono, esperar preview, confirmar que el logo-first design se lee bien en thumbnail. Loop abierto desde sesion 11b (rediseno og-image).
+- [ ] **W59** — UX feedback Nico (beta tester, 16-Jul-2026): (1) Tooltip "Impuesto Anual sobre Activos" necesita rangos concretos para Argentina (ej: Bienes Personales 0.5%-1.75%). Decision tomada: dejar default en 0%, mejorar tooltip. (2) "Esperar me cuesta $X/mes" necesita contexto explicando de donde sale el numero. (3) Iconos perfiles 60/40 y 80/20: Nico lo resolvio encontrando el glosario, no critico.
 
 ### Landing/UX pendientes (auditoria 29-Abr-2026)
 - [x] **W36** — Landing ya dice "3 min" (verificado en LandingPage.jsx) — tildado 06-Jul-2026
@@ -128,15 +130,17 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `1996be1` — feat(W56): captura de UTMs end-to-end + plan de marketing (W49-prep)
+- **HEAD:** `88b7a3c` — chore: trigger redeploy with all env vars (Supabase + Stripe)
 - **Local = Remote:** sincronizado
 - **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
 - **Deploy:** GitHub Actions auto on push to master (`wrangler-action@v3`)
 - **Serverless Functions:** 3/3 LIVE (`/api/verify-session`, `/api/send-report`, `/api/notify-lead`)
 - **Resend:** Dominio verificado, email operativo desde `informes@magic-number.app`
-- **Stripe:** Pendiente cuenta (Fede) — endpoint responde `not_configured`
+- **Stripe:** OPERATIVO via cuenta Divit (empresa hermano). Payment Link + verificacion server-side funcionando.
+- **Supabase:** OPERATIVO (fix sesion 13: env vars ahora se pasan al build step)
 - **UTMs:** Captura end-to-end operativa (analytics + leads + email asesor). Supabase migrado.
-- **Deck Javier:** PPTX+PDF en repo, 11 slides con notas de orador
+- **Deck Javier:** PPTX+PDF en repo, 11 slides con notas de orador (nombre Javier removido por decision del usuario)
+- **Briefing Fede:** Enviado por email 16-Jul-2026 (DOCX + deck + plan marketing)
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
-- **Status:** ACTIVO — Produccion completa, solo falta Stripe (Fede)
+- **Status:** ACTIVO — Produccion 100% operativa. Proximo: decisiones de negocio (comision %, presupuesto pauta, fecha Javier)
