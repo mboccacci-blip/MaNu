@@ -135,7 +135,7 @@ export default {
     realEstate: "Capital Inmobiliario",
     realEstateDesc: "Si tenés propiedades de alquiler, el equity (valor de mercado menos lo que debés) cuenta en tus activos totales pero NO se incluye en las proyecciones de inversión. Los inmuebles son ilíquidos y se revalorizan de forma diferente a las acciones o bonos. El ingreso neto de alquiler, sin embargo, sí se suma a tu ingreso mensual.",
     readyToStart: "¿Listo para empezar?",
-    readyToStartDesc: "Vas a ingresar tu información, explorar distintos escenarios, y descubrir tu Magic Number: el monto que necesitás para jubilarte tranquilo.",
+    readyToStartDesc: "Vas a ingresar tu información, explorar distintos escenarios y descubrir tu Magic Number: el monto que necesitás para jubilarte tranquilo.",
     letsGo: "¡Vamos! →",
   },
 
