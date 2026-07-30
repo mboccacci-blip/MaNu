@@ -25,7 +25,7 @@ Calculadora de planificacion financiera para el retiro. Mercado objetivo: hispan
 ## Estado Actual (Julio 2026)
 - MVP desplegado en produccion. Motor financiero completo. Stripe $3.99 + PDF + email operativos.
 - 0 usuarios, 0 revenue. 5% time allocation semanal.
-- HEAD: `70b4402`. Tests: 40/40. Build: OK.
+- Tests: 40/40. Build: OK.
 - Audit CERRADO: 27/27 hallazgos + 4 fixes externos + 3 refactors + 3 features.
 
 ## MVP Scope (3 tabs visibles)
