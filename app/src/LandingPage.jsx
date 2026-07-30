@@ -65,13 +65,13 @@ const INITIAL_METRICS = [
 ];
 
 const NEWS_ES = [
-  { text: 'El interés compuesto es la fuerza más poderosa del universo — cuanto antes empieces, más crece', highlight: 'más crece' },
+  { text: 'El interés compuesto es la fuerza más poderosa del universo. Cuanto antes empieces, más crece', highlight: 'más crece' },
   { text: 'Los fondos indexados históricamente superaron a gestores activos en horizontes de 15+ años', highlight: 'superaron' },
   { text: 'El movimiento FIRE gana tracción en LATAM: retirarse antes de los 50 es posible con planificación', highlight: 'antes de los 50' },
 ];
 
 const NEWS_EN = [
-  { text: 'Compound interest is the most powerful force in the universe — the earlier you start, the more it grows', highlight: 'the more it grows' },
+  { text: 'Compound interest is the most powerful force in the universe. The earlier you start, the more it grows', highlight: 'the more it grows' },
   { text: 'Index funds have historically outperformed active managers over 15+ year horizons', highlight: 'outperformed' },
   { text: 'The FIRE movement gains traction globally: retiring before 50 is possible with proper planning', highlight: 'before 50' },
 ];
@@ -104,7 +104,7 @@ const T = {
     freePill:     'Sin registro · Sin tarjeta · Resultado en minutos',
     h1a:          'Cada día que esperás',
     h1b:          'perdés plata.',
-    sub:          'El costo de no invertir crece cada mes. Descubrí exactamente cuánto estás dejando sobre la mesa — y tu Magic Number para alcanzar la libertad financiera.',
+    sub:          'El costo de no invertir crece cada mes. Descubrí exactamente cuánto estás dejando sobre la mesa y tu Magic Number para alcanzar la libertad financiera.',
     noReg1:       'Sin registro',
     noReg2:       'Sin tarjeta de crédito',
     noReg3:       'Resultado en segundos',
@@ -158,7 +158,7 @@ const T = {
     freePill:     'No signup · No credit card · Results in minutes',
     h1a:          'Every day you wait,',
     h1b:          'you lose money.',
-    sub:          'The cost of not investing grows every month. Find exactly how much you\'re leaving on the table — and your Magic Number to achieve financial freedom.',
+    sub:          'The cost of not investing grows every month. Find exactly how much you\'re leaving on the table and your Magic Number to achieve financial freedom.',
     noReg1:       'No signup required',
     noReg2:       'No credit card',
     noReg3:       'Results in seconds',
@@ -179,7 +179,7 @@ const T = {
     previewNote:  'This is your personalized dashboard.',
     previewLink:  'Open the app to see yours →',
     feat1title:   'Your Magic Number',
-    feat1desc:    'The exact capital you need so your investments cover your lifestyle forever — no guesswork.',
+    feat1desc:    'The exact capital you need so your investments cover your lifestyle forever. No guesswork.',
     feat2title:   'FIRE Simulator',
     feat2desc:    'Explore retirement scenarios: when you retire, savings rate, expected return. Decide with real data.',
     feat3title:   'Personal Analytics',

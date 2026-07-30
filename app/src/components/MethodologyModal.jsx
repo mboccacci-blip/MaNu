@@ -33,8 +33,8 @@ export default function MethodologyModal({ show, onClose, lang, profiles, inflat
         icon: 'scales',
         t: es ? 'Perfiles de inversión' : 'Investment profiles',
         b: es
-          ? 'Seis perfiles, de efectivo a 100% acciones, con retornos nominales históricos de largo plazo. Si configurás un impuesto anual a los activos, lo restamos del retorno (drag fiscal) en los cálculos — el retorno que se muestra en las etiquetas es siempre el canónico sin impuesto.'
-          : 'Six profiles, from cash to 100% equities, using long-term historical nominal returns. If you set an annual asset tax, we subtract it from the return (tax drag) in calculations — labels always show the canonical pre-tax return.',
+          ? 'Seis perfiles, de efectivo a 100% acciones, con retornos nominales históricos de largo plazo. Si configurás un impuesto anual a los activos, lo restamos del retorno (drag fiscal) en los cálculos. El retorno que se muestra en las etiquetas es siempre el canónico sin impuesto.'
+          : 'Six profiles, from cash to 100% equities, using long-term historical nominal returns. If you set an annual asset tax, we subtract it from the return (tax drag) in calculations. Labels always show the canonical pre-tax return.',
         table: true,
       },
       {
@@ -62,8 +62,8 @@ export default function MethodologyModal({ show, onClose, lang, profiles, inflat
         icon: 'warning',
         t: es ? 'Límites del modelo' : 'Model limitations',
         b: es
-          ? 'El modelo no contempla impuestos locales específicos de tu país, secuencia de retornos (la volatilidad año a año puede cambiar el resultado aunque el promedio se cumpla), ni cambios futuros en tus ingresos o gastos. Los retornos históricos no garantizan retornos futuros. Es una herramienta educativa de planificación — no es asesoramiento financiero.'
-          : 'The model does not account for your country’s specific taxes, sequence-of-returns risk (year-to-year volatility can change outcomes even if the average holds), or future changes in your income or expenses. Historical returns don’t guarantee future returns. This is an educational planning tool — not financial advice.',
+          ? 'El modelo no contempla impuestos locales específicos de tu país, secuencia de retornos (la volatilidad año a año puede cambiar el resultado aunque el promedio se cumpla), ni cambios futuros en tus ingresos o gastos. Los retornos históricos no garantizan retornos futuros. Es una herramienta educativa de planificación, no asesoramiento financiero.'
+          : 'The model does not account for your country’s specific taxes, sequence-of-returns risk (year-to-year volatility can change outcomes even if the average holds), or future changes in your income or expenses. Historical returns don’t guarantee future returns. This is an educational planning tool, not financial advice.',
       },
     ],
     colProfile: es ? 'Perfil' : 'Profile',
