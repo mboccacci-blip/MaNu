@@ -22,10 +22,10 @@ Calculadora de planificacion financiera para el retiro. Mercado objetivo: hispan
 - **Analytics**: `utils/analytics.js` — Supabase, batching 5s/20 eventos. SIN PII.
 - **Routing**: `useState("achieve")` — sin router.
 
-## Estado Actual (Junio 2026)
-- MVP desplegado en produccion. Motor financiero completo.
+## Estado Actual (Julio 2026)
+- MVP desplegado en produccion. Motor financiero completo. Stripe $3.99 + PDF + email operativos.
 - 0 usuarios, 0 revenue. 5% time allocation semanal.
-- HEAD: `9cae203`. Tests: 40/40. Build: 860 KB.
+- HEAD: `70b4402`. Tests: 40/40. Build: OK.
 - Audit CERRADO: 27/27 hallazgos + 4 fixes externos + 3 refactors + 3 features.
 
 ## MVP Scope (3 tabs visibles)
@@ -49,5 +49,6 @@ Calculadora de planificacion financiera para el retiro. Mercado objetivo: hispan
 - Nunca agregar metricas falsas ni social proof inventado.
 
 ## Deploy
-`npx wrangler pages deploy dist` (manual via CLI)
+**Automatico (normal):** push a master → GitHub Actions (`.github/workflows/deploy.yml`) rebuilda desde fuentes + `wrangler-action@v3`. No requiere intervencion manual.
+**Manual (fallback):** `cd app && npm run build && npx wrangler pages deploy dist --project-name=manu-pro`
 Git remote: `github.com/mboccacci-blip/MaNu.git` (branch: master)
