@@ -1,18 +1,20 @@
 # MaNu PRO — Tasks Ledger
-> Actualizado: 2026-07-16 (sesion 13) — Stripe OPERATIVO (cuenta Divit). Bug fix critico: Supabase no funcionaba en produccion (env vars faltantes en build). Briefing enviado a Fede. PRODUCCION 100%.
+> Actualizado: 2026-08-21 (sesion 14) — Reunion con Fede Amui. CAMBIO DE MODELO: eliminar $3.99, ir B2B puro (email gate -> lead al asesor). Fede pide anonimato en docs publicos. Proximos pasos: presupuesto pauta, contactar Javier, enviar PDFs a Fede.
 
 ---
 
 ## Decisiones Vigentes
-- [x] **D1** — Precio B2C: **$3.99** micro-pago (baja de $14.99) — Decidido 17-Abr-2026
-- [x] **D3** — Captura de email: en el flujo de pago de $3.99 — Decidido 17-Abr-2026
+- [x] **D1** — ~~Precio B2C: $3.99 micro-pago~~ **SUPERSEDIDA por D10** — Decidido 17-Abr, reemplazada 21-Ago-2026
+- [x] **D3** — ~~Captura de email: en el flujo de pago~~ **SUPERSEDIDA por D10** — Ahora email gate es el unico gate
 - [x] **D4** — MVP = 3 tabs: Achieve, Inaction, Learn — Decidido 17-Abr-2026
 - [x] **D5** — Default jubilacion: Treasuries 1.5% real (Fede: "1 o 1.5 pondria") — Confirmado 18-Abr-2026
 - [x] **D6** — Rango free: ±15% (sin cambio) — Confirmado 17-Abr-2026
-- [x] **D7** — Premium $14.99: en STAND-BY — Decidido 17-Abr-2026
+- [x] **D7** — ~~Premium $14.99: en STAND-BY~~ **CANCELADA por D10** — Decidido 17-Abr-2026
 - [x] **D8** — Learn: podar a solo terminos de Achieve + Inaction — Decidido 17-Abr-2026
 - [x] **D9** — Frase debajo del MN: simplificada a "Juntando este capital a tus X anos..." — Decidido 24-Abr-2026
 - [ ] **D2** — Estructura juridica: orientacion Argentina, Stripe + investigar MercadoPago. No bloqueante.
+- [ ] **D10** — **CAMBIO DE MODELO B2B PURO** — Eliminar cobro $3.99 y PDF pago. El flujo pasa a: FREE (rango) -> EMAIL (numero exacto, lead al asesor). Revenue unico: comision por lead convertido al asesor. Propuesto por Fede 21-Ago-2026. **PENDIENTE: decidir que hacer con el PDF (eliminar / reconvertir a lead magnet gratuito) y las 13 tabs extras (desbloquear con email o mantener ocultas). Analisis de impacto completado.**
+- [ ] **D11** — **ANONIMATO FEDE** — Fede pidio retirar su nombre de cualquier documento publico del proyecto. Mantiene financiamiento y equity 50-50 pero sin exposicion publica. Decidido 21-Ago-2026.
 
 ---
 
@@ -84,6 +86,15 @@
 - [ ] **W51** — **Fastlane (usefastlane.ai) — Produccion video short-form**: Plataforma AI que genera TikTok/Reels/Shorts desde la URL del producto. Tier gratuito. Cuenta registrada. **Accion concreta: semana 1 del calendario de marketing (W49).** Activar cuando se confirme presupuesto con Fede.
 - [ ] **W58** — Verificacion og-image WhatsApp: pegar link `magic-number.app?v=7` en WhatsApp desde telefono, esperar preview, confirmar que el logo-first design se lee bien en thumbnail. Loop abierto desde sesion 11b (rediseno og-image).
 - [ ] **W59** — UX feedback Nico (beta tester, 16-Jul-2026): (1) Tooltip "Impuesto Anual sobre Activos" necesita rangos concretos para Argentina (ej: Bienes Personales 0.5%-1.75%). Decision tomada: dejar default en 0%, mejorar tooltip. (2) "Esperar me cuesta $X/mes" necesita contexto explicando de donde sale el numero. (3) Iconos perfiles 60/40 y 80/20: Nico lo resolvio encontrando el glosario, no critico.
+- [ ] **W60** — ⚠️ WATCHLIST Supabase pause: email recibido 27-Jul, pausa inminente. DECISION: aceptar pausa y restaurar manualmente cuando llegue email de confirmacion. Accion: supabase.com/dashboard → proyecto manu-pro → "Restore project" (tarda 2 min, plazo 90 dias). Mientras pausado: leads, analytics y email premium fallan silenciosamente. La app calculadora sigue funcionando.
+
+
+### Reunion 21-Ago-2026 — Cambio de modelo + proximos pasos
+- [ ] **W61** — Implementar cambio B2B puro (D10): eliminar Stripe/PaymentModal/verify-session, simplificar tiers a free/email, reconvertir o eliminar PDF. **Analisis de impacto completado** (15 archivos + 3 functions). No ejecutar sin confirmacion.
+- [ ] **W62** — Elaborar presupuesto detallado para Fede: publicidad (Meta/Google) + costos legales.
+- [ ] **W63** — Contactar Javier: coordinar presentacion del proyecto. Preparar resumen de 3 puntos.
+- [ ] **W64** — Enviar ejemplos de PDF generados por la app a Fede para evaluacion tecnica.
+- [ ] **W65** — Martin: consultar a Poletto sobre Google Ads como canal 2 (Martin, no Fede).
 
 ### Landing/UX pendientes (auditoria 29-Abr-2026)
 - [x] **W36** — Landing ya dice "3 min" (verificado en LandingPage.jsx) — tildado 06-Jul-2026
