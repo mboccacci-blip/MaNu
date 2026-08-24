@@ -16,7 +16,7 @@
 | Lead a Javier (W48) | `functions/api/notify-lead.js` | Cada lead de asesor le llega por email a `ADVISOR_EMAIL` con el perfil completo. Cambiar de asesor = cambiar una variable. |
 | Cómo calculamos (W46) | `src/components/MethodologyModal.jsx` | Transparencia metodológica. Links en footer y bajo el MN. |
 
-## Paso 1 — Stripe (cuando Fede abra la cuenta)
+## Paso 1 — Stripe (cuando se resuelva la cuenta)
 
 1. Dashboard → **Payment Links** → crear:
    - Producto "MaNu PRO — Perfil Full", **$3.99 USD, one-time**.
