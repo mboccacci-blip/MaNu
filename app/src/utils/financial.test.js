@@ -310,3 +310,31 @@ describe('escenario conservador', function () {
     });
   });
 });
+
+// ─── Invariante cobertura: pagina 1 vs tabla de pagina 2 ──────────────────────
+// Los anos de cobertura (drawdownYears, pagina 1) y la trayectoria (pagina 2)
+// tienen que describir el mismo agotamiento. Antes divergian: drawdownYears
+// capitalizaba anual y yearByYear mensual.
+
+describe('drawdownYears vs reportTrajectory: misma convencion', function () {
+  var CASOS = [
+    { bal: 180399, spend: 4000, r: 0.015 },
+    { bal: 300000, spend: 3000, r: 0.02 },
+    { bal: 622309, spend: 3000, r: 0.015 },
+    { bal: 1000000, spend: 5000, r: 0.04 },
+  ];
+
+  it('el saldo se agota exactamente un ano despues de la cobertura reportada', function () {
+    CASOS.forEach(function (c) {
+      var traj = reportTrajectory(c.bal, 0, c.r, 0, 60, c.spend, []);
+      var cov = drawdownYears(c.bal, c.spend * 12, c.r, 60);
+      expect(traj[cov + 1].balance).toBe(0);
+      if (cov >= 1) expect(traj[cov - 1].balance).toBeGreaterThan(0);
+    });
+  });
+
+  it('usa capitalizacion mensual, no anual', function () {
+    // Con capitalizacion anual este caso da 28; con mensual da 27.
+    expect(drawdownYears(1000000, 60000, 0.04, 60)).toBe(27);
+  });
+});

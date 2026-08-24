@@ -65,7 +65,7 @@ var STR = {
     trajTitle: 'Tu trayectoria año a año',
     trajAccum: 'Acumulación', trajDraw: 'Retiro (consumo)', retirementAt: 'Retiro',
     colYear: 'Año', colAge: 'Edad', colBalance: 'Saldo proyectado', colPhase: 'Fase',
-    phaseA: 'Acumulación', phaseD: 'Retiro',
+    phaseA: 'Acumulación', phaseD: 'Retiro', phaseR: 'Te jubilás',
     monthlyTitle: 'Cuánto ahorrar por mes, según el perfil de inversión',
     monthlySub: function (mSav) { return 'Para llegar a tu Magic Number a tiempo, además de los ' + money(Math.max(mSav, 0)) + '/mes que ya ahorrás:'; },
     colProfile: 'Perfil', colReturn: 'Retorno real', colNeeded: 'Ahorro adicional',
@@ -127,7 +127,7 @@ var STR = {
     trajTitle: 'Your year-by-year trajectory',
     trajAccum: 'Accumulation', trajDraw: 'Retirement (drawdown)', retirementAt: 'Retirement',
     colYear: 'Year', colAge: 'Age', colBalance: 'Projected balance', colPhase: 'Phase',
-    phaseA: 'Accumulation', phaseD: 'Drawdown',
+    phaseA: 'Accumulation', phaseD: 'Drawdown', phaseR: 'You retire',
     monthlyTitle: 'How much to save per month, by investment profile',
     monthlySub: function (mSav) { return 'To reach your Magic Number on time, on top of the ' + money(Math.max(mSav, 0)) + '/mo you already save:'; },
     colProfile: 'Profile', colReturn: 'Real return', colNeeded: 'Additional savings',
@@ -427,8 +427,8 @@ function page2(doc, engine, store, L, d, trajectory) {
     doc.text(String(engine.nAge + r.year), M + 30, y);
     setText(doc, isRet ? BLUE : INK);
     doc.text(money(Math.round(r.balance)), M + 100, y, { align: 'right' });
-    setText(doc, r.phase === 'accumulation' ? GREEN : AMBER);
-    doc.text(r.phase === 'accumulation' ? L.phaseA : L.phaseD, M + CW - 3, y, { align: 'right' });
+    setText(doc, isRet ? BLUE : r.phase === 'accumulation' ? GREEN : AMBER);
+    doc.text(isRet ? L.phaseR : r.phase === 'accumulation' ? L.phaseA : L.phaseD, M + CW - 3, y, { align: 'right' });
     y += rowH;
   });
 
