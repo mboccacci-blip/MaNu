@@ -49,7 +49,7 @@ var STR = {
     title: 'Informe Premium — Plan de Retiro',
     generated: 'Generado el',
     heroLabel: 'TU MAGIC NUMBER',
-    heroPhrase: function (d) { return 'Juntando este capital a tus ' + d.retAge + ' años, te asegurás ' + money(d.desired) + ' por mes durante ' + d.yp + ' años de retiro.'; },
+    heroPhrase: function (d) { var base = 'Juntando este capital a tus ' + d.retAge + ' años, te asegurás ' + money(d.desired) + ' por mes durante ' + d.yp + ' años de retiro.'; if (d.ss > 0) base += ' (' + money(d.desiredAfterSS) + ' de tu capital + ' + money(d.ss) + ' de ingreso adicional)'; return base; },
     conservative: function (d) { return 'Escenario conservador (invirtiendo el capital a ' + pctS(d.rate) + ' real durante el retiro): ' + money(d.value); },
     yourData: 'Tus datos',
     dAge: 'Edad actual', dRetAge: 'Edad de retiro', dYP: 'Años de retiro planificados',
@@ -65,13 +65,13 @@ var STR = {
     trajTitle: 'Tu trayectoria año a año',
     trajAccum: 'Acumulación', trajDraw: 'Retiro (consumo)', retirementAt: 'Retiro',
     colYear: 'Año', colAge: 'Edad', colBalance: 'Saldo proyectado', colPhase: 'Fase',
-    phaseA: 'Acumulación', phaseD: 'Retiro',
+    phaseA: 'Acumulación', phaseD: 'Retiro', phaseR: 'Te jubilás',
     monthlyTitle: 'Cuánto ahorrar por mes, según el perfil de inversión',
-    monthlySub: 'Para llegar a tu Magic Number a tiempo, empezando hoy:',
-    colProfile: 'Perfil', colReturn: 'Retorno real', colNeeded: 'Ahorro necesario',
+    monthlySub: function (mSav) { return 'Para llegar a tu Magic Number a tiempo, además de los ' + money(Math.max(mSav, 0)) + '/mes que ya ahorrás:'; },
+    colProfile: 'Perfil', colReturn: 'Retorno real', colNeeded: 'Ahorro adicional',
     surplusBy: function (v) { return 'Superás la meta por ' + moneyC(v); },
     inactionTitle: 'El costo de esperar',
-    inactionSub: function (d) { return 'Si en vez de empezar hoy esperás, esto es lo que dejás de acumular (' + d.name + ', ' + d.years + ' años de horizonte):'; },
+    inactionSub: function (d) { return 'Si en vez de empezar hoy esperás, esto es lo que dejás de acumular (' + d.name + ', ' + d.years + (d.years === 1 ? ' año' : ' años') + ' de horizonte):'; },
     startToday: 'Empezando hoy', waitN: function (n) { return 'Esperando ' + n + (n === 1 ? ' año' : ' años'); },
     lost: function (v) { return '-' + moneyC(v); },
     extrasScoreTitle: 'Tu salud financiera — Score',
@@ -111,7 +111,7 @@ var STR = {
     title: 'Premium Report — Retirement Plan',
     generated: 'Generated on',
     heroLabel: 'YOUR MAGIC NUMBER',
-    heroPhrase: function (d) { return 'Accumulating this capital by age ' + d.retAge + ', you secure ' + money(d.desired) + ' per month for ' + d.yp + ' years of retirement.'; },
+    heroPhrase: function (d) { var base = 'Accumulating this capital by age ' + d.retAge + ', you secure ' + money(d.desired) + ' per month for ' + d.yp + ' years of retirement.'; if (d.ss > 0) base += ' (' + money(d.desiredAfterSS) + ' from your capital + ' + money(d.ss) + ' from additional income)'; return base; },
     conservative: function (d) { return 'Conservative scenario (investing the capital at ' + pctS(d.rate) + ' real during retirement): ' + money(d.value); },
     yourData: 'Your data',
     dAge: 'Current age', dRetAge: 'Retirement age', dYP: 'Planned years in retirement',
@@ -127,10 +127,10 @@ var STR = {
     trajTitle: 'Your year-by-year trajectory',
     trajAccum: 'Accumulation', trajDraw: 'Retirement (drawdown)', retirementAt: 'Retirement',
     colYear: 'Year', colAge: 'Age', colBalance: 'Projected balance', colPhase: 'Phase',
-    phaseA: 'Accumulation', phaseD: 'Drawdown',
+    phaseA: 'Accumulation', phaseD: 'Drawdown', phaseR: 'You retire',
     monthlyTitle: 'How much to save per month, by investment profile',
-    monthlySub: 'To reach your Magic Number on time, starting today:',
-    colProfile: 'Profile', colReturn: 'Real return', colNeeded: 'Savings needed',
+    monthlySub: function (mSav) { return 'To reach your Magic Number on time, on top of the ' + money(Math.max(mSav, 0)) + '/mo you already save:'; },
+    colProfile: 'Profile', colReturn: 'Real return', colNeeded: 'Additional savings',
     surplusBy: function (v) { return 'You exceed the goal by ' + moneyC(v); },
     inactionTitle: 'The cost of waiting',
     inactionSub: function (d) { return 'If you wait instead of starting today, this is what you give up (' + d.name + ', ' + d.years + '-year horizon):'; },
@@ -229,23 +229,23 @@ function prepData(engine, store) {
   var basePct = engine.magic.real > 0 ? baseProjected / engine.magic.real * 100 : 0;
   var baseCoverage = null;
   if (baseProjected > 0 && engine.desiredAfterSS > 0 && engine.nYP > 0) {
-    var retR = (engine.adjProfiles[2] || engine.adjProfiles[0]).effReal;
+    var retR = engine.retProfReturn;
     var yrs = drawdownYears(baseProjected, engine.desiredAfterSS * 12, retR, 60);
     baseCoverage = { years: yrs, untilAge: engine.nRetAge + yrs, sufficient: yrs >= engine.nYP };
   }
   var canonical = engine.adjProfiles.filter(function (p) { return p.name === engine.retProfLabel; })[0] || engine.adjProfiles[2];
 
-  // Cost of waiting — user's real numbers, selected delay profile, ciH horizon
+  // Cost of waiting — uses retProfReturn and ytr (horizon to retirement)
   var inaction = null;
   if (engine.nEx > 0 || mSavPos > 0) {
-    var h = Number(store.ciH) || 20;
-    var prof = engine.adjProfiles[store.ciDelayProf] || engine.adjProfiles[engine.adjProfiles.length - 1];
-    var today = fvVariable(engine.nEx, mSavPos, prof.effReal, h, []);
-    var rows = [1, 3, 5, 10].map(function (d) {
-      var v = fvVariable(engine.nEx, mSavPos, prof.effReal, Math.max(h - d, 0), []);
+    var h = engine.ytr;
+    var rInact = engine.retProfReturn;
+    var today = fvVariable(engine.nEx, mSavPos, rInact, h, []);
+    var rows = [1, 3, 5, 10].filter(function (d) { return d < h; }).map(function (d) {
+      var v = fvVariable(engine.nEx, mSavPos, rInact, Math.max(h - d, 0), []);
       return { delay: d, val: v, lost: today - v };
     });
-    inaction = { horizon: h, profName: prof.name, today: today, rows: rows };
+    inaction = { horizon: h, profName: engine.retProfLabel, today: today, rows: rows };
   }
   return { baseProjected: baseProjected, basePct: basePct, baseCoverage: baseCoverage, canonical: canonical, inaction: inaction };
 }
@@ -257,8 +257,8 @@ function ensure(doc, y, needed) {
   return y;
 }
 
-function drawChart(doc, y, engine, L) {
-  var data = engine.ybYData;
+function drawChart(doc, y, engine, L, trajectory) {
+  var data = trajectory;
   var x0 = M + 12, w = CW - 14, h = 40;
   var maxV = 1;
   data.forEach(function (d) { if (d.balance > maxV) maxV = d.balance; });
@@ -330,7 +330,7 @@ function page1(doc, engine, store, L, d, dateStr) {
   doc.text(money(Math.round(engine.magic.real)), W / 2, y + 14, { align: 'center' });
   setFill(doc, [239, 246, 255]); setDraw(doc, [191, 219, 254]); doc.setLineWidth(0.3);
   doc.roundedRect(M + 10, y + 20, CW - 20, 13, 2, 2, 'FD');
-  y = wrapText(doc, L.heroPhrase({ retAge: engine.nRetAge, desired: engine.nDes, yp: engine.nYP }), W / 2 - (CW - 30) / 2, y + 25.5, CW - 30, 9.5, INK, 4.4) + 4;
+  y = wrapText(doc, L.heroPhrase({ retAge: engine.nRetAge, desired: engine.nDes, yp: engine.nYP, ss: engine.nSS, desiredAfterSS: engine.desiredAfterSS }), W / 2 - (CW - 30) / 2, y + 25.5, CW - 30, 9.5, INK, 4.4) + 4;
   if (engine.magic.conservative > 0 && engine.magic.conservativeRate != null) {
     y = wrapText(doc, L.conservative({ rate: engine.magic.conservativeRate, value: Math.round(engine.magic.conservative) }), M + 10, y + 3, CW - 20, 8, SLATE, 3.8, 'italic') + 2;
   }
@@ -393,14 +393,14 @@ function page1(doc, engine, store, L, d, dateStr) {
   wrapText(doc, L.projAssumption({ rate: d.canonical.realReturn, profile: engine.retProfLabel }), M, y, CW, 8, SLATE, 3.8, 'italic');
 }
 
-function page2(doc, engine, store, L, d) {
+function page2(doc, engine, store, L, d, trajectory) {
   var y = 20;
   // Chart
   y = sectionTitle(doc, y, L.trajTitle);
-  y = drawChart(doc, y + 4, engine, L) + 2;
+  y = drawChart(doc, y + 4, engine, L, trajectory) + 2;
 
   // Year-by-year table (sampled)
-  var data = engine.ybYData;
+  var data = trajectory;
   var total = data.length - 1;
   var step = Math.max(1, Math.ceil(total / 8));
   var idxs = [];
@@ -427,15 +427,15 @@ function page2(doc, engine, store, L, d) {
     doc.text(String(engine.nAge + r.year), M + 30, y);
     setText(doc, isRet ? BLUE : INK);
     doc.text(money(Math.round(r.balance)), M + 100, y, { align: 'right' });
-    setText(doc, r.phase === 'accumulation' ? GREEN : AMBER);
-    doc.text(r.phase === 'accumulation' ? L.phaseA : L.phaseD, M + CW - 3, y, { align: 'right' });
+    setText(doc, isRet ? BLUE : r.phase === 'accumulation' ? GREEN : AMBER);
+    doc.text(isRet ? L.phaseR : r.phase === 'accumulation' ? L.phaseA : L.phaseD, M + CW - 3, y, { align: 'right' });
     y += rowH;
   });
 
   // Monthly needed by profile
   y = ensure(doc, y + 8, 70);
   y = sectionTitle(doc, y, L.monthlyTitle);
-  y = wrapText(doc, L.monthlySub, M, y, CW, 8.5, SLATE, 4) + 2;
+  y = wrapText(doc, L.monthlySub(engine.mSav), M, y, CW, 8.5, SLATE, 4) + 2;
   var mn = engine.monthlyNeeded || [];
   var rowH2 = 5.5;
   doc.setFont('helvetica', 'bold'); doc.setFontSize(8); setText(doc, SLATE);
@@ -457,7 +457,7 @@ function page2(doc, engine, store, L, d) {
   });
 
   // Cost of waiting
-  if (d.inaction) {
+  if (d.inaction && d.inaction.rows.length > 0) {
     y = ensure(doc, y + 8, 50);
     y = sectionTitle(doc, y, L.inactionTitle);
     y = wrapText(doc, L.inactionSub({ name: d.inaction.profName, years: d.inaction.horizon }), M, y, CW, 8.5, SLATE, 4) + 2;
@@ -665,10 +665,12 @@ export function buildReport(input) {
   var dateStr = now.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
   var d = prepData(engine, store);
 
+  var trajectory = engine.ybYReport;
+
   var doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
   page1(doc, engine, store, L, d, dateStr);
   doc.addPage();
-  var y2 = page2(doc, engine, store, L, d);
+  var y2 = page2(doc, engine, store, L, d, trajectory);
   pageExtras(doc, engine, store, L, y2);
   doc.addPage();
   page3(doc, engine, L);

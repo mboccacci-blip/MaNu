@@ -112,18 +112,11 @@ const INITIAL_STATE = {
   ciBase: 0,
 };
 
-// Fields that get persisted to localStorage
+// Fields that get persisted to localStorage.
+// Restricted to the MVP of 3 visible tabs. Expand this list when other tabs are unhidden.
 const PERSISTED_FIELDS = [
-  'age', 'monthlyIncome', 'expenses', 'ownsHome', 'vacationAnnual',
-  'coupleMode', 'partner2Income', 'hasRental', 'rentalEquity', 'rentalNetIncome',
-  'debts', 'noDebts', 'noMortgage', 'mortgageBalance', 'mortgageRate', 'mortgagePayment', 'mortgageYearsLeft',
-  'noCarLoan', 'carBalance', 'carRate', 'carPayment', 'carYearsLeft',
-  'retirementAge', 'yearsPostRet', 'desiredIncome', 'existingSavings', 'socialSecurity',
-  'legacy', 'assetTax', 'manualMonthlySav',
-  'customInflation', 'customReturn', 'portAlloc', 'portContribAlloc',
-  'extraIncome', 'eiTemporary', 'eiYears', 'goals',
-  'tier', 'userEmail',
-  '_nEId', '_nDId', '_nGId',
+  'age', 'retirementAge', 'yearsPostRet', 'desiredIncome', 'existingSavings',
+  'legacy', 'assetTax', 'manualMonthlySav', 'tier', 'userEmail'
 ];
 
 const useAppStore = create(
@@ -214,7 +207,17 @@ const useAppStore = create(
     },
     {
       name: 'manu-pro-state',
-      version: 1,
+      version: 2,
+      migrate: function (persistedState, version) {
+        if (version < 2) {
+          var clean = {};
+          PERSISTED_FIELDS.forEach(function (k) {
+            if (persistedState && persistedState[k] !== undefined) clean[k] = persistedState[k];
+          });
+          return clean;
+        }
+        return persistedState;
+      },
       partialize: function (state) {
         var result = {};
         PERSISTED_FIELDS.forEach(function (key) {

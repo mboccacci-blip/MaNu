@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { PROFILES, SCENARIO_SPREAD, BENCH_SR, BENCH_NW } from '../constants.js';
-import { mR, fvC, fvL, pvA, gB, clamp, yearByYear, fvVariable, drawdownYears } from '../utils/financial.js';
+import { mR, fvC, fvL, pvA, gB, clamp, yearByYear, fvVariable, drawdownYears, reportTrajectory } from '../utils/financial.js';
 
 function profById(id, list) { return list.find(function(p){ return p.id === id; }) || list[list.length-1]; }
 
@@ -146,11 +146,11 @@ export default function useFinancialEngine(store, t, lang) {
     var legacyPV=nLegacy>0?nLegacy/Math.pow(1+retProfReturn,nYP):0;
     var withSS=pvA(desiredAfterSS,retProfReturn,nYP)+legacyPV;
     var withoutSS=pvA(nDes,retProfReturn,nYP)+legacyPV;
-    var conservativeRate=profById('cds',adjProfiles).effReal;
+    var conservativeRate=retProfReturn-0.005;
     var legacyPVc=nLegacy>0?nLegacy/Math.pow(1+conservativeRate,nYP):0;
     var conservative=pvA(desiredAfterSS,conservativeRate,nYP)+legacyPVc;
     return{real:withSS,withoutSS:withoutSS,conservative:conservative,conservativeRate:conservativeRate,legacyPV:legacyPV}
-  },[desiredAfterSS,nDes,nYP,retProfReturn,adjProfiles,nLegacy]);
+  },[desiredAfterSS,nDes,nYP,retProfReturn,nLegacy]);
 
   var mD=useMemo(function(){
     var p=magic.real>0?(nEx/magic.real)*100:0;
@@ -178,6 +178,10 @@ export default function useFinancialEngine(store, t, lang) {
   var ybYData=useMemo(function(){if(ytr<=0||nDes<=0)return[];
     return yearByYear(nEx,mSav,chartAccumReturn,ytr,nYP,desiredAfterSS,INFL,debtEvents,chartRetireReturn);
   },[nEx,mSav,chartAccumReturn,chartRetireReturn,ytr,nYP,desiredAfterSS,INFL,debtEvents]);
+
+  var ybYReport=useMemo(function(){if(ytr<=0||nDes<=0)return[];
+    return reportTrajectory(nEx,mSav,retProfReturn,ytr,nYP,desiredAfterSS,debtEvents);
+  },[nEx,mSav,retProfReturn,ytr,nYP,desiredAfterSS,debtEvents]);
 
   const projs=useMemo(function(){
     return (allProfiles||[]).map(function(pr){
@@ -377,7 +381,7 @@ export default function useFinancialEngine(store, t, lang) {
     totalNetWorth, nSSRaw, nLegacy, ytr, nSS, totDebt, mortBal, carBal, totalDebtAll, nEI, nEIYrs, effectiveMSav,
     allDebts, debtEvents, TAX, adjProfiles, allProfiles, portReturn, portContribReturn, hasPortfolio, blendedPortReturn,
     desiredAfterSS, retProfReturn, retProfLabel, chartAccumReturn, chartRetireReturn, chartAccumLabel, chartRetireLabel,
-    magic, mD, monthlyNeeded, ybYData, projs, maxProj, scenarios, costNSYears, costNSReturn, costNS,
+    magic, mD, monthlyNeeded, ybYData, ybYReport, projs, maxProj, scenarios, costNSYears, costNSReturn, costNS,
     debtAn, probDebts, emergencyMonths, savOpps, totalSavOpp, earnProj, combinedImpact, costInRet, goalCalcs, totalGoalMo, goalImpactRate, goalRetImpact,
     simEffSav, simEffMo, simEffRet, simProjected, simGap, simPct, simNeededReturn, simNeededMonthly,
     revResult, hScore, bSR, bNW, percentiles

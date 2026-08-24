@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mR, fvC, fvL, pvA, clamp, drawdownYears, yearByYear, fvVariable } from './financial.js';
+import { mR, fvC, fvL, pvA, clamp, drawdownYears, yearByYear, fvVariable, reportTrajectory } from './financial.js';
 
 // ─── mR (monthly rate from annual) ────────────────────────────────────────────
 
@@ -279,5 +279,62 @@ describe('F3: fvC vs fvVariable consistency', function () {
     var fromFvVar = fvVariable(10000, 0, 0.04, 20, null);
     // fvL uses annual compound, fvVariable uses annual → should be identical
     expect(fromFvVar).toBeCloseTo(fromFvL, 2);
+  });
+});
+
+// ─── reportTrajectory: invariante informe/pagina 1 ────────────────────────────
+
+describe('reportTrajectory: invariante informe/pagina 1', function () {
+  // Escenario del audit 2026-08-24
+  var nEx = 50000, mSav = 500, ytr = 17, nYP = 20, spend = 3000, rate = 0.015;
+
+  it('el saldo en el ano de retiro coincide con la proyeccion de la pagina 1', function () {
+    var traj = reportTrajectory(nEx, mSav, rate, ytr, nYP, spend, []);
+    var proj = fvVariable(nEx, mSav, rate, ytr, []);
+    expect(traj[ytr].balance).toBeCloseTo(proj, 0);
+  });
+
+  it('reproduce los valores auditados', function () {
+    var traj = reportTrajectory(nEx, mSav, rate, ytr, nYP, spend, []);
+    expect(Math.round(traj[ytr].balance)).toBe(180399);   // NO 242168
+  });
+});
+
+// ─── escenario conservador ────────────────────────────────────────────────────
+
+describe('escenario conservador', function () {
+  it('siempre exige mas capital que el escenario base', function () {
+    [0.065, 0.04, 0.015, 0.01, -0.025, -0.05].forEach(function (r) {
+      var c = r - 0.005;
+      expect(pvA(3000, c, 20)).toBeGreaterThan(pvA(3000, r, 20));
+    });
+  });
+});
+
+// ─── Invariante cobertura: pagina 1 vs tabla de pagina 2 ──────────────────────
+// Los anos de cobertura (drawdownYears, pagina 1) y la trayectoria (pagina 2)
+// tienen que describir el mismo agotamiento. Antes divergian: drawdownYears
+// capitalizaba anual y yearByYear mensual.
+
+describe('drawdownYears vs reportTrajectory: misma convencion', function () {
+  var CASOS = [
+    { bal: 180399, spend: 4000, r: 0.015 },
+    { bal: 300000, spend: 3000, r: 0.02 },
+    { bal: 622309, spend: 3000, r: 0.015 },
+    { bal: 1000000, spend: 5000, r: 0.04 },
+  ];
+
+  it('el saldo se agota exactamente un ano despues de la cobertura reportada', function () {
+    CASOS.forEach(function (c) {
+      var traj = reportTrajectory(c.bal, 0, c.r, 0, 60, c.spend, []);
+      var cov = drawdownYears(c.bal, c.spend * 12, c.r, 60);
+      expect(traj[cov + 1].balance).toBe(0);
+      if (cov >= 1) expect(traj[cov - 1].balance).toBeGreaterThan(0);
+    });
+  });
+
+  it('usa capitalizacion mensual, no anual', function () {
+    // Con capitalizacion anual este caso da 28; con mensual da 27.
+    expect(drawdownYears(1000000, 60000, 0.04, 60)).toBe(27);
   });
 });
