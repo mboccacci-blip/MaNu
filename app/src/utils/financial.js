@@ -99,3 +99,9 @@ export function fvVariable(existingSavings, baseMonthlySav, realReturn, years, d
   }
   return bal;
 }
+
+/** Trayectoria del informe: una unica tasa para acumulacion y retiro.
+ *  Garantiza que el saldo en `yearsAccum` coincida con fvVariable() al mismo rate. */
+export function reportTrajectory(existingSavings, monthlySav, rate, yearsAccum, yearsRetire, monthlySpend, debtEvents) {
+  return yearByYear(existingSavings, monthlySav, rate, yearsAccum, yearsRetire, monthlySpend, 0, debtEvents, rate);
+}
