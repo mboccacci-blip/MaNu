@@ -93,8 +93,9 @@
 - [ ] **W61** — Implementar cambio B2B puro (D10): eliminar Stripe/PaymentModal/verify-session, simplificar tiers a free/email, reconvertir o eliminar PDF. **Analisis de impacto completado** (15 archivos + 3 functions). No ejecutar sin confirmacion.
 - [ ] **W62** — Elaborar presupuesto detallado para Fede: publicidad (Meta/Google) + costos legales.
 - [ ] **W63** — Contactar Javier: coordinar presentacion del proyecto. Preparar resumen de 3 puntos.
-- [ ] **W64** — Enviar ejemplos de PDF generados por la app a Fede para evaluacion tecnica.
+- [x] **W64** — Enviar ejemplos de PDF generados por la app a Fede para evaluacion tecnica. **CERRADA 24-Ago-2026.** Fede devolvio audio+Excel con audit completo. Se auditaron 6 hallazgos (H1-H6), se corrigieron todos, y se regeneraron informes en `ejemplos/`. Ver `AUDIT_2026-08-24_pdf-premium.md`.
 - [ ] **W65** — Martin: consultar a Poletto sobre Google Ads como canal 2 (Martin, no Fede).
+- [ ] **W66** — Decidir el futuro del campo de ingreso previsional/adicional (`socialSecurity`). Contexto: removido del UI el 29-abr-2026 (e128b87, W25) pero sigue en el motor, el store y el PDF; hoy `nSS` es siempre 0. Fede valido el split $3.000/$1.000 como comportamiento correcto sin saber que el input ya no existia. Dos caminos: (a) el campo vuelve al UI, o (b) "ingreso necesario" pasa a significar neto de jubilacion y hay que decirlo en el copy. Decision de Martin y Fede.
 
 ### Landing/UX pendientes (auditoria 29-Abr-2026)
 - [x] **W36** — Landing ya dice "3 min" (verificado en LandingPage.jsx) — tildado 06-Jul-2026
@@ -141,7 +142,8 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `88b7a3c` — chore: trigger redeploy with all env vars (Supabase + Stripe)
+- **HEAD:** `591ab02` — merge: fix/pdf-audit-h1-h5 (H1-H6 audit PDF premium + docs)
+- **Tests:** 47/47 (3 archivos: financial.test.js 45, reachability.test.js 1, reportPdf.wiring.test.js 1)
 - **Local = Remote:** sincronizado
 - **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
 - **Dominio custom:** magic-number.app — ACTIVO (Cloudflare Pages)
@@ -151,7 +153,8 @@
 - **Stripe:** OPERATIVO via cuenta Divit (empresa hermano). Payment Link + verificacion server-side funcionando.
 - **Supabase:** OPERATIVO (fix sesion 13: env vars ahora se pasan al build step)
 - **UTMs:** Captura end-to-end operativa (analytics + leads + email asesor). Supabase migrado.
+- **Persist version:** 2 (migra blobs v1 eliminando campos huerfanos como socialSecurity)
 - **Deck Javier:** PPTX+PDF en repo, 11 slides con notas de orador (nombre Javier removido por decision del usuario)
 - **Briefing Fede:** Enviado por email 16-Jul-2026 (DOCX + deck + plan marketing)
 - **Revenue:** $0 | **Users:** 0 | **Leads:** 2 (test)
-- **Status:** ACTIVO — Produccion 100% operativa. Proximo: decisiones de negocio (comision %, presupuesto pauta, fecha Javier)
+- **Status:** ACTIVO — Produccion 100% operativa. Proximo: decisiones de negocio (comision %, presupuesto pauta, fecha Javier, W66 socialSecurity)

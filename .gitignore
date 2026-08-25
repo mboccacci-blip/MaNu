@@ -19,3 +19,8 @@ Thumbs.db
 
 # Netlify build artifacts
 .netlify/
+
+# Agent session artifacts
+.session/
+.session_open
+tasks/handoff-cierre-*.md
