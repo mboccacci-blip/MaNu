@@ -95,7 +95,7 @@
 - [ ] **W63** — Contactar Javier: coordinar presentacion del proyecto. Preparar resumen de 3 puntos.
 - [x] **W64** — Enviar ejemplos de PDF generados por la app a Fede para evaluacion tecnica. **CERRADA 24-Ago-2026.** Fede devolvio audio+Excel con audit completo. Se auditaron 6 hallazgos (H1-H6), se corrigieron todos, y se regeneraron informes en `ejemplos/`. Ver `AUDIT_2026-08-24_pdf-premium.md`.
 - [ ] **W65** — Martin: consultar a Poletto sobre Google Ads como canal 2 (Martin, no Fede).
-- [ ] **W66** — Decidir el futuro del campo de ingreso previsional/adicional (`socialSecurity`). Contexto: removido del UI el 29-abr-2026 (e128b87, W25) pero sigue en el motor, el store y el PDF; hoy `nSS` es siempre 0. Fede valido el split $3.000/$1.000 como comportamiento correcto sin saber que el input ya no existia. Dos caminos: (a) el campo vuelve al UI, o (b) "ingreso necesario" pasa a significar neto de jubilacion y hay que decirlo en el copy. Decision de Martin y Fede.
+- [ ] **W66** -- Decidir el futuro del campo de ingreso previsional/adicional (`socialSecurity`). Contexto: removido del UI el 29-abr-2026 (e128b87, W25) pero sigue en el motor, el store y el PDF; hoy `nSS` es siempre 0. Fede valido el split $3.000/$1.000 como comportamiento correcto sin saber que el input ya no existia. Dos caminos: (a) el campo vuelve al UI, o (b) "ingreso necesario" pasa a significar neto de jubilacion y hay que decirlo en el copy. **Residuo en UI:** `AchieveTab.jsx:228` dice "$4,000 extra por mes" en ES (EN no dice "extra"). Con nSS=0 no hay "extra" -- son los $4,000 completos. La palabra sobra o el campo falta. Decision de Martin y Fede.
 
 ### Landing/UX pendientes (auditoria 29-Abr-2026)
 - [x] **W36** — Landing ya dice "3 min" (verificado en LandingPage.jsx) — tildado 06-Jul-2026
@@ -142,7 +142,6 @@
 ## Estado del Repositorio
 - **Branch:** `master`
 - **Remote:** `origin` -> `github.com/mboccacci-blip/MaNu.git`
-- **HEAD:** `591ab02` — merge: fix/pdf-audit-h1-h5 (H1-H6 audit PDF premium + docs)
 - **Tests:** 47/47 (3 archivos: financial.test.js 45, reachability.test.js 1, reportPdf.wiring.test.js 1)
 - **Local = Remote:** sincronizado
 - **Active URL:** https://magic-number.app (Cloudflare Pages — Production)
