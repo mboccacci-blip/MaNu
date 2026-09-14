@@ -3,12 +3,12 @@ export const INFLATION_DEFAULT = 0.025;
 export const SCENARIO_SPREAD = 0.02;
 
 export const PROFILES = [
-  { id:"vault",name:"Vault",nomReturn:0,realReturn:-0.025,desc:"Cash under the mattress. Loses to inflation.",icon:"lock",color:"#64748b",risk:0,vol:0},
-  { id:"cds",name:"CDs",nomReturn:0.035,realReturn:0.01,desc:"Certificates of Deposit. FDIC insured.",icon:"bank",color:"#a78bfa",risk:2,vol:0},
+  { id:"vault",name:"Vault",nomReturn:0,realReturn:-0.024,desc:"Cash under the mattress. Loses to inflation.",icon:"lock",color:"#64748b",risk:0,vol:0},
+  { id:"cds",name:"CDs",nomReturn:0.03,realReturn:0.005,desc:"Certificates of Deposit. FDIC insured.",icon:"bank",color:"#a78bfa",risk:2,vol:0},
   { id:"treasuries",name:"Treasuries",nomReturn:0.04,realReturn:0.015,desc:"Long-term US Treasury bonds (TLT).",icon:"landmark",color:"#60a5fa",risk:3,vol:0.12},
-  { id:"6040",name:"60 / 40",nomReturn:0.065,realReturn:0.04,desc:"60% stocks, 40% bonds. Balanced.",icon:"scales",color:"#34d399",risk:4,vol:0.10},
-  { id:"8020",name:"80 / 20",nomReturn:0.075,realReturn:0.05,desc:"80% stocks, 20% bonds. Growth-tilted.",icon:"chart-line-up",color:"#22c55e",risk:5,vol:0.13},
-  { id:"equities",name:"100% Equities",nomReturn:0.09,realReturn:0.065,desc:"All stocks (S&P 500). Highest return and volatility.",icon:"rocket",color:"#f59e0b",risk:6,vol:0.15},
+  { id:"6040",name:"60 / 40",nomReturn:0.067,realReturn:0.041,desc:"60% stocks, 40% bonds. Balanced.",icon:"scales",color:"#34d399",risk:4,vol:0.10},
+  { id:"8020",name:"80 / 20",nomReturn:0.076,realReturn:0.050,desc:"80% stocks, 20% bonds. Growth-tilted.",icon:"chart-line-up",color:"#22c55e",risk:5,vol:0.13},
+  { id:"equities",name:"100% Equities",nomReturn:0.085,realReturn:0.059,desc:"All stocks (S&P 500). Highest return and volatility.",icon:"rocket",color:"#f59e0b",risk:6,vol:0.15},
 ];
 
 

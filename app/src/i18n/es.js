@@ -391,7 +391,7 @@ export default {
     combineBoth: "C. Combinar ambos",
     onTrack: "¡Vas bien encaminado!",
     surpassBy: "Vas a superar tu Magic Number por",
-    returnsDisclaimer: "Los retornos mostrados son promedios históricos de largo plazo, no promesas. Rendimientos reales sostenidos por encima del 7% son extremadamente raros. Tu mayor palanca es el ahorro constante y el tiempo, no perseguir rendimientos altos.",
+    returnsDisclaimer: "Los retornos mostrados corresponden a promedios hist\u00f3ricos de largo plazo. El desempe\u00f1o pasado no garantiza resultados futuros. Obtener rendimientos reales sostenidos por encima del 7% es extremadamente raro. Tu mayor palanca es el ahorro constante y el tiempo, no perseguir rentabilidades altas.",
     unrealisticReturn: "El retorno necesario de {rate}% supera el rendimiento histórico de cualquier clase de activo. No existe una inversión que garantice esto. Considerá aumentar tu ahorro mensual o ajustar tus expectativas de ingreso.",
     whenCanIRetire: "¿Para Cuántos Años Te Alcanza tu Ahorro Proyectado?",
     reverseIntro: "",

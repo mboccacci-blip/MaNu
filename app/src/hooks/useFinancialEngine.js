@@ -74,10 +74,11 @@ export default function useFinancialEngine(store, t, lang) {
   var PROF_KEY_MAP={vault:"vault",cds:"cds",treasuries:"treasuries","6040":"6040","8020":"8020",equities:"equities",custom:"custom"};
   var adjProfiles=useMemo(function(){return PROFILES.map(function(p){
     var k=PROF_KEY_MAP[p.id]||p.id;
+    var realR=(1+p.nomReturn)/(1+INFL)-1;
     return Object.assign({},p,{
-      realReturn:p.nomReturn-INFL,
+      realReturn:realR,
       nomReturn:p.nomReturn,
-      effReal:p.nomReturn-INFL-TAX,
+      effReal:realR-TAX,
       effNom:p.nomReturn-TAX,
       name:t('profiles.'+k+'.name')||p.name,
       desc:t('profiles.'+k+'.desc')||p.desc
@@ -88,7 +89,7 @@ export default function useFinancialEngine(store, t, lang) {
   var custR=Number(customReturn)||0;
   var allProfiles=useMemo(function(){
     var p=adjProfiles.slice();
-    if(custR>0)p.push({id:"custom",name:t('profiles.custom.name')||"Custom",nomReturn:custR/100,realReturn:custR/100-INFL,effNom:custR/100-TAX,effReal:custR/100-INFL-TAX,desc:t('profiles.custom.desc')||"Your custom return rate.",icon:"gear",color:"#e879f9",risk:7,vol:0});
+    if(custR>0){var custReal=(1+custR/100)/(1+INFL)-1;p.push({id:"custom",name:t('profiles.custom.name')||"Custom",nomReturn:custR/100,realReturn:custReal,effNom:custR/100-TAX,effReal:custReal-TAX,desc:t('profiles.custom.desc')||"Your custom return rate.",icon:"gear",color:"#e879f9",risk:7,vol:0});}
     return p;
   },[adjProfiles,custR,INFL,TAX,lang,t]);
 
@@ -170,7 +171,7 @@ export default function useFinancialEngine(store, t, lang) {
       const r=blendedPortReturn,proj=fvVariable(nEx,mSav,r,ytr,debtEvents);
       const gap=Math.max(magic.real-proj,0);let mo=0;
       if(gap>0){const m=mR(r),n=ytr*12;mo=r===0||m===0?gap/n:gap/((Math.pow(1+m,n)-1)/m)}
-      list.unshift({id:"myportfolio",name:t('profiles.myPortfolio.name'),icon:"sliders-h",realReturn:r,nomReturn:r+INFL,color:"#e879f9",monthly:mo,surplus:gap<=0?proj-magic.real:0,projected:proj});
+      list.unshift({id:"myportfolio",name:t('profiles.myPortfolio.name'),icon:"sliders-h",realReturn:r,nomReturn:(1+r)*(1+INFL)-1,color:"#e879f9",monthly:mo,surplus:gap<=0?proj-magic.real:0,projected:proj});
     }
     return list;
   },[magic.real,nEx,mSav,ytr,adjProfiles,debtEvents,hasPortfolio,blendedPortReturn,INFL,t]);

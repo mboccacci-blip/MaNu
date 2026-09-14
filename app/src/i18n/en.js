@@ -390,7 +390,7 @@ export default {
     combineBoth: "C. Combine both",
     onTrack: "You're on track!",
     surpassBy: "You'll surpass your Magic Number by",
-    returnsDisclaimer: "Returns shown are long-term historical averages, not promises. Sustained real returns above 7% are extremely rare. Your greatest lever is consistent saving and time, not chasing high returns.",
+    returnsDisclaimer: "Returns shown correspond to long-term historical averages. Past performance does not guarantee future results. Sustained real returns above 7% are extremely rare. Your greatest lever is consistent saving and time, not chasing high returns.",
     unrealisticReturn: "The required return of {rate}% exceeds the historical performance of any asset class. No investment guarantees this. Consider increasing your monthly savings or adjusting your income expectations.",
     whenCanIRetire: "How Many Years Will Your Projected Savings Last?",
     reverseIntro: "",
