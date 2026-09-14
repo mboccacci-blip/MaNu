@@ -13,9 +13,11 @@ Implementar feedback de Federico Amui sobre retornos de perfiles y conversion no
 - **Tests:** 47/47 | **Build:** OK | **Deploy:** produccion verificada
 - **MN referencia:** $832,607 (antes $829,745, delta por Fisher)
 - Mensaje para Fede redactado. Producto listo para demo a Javier.
+- **Post-cierre:** Fede respondio OK, pidio link + PDF + deck para Javier. PDFs regenerados (informe-premium-2026-09-14-es/en.pdf). Deck PPTX verificado: sin retornos hardcodeados, no requiere cambios. Archivos enviados.
 
 ## Commits
 - `321bb55` fix(engine): Fisher equation for real returns + updated profile rates + past-performance disclaimer
+- `c7be20f` docs: sesion 17
 
 ## Pendiente
 - W66: destino socialSecurity + "extra" en hero
