@@ -1,3 +1,29 @@
+# Minuta Sesion 17 -- MaNu PRO
+**Fecha:** 2026-09-14
+**Workspace:** Magic Number PRO
+**Modelo:** Claude Opus 4.6 (Thinking)
+
+## Objetivo
+Implementar feedback de Federico Amui sobre retornos de perfiles y conversion nominal-a-real.
+
+## Resultados
+- **Fisher:** Conversion nominal-a-real cambiada de resta a ecuacion de Fisher en 3 puntos del motor
+- **Retornos:** CDs 3.5%->3.0%, Equities 9.0%->8.5%, blends 60/40=6.7% y 80/20=7.6% (ponderacion exacta equities+treasuries)
+- **Disclaimer:** "El desempeno pasado no garantiza resultados futuros" en app y PDF (ES+EN)
+- **Tests:** 47/47 | **Build:** OK | **Deploy:** produccion verificada
+- **MN referencia:** $832,607 (antes $829,745, delta por Fisher)
+- Mensaje para Fede redactado. Producto listo para demo a Javier.
+
+## Commits
+- `321bb55` fix(engine): Fisher equation for real returns + updated profile rates + past-performance disclaimer
+
+## Pendiente
+- W66: destino socialSecurity + "extra" en hero
+- D10: modelo B2B puro
+- W50: % comision referido para Javier
+
+---
+
 # Minuta Sesion 16 — MaNu PRO
 **Fecha:** 2026-08-25
 **Workspace:** Magic Number PRO
