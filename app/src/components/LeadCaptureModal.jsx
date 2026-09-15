@@ -50,10 +50,14 @@ export default function LeadCaptureModal({ show, onClose, financials, lang }) {
     return '$' + Math.round(v).toLocaleString('en-US');
   }
 
+  // Free-tier: hide Magic Number and Progress to enforce paywall.
+  // Progress + currentSavings would let the user derive the exact MN.
+  var isFree = financials.tier === 'free';
+
   var highlights = [
     financials.healthScore != null && { label: lang === 'en' ? 'Health Score' : 'Score Financiero', value: financials.healthScore + '/100', color: financials.healthScore >= 70 ? '#22c55e' : financials.healthScore >= 40 ? '#eab308' : '#ef4444' },
-    financials.magicNumber > 0 && { label: 'Magic Number', value: fmt(financials.magicNumber), color: '#60a5fa' },
-    financials.mnProgressPct != null && { label: lang === 'en' ? 'Progress' : 'Progreso', value: financials.mnProgressPct.toFixed(1) + '%', color: financials.mnProgressPct >= 100 ? '#22c55e' : '#f59e0b' },
+    !isFree && financials.magicNumber > 0 && { label: 'Magic Number', value: fmt(financials.magicNumber), color: '#60a5fa' },
+    !isFree && financials.mnProgressPct != null && { label: lang === 'en' ? 'Progress' : 'Progreso', value: financials.mnProgressPct.toFixed(1) + '%', color: financials.mnProgressPct >= 100 ? '#22c55e' : '#f59e0b' },
     financials.monthlySavings != null && { label: lang === 'en' ? 'Monthly savings' : 'Ahorro mensual', value: fmt(financials.monthlySavings), color: financials.monthlySavings > 0 ? '#22c55e' : '#ef4444' },
     financials.currentSavings > 0 && { label: lang === 'en' ? 'Current savings' : 'Ahorros actuales', value: fmt(financials.currentSavings), color: '#60a5fa' },
     financials.investmentProfile && { label: lang === 'en' ? 'Profile' : 'Perfil', value: financials.investmentProfile, color: '#a78bfa' },
